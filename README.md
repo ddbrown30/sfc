@@ -1,6 +1,11 @@
 This module for Foundry VTT adds fantasy style currencies to Savage Worlds.
 
-[[_TOC_]]
+- [Installation](#installation)
+- [Initialization](#initialization)
+- [Usage Instructions](#usage-instructions)
+- [Configuration](#configuration)
+- [Feedback](#feedback)
+
 
 # Installation
 
