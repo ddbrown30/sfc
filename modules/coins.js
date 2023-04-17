@@ -29,7 +29,7 @@ export class Coins {
                 buttons: {
                     yes: {
                         icon: `<i class="fa fa-check"></i>`,
-                        label: game.i18n.localize("WORDS._Yes"),
+                        label: game.i18n.localize("SFC.Yes"),
                         callback: async (html) => {
                             const behaviour = html.find(`#behaviour`)[0].value;
                             const keepCurrency = behaviour == "keep-coins" ? false  : true;
@@ -38,7 +38,7 @@ export class Coins {
                     },
                     no: {
                         icon: `<i class="fa fa-times"></i>`,
-                        label: game.i18n.localize("WORDS._No"),
+                        label: game.i18n.localize("SFC.No"),
                         callback: event => { }
                     }
                 },

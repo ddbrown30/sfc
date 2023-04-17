@@ -59,7 +59,7 @@ export class CoinConfig extends FormApplication {
             buttons: {
                 yes: {
                     icon: `<i class="fa fa-check"></i>`,
-                    label: game.i18n.localize("WORDS._Yes"),
+                    label: game.i18n.localize("SFC.Yes"),
                     callback: async event => {
                         const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinMap);
                         this.initialMap = defaultMap;
@@ -69,7 +69,7 @@ export class CoinConfig extends FormApplication {
                 },
                 no :{
                     icon: `<i class="fa fa-times"></i>`,
-                    label: game.i18n.localize("WORDS._No"),
+                    label: game.i18n.localize("SFC.No"),
                     callback: event => {}
                 }
             },

@@ -36,5 +36,7 @@
     "SFC.Icon": "Icon",
     "SFC.CoinName": "Coin Name",
     "SFC.Value": "Value",
-    "SFC.Weight": "Weight"
+    "SFC.Weight": "Weight",
+    "SFC.Yes": "Yes",
+    "SFC.No": "No"
 }
