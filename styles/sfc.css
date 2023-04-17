@@ -1,0 +1,74 @@
+.sfc img.coin-icon {
+    height: var(--form-field-height);
+}
+
+.sfc .coins {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
+
+.sfc .coins .value {
+    font-weight: 700;
+    width: 80px;
+    margin-left: 10px;
+}
+
+.sfc .coins > input {
+  font-weight: 700;
+  max-width: 65px;
+  margin-right: 10px;
+}
+
+.coin-config .icon {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+}
+
+#coin-config .wrapper-rel {
+    position: relative;
+    flex: 1;
+    height: fit-content;
+}
+
+#coin-config .inset-label {
+    position: absolute;
+    /* background: rgba(0,0,0,0.5); */
+    /* color: white; */
+    background: rgba(0, 0, 0, 0.05);
+    height: 100%;
+    padding: 4px 2px;
+    font-size: small;
+}
+
+#coin-config .coin-enabled-input {
+    padding-left: 85px;
+}
+
+#coin-config .coin-text-input {
+    padding-left: 85px;
+}
+.coin-config .flexcol.text-entry {
+    flex: 8;
+}
+
+.coin-config .flexcol.text-entry .path,
+.coin-config  .flexcol.text-entry .coin {
+    display: flex;
+    flex: 1;
+    /* margin: 0px 3px 3px 0px; */
+}
+
+.coin-config .flexrow {
+    justify-content: space-around;
+}
+
+#coin-config .icon-path {
+    padding-left: 35px;
+}
+
+.coin-config .flexcol {
+    margin: 3px;
+}

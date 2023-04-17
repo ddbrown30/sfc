@@ -1,0 +1,40 @@
+{
+    "SFC": {
+        "InitActors": {
+            "Title": "Initialize All Characters",
+            "Dialog": {
+                "Contents1": "This will process all player character actors, adding coin items and initializing values.",
+                "Contents2": "When using the Keep Currency behaviour, the actor's current currency will be used to set the starting quantities of coins based on the value for each coin.",
+                "Contents3": "If the values of the coins is such that the current currency cannot be evenly divided, the remaining amount will be lost.",
+                "Contents4": "(Note: This is only a potential issue if you've modified the values in the coin config. The default values will always work correctly.)",
+                "Contents5": "If this is your first time running this process, you should use Keep Currency.",
+                "Contents6": "When using the Keep Coins behaviour, the quantity of coins in the actors inventory is maintained and the actor's currency is updated based on the value of those coins.",
+                "Contents7": "If the actor does not have a coin in its inventory at this time, it will be treated as 0.",
+                "Contents8": "This option is only really useful if you are changing the value of your coins mid-campaign. Generally, prefer using Keep Currency.",
+                "Contents9": "This process can not be undone. Are you sure you would like to continue?",
+                "BehaviourOptions":{
+                    "KeepCurrencyValue": "Keep Currency",
+                    "KeepCurrencyTitle": "Generates coin quantities based on currency",
+                    "KeepCoinsValue": "Keep Coins",
+                    "KeepCoinsTitle": "Calculates the currency based on existing coins"
+                }
+            }
+        },
+
+        "CoinConfig": {
+            "Name": "Coin Config",
+            "Label": "Open Coin Config",
+            "Hint": "Configure the coins in your game. You will need to run Initialize All Characters after making any changes.",
+            "RestoreDefaultsButton": "Restore Defaults",
+            "RestoreDefaultsTitle": "Restore Defaults",
+            "RestoreDefaultsContents":"<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>"
+        }
+    },
+
+    "SFC.Enabled": "Enabled",
+    "SFC.DisableWarning": "Warning: Disabled coins are removed from actor inventories when running Initialize All Characters.",
+    "SFC.Icon": "Icon",
+    "SFC.CoinName": "Coin Name",
+    "SFC.Value": "Value",
+    "SFC.Weight": "Weight"
+}

@@ -1,0 +1,11 @@
+<div class='sfc'>
+    <div class='coins'>
+        <span class='label'>{{currencyName}}:</span>
+        <span class='value'>{{numberFormat actor.system.details.currency decimals=2}}</span>
+        
+    {{#each coinData}}
+        <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}'/>
+        <input name='flags.sfc.{{countFlagName}}' type='text' data-dtype='Number' value='{{count}}' />
+    {{/each}}
+    </div>
+</div>

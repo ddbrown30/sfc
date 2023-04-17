@@ -1,0 +1,18 @@
+<form autocomplete='off' class='main-grid'>
+  <p class="notes" style="padding: 0 0 0 2em"><strong>{{localize "SFC.DisableWarning"}}</strong></p>
+
+  <ol class="coin-config list">
+    {{#each coinMap as |coin key|}}
+    {{> "modules/sfc/templates/partials/coin-config-item.hbs" coin=coin key=key}}
+    {{/each}}
+  </ol>
+
+  <footer class='sheet-footer flexrow'>
+    <button type='submit' name='submit' id='submit'>
+      <i class='far fa-save'></i>{{localize 'SETTINGS.Save'}}
+    </button>
+    <button type='reset' name='reset' id='reset'>
+      <i class='fas fa-history'></i>{{localize 'SFC.CoinConfig.RestoreDefaultsButton'}}
+    </button>
+  </footer>
+</form>
