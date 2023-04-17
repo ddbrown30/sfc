@@ -78,8 +78,9 @@ export class Coins {
             }
         }
 
-        let currencyName = game.settings.get("swade", "currencyName");
-        const templateData = {actor, currencyName, coinData};
+        const currencyName = game.settings.get("swade", "currencyName");
+        const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
+        const templateData = {currencyAmount, currencyName, coinData};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
         
         //Find the existing currency section and replace it with ours
@@ -165,7 +166,8 @@ export class Coins {
     }
 
     static async initActorInventory(actor, keepCurrency) {
-        let remainingCurrencyInt = Math.floor(actor.system.details.currency * 1000); //This converts us to an int so we don't have to deal with float issues
+        const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
+        let remainingCurrencyInt = Math.floor(currencyAmount * 1000); //This converts us to an int so we don't have to deal with float issues
         let createData = [];
         let updateData = [];
         let deleteData = [];
