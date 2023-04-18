@@ -25,10 +25,6 @@ export class HooksManager {
         /*                    Render                    */
         /* -------------------------------------------- */
 
-        Hooks.on("renderActorSheet", (sheet) => {
-            sheet.activateTab("inventory")
-        })
-
         Hooks.on("renderActorSheet", (app, html, data) => {
             Coins.onRenderActorSheet(app, html, data);
         });
