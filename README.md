@@ -32,6 +32,8 @@ This will then grab all character actors in your game (skipping npcs and vehicle
 
 You might notice the behaviour dropdown on the confirmation dropdown. You should leave that on the default value of Keep Currency for the first time you run it. The Keep Coins option is useful for initializing characters after you have been using SFC for awhile. Instead of using the actor's currency to calculate the number of coins they should have, it instead will keep the quantity of coins the same and will calculate the currency based on the value of the coins the actor has. This is important because if, for instance, an actor has 1000 copper coins (which is equal to $10 of currency) running the init step with Keep Currency would convert those coins to 10 gold coins.
 
+If processing all the characters in your game makes you nervous, you can instead enable the Init Coins button in the settings. You can then go into each character, one by one, and click the button there to initialize just that character. It otherwise functions exactly as above.
+
 # Usage Instructions
 
 Using SFC is simple. On the gear tab of the character sheet, the normal currency display has been replaced by the coin display. To change the number of coins the actor has, just enter the new value in the field next to the coin and the coin inventory will update to match. The actor's total currency value will update automatically based on the value of the coins. You can also edit the coins directly in the inventory, if you prefer, and everything will work the same.
