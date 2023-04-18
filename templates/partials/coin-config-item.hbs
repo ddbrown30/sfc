@@ -4,7 +4,7 @@
             <div class="flexrow path">
                 <div class="wrapper-rel">
                     <input type="checkbox" name="coin-enabled-{{key}}" {{checked coin.flags.sfc.enabled}}>
-                    <label for="coin-enabled-{{key}}">{{localize "SFC.Enabled"}}</label>
+                    <label for="coin-enabled-{{key}}">{{localize "SFC.CoinConfigItem.Enabled"}}</label>
                 </div>
             </div>
         </div>
@@ -16,15 +16,20 @@
                 <div class="flexrow">
                     <div class="coin">
                         <div class="wrapper-rel">
-                            <label for="coin-name-{{key}}" class="inset-label">{{localize "SFC.CoinName"}}</label>
+                            <label for="coin-name-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Name"}}</label>
                             <input type="text" name="coin-name-{{key}}" title="Coin" value="{{coin.name}}"
-                                class="coin coin-text-input" placeholder="Coin Name" data-dtype="String">
+                                class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.Name"}}' data-dtype="String">
+                        </div>
+                        <div class="wrapper-rel">
+                            <label for="coin-shortname-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.ShortName"}}</label>
+                            <input type="text" name="coin-shortname-{{key}}" title="Coin" value="{{coin.flags.sfc.shortName}}"
+                                class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.ShortName"}}' data-dtype="String">
                         </div>
                     </div>
                 </div>
                 <div class="flexrow path">
                     <div class="wrapper-rel">
-                        <label for="icon-path-{{key}}" class="inset-label">{{localize "SFC.Icon"}}</label>
+                        <label for="icon-path-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Icon"}}</label>
                         <input type="text" name="icon-path-{{key}}" title="Icon Path" class="icon-path coin-text-input"
                             value="{{coin.img}}" placeholder="/icons/example.svg" data-dtype="String">
                     </div>
@@ -39,14 +44,14 @@
             <div class="flexcol text-entry">
                 <div class="flexrow path">
                     <div class="wrapper-rel">
-                        <label for="coin-value-{{key}}" class="inset-label">{{localize "SFC.Value"}}</label>
+                        <label for="coin-value-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Value"}}</label>
                         <input type="text" name="coin-value-{{key}}" title="Value" class="value coin-text-input"
-                            value="{{coin.flags.sfc.value}}" placeholder={{localize "SFC.Value" }} data-dtype="String">
+                            value="{{coin.flags.sfc.value}}" placeholder='{{localize "SFC.CoinConfigItem.Value" }}' data-dtype="String">
                     </div>
                     <div class="wrapper-rel">
-                        <label for="coin-weight-{{key}}" class="inset-label">{{localize "SFC.Weight"}}</label>
+                        <label for="coin-weight-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Weight"}}</label>
                         <input type="text" name="coin-weight-{{key}}" title="Weight" class="weight coin-text-input"
-                            value="{{coin.system.weight}}" placeholder={{localize "SFC.Weight" }} data-dtype="String">
+                            value="{{coin.system.weight}}" placeholder='{{localize "SFC.CoinConfigItem.Weight"}}' data-dtype="String">
                     </div>
                 </div>
             </div>

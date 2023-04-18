@@ -8,12 +8,14 @@ export class Coins {
     /* -------------------------------------------- */
 
     static async onReady() {
-        game.sfc.coinMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinMap);
+        const defaultMap = Coins.createDefaultCoinMap();
 
+        game.sfc.coinMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinMap);
         if (!Object.values(game.sfc.coinMap).length) {
-            const defaultMap = Coins.createDefaultCoinMap();
             Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, duplicate(defaultMap));
         }
+
+        Coins.buildItemDescriptionText();
     }
     
     static async onRenderSettingsConfig(app, el, data) {
@@ -232,7 +234,8 @@ export class Coins {
                     "name": coin.name,
                     "img": coin.img,
                     "system.quantity": numCoins,
-                    "system.weight": coin.system.weight
+                    "system.weight": coin.system.weight,
+                    "system.description": game.sfc.itemDescription
                 });
                 await coinItem.setFlag(SFC_CONFIG.NAME, "value", coin.flags.sfc.value);
                 updateData.push(coinItem);
@@ -268,14 +271,15 @@ export class Coins {
     static createDefaultCoinMap() {
         let defaultMap = {};
 
-        defaultMap["copper"] = {
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper] = {
             name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.copper,
             type: 'gear',
             img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.copper,
             flags: {
                 sfc: {
                     value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.copper,
-                    type: "copper",
+                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper,
+                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.copper,
                     countFlagName: SFC_CONFIG.FLAGS.copperCount,
                     enabled: true
                 }
@@ -286,14 +290,15 @@ export class Coins {
             }
         };
         
-        defaultMap["silver"] = {
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver] = {
             name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.silver,
             type: 'gear',
             img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.silver,
             flags: {
                 sfc: {
                     value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.silver,
-                    type: "silver",
+                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver,
+                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.silver,
                     countFlagName: SFC_CONFIG.FLAGS.silverCount,
                     enabled: true
                 }
@@ -304,14 +309,15 @@ export class Coins {
             }
         };
         
-        defaultMap["gold"] = {
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold] = {
             name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.gold,
             type: 'gear',
             img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.gold,
             flags: {
                 sfc: {
                     value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.gold,
-                    type: "gold",
+                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold,
+                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.gold,
                     countFlagName: SFC_CONFIG.FLAGS.goldCount,
                     enabled: true
                 }
@@ -322,14 +328,15 @@ export class Coins {
             }
         };
         
-        defaultMap["plat"] = {
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat] = {
             name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.plat,
             type: 'gear',
             img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.plat,
             flags: {
                 sfc: {
                     value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.plat,
-                    type: "plat",
+                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat,
+                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.plat,
                     countFlagName: SFC_CONFIG.FLAGS.platCount,
                     enabled: true
                 }
@@ -342,5 +349,68 @@ export class Coins {
 
         Utils.setSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinMap, defaultMap);
         return defaultMap;
+    }
+
+    static decimalToFraction(decimal) {
+        var gcd = function(a, b) {
+            if (!b) return a;
+              a = parseInt(a);
+              b = parseInt(b);
+            return gcd(b, a % b);
+          };
+          
+          var len = decimal.toString().length - 2;
+          len = len > 1 ? len : 1; //If decimal is a whole number, we don't want to shift the denominator
+          
+          var denominator = Math.pow(10, len);
+          var numerator = decimal * denominator;
+          
+          var divisor = gcd(numerator, denominator);          
+          numerator /= divisor;
+          denominator /= divisor;
+          
+          return numerator.toFixed() + '/' + denominator.toFixed();
+    }
+
+    static async buildItemDescriptionText() {
+        //Sort the coins from lowest value to highest
+        let coinArray = Object.values(game.sfc.coinMap);
+        coinArray.sort((a, b) => {
+            return a.flags.sfc.value - b.flags.sfc.value;
+        });
+
+        let coinDatas = [];
+        for (let i = 0; i < coinArray.length; ++i) {
+            const coin = coinArray[i];
+            if (coin.flags.sfc.enabled) {
+                let coinData = {
+                    name: coin.name,
+                    shortName: coin.flags.sfc.shortName,
+                    shortNameUpper: coin.flags.sfc.shortName.toUpperCase(),
+                    columns: []
+                };
+
+                for (let j = 0; j < coinArray.length; ++j) {
+                    if (!coinArray[j].flags.sfc.enabled) {
+                        continue;
+                    }
+
+                    if (i == j) {
+                        coinData.columns[j] = "1";
+                        continue;
+                    }
+                    
+                    const decimal = (coin.flags.sfc.value * 1000) / (coinArray[j].flags.sfc.value * 1000);
+                    const fraction = this.decimalToFraction(decimal);
+                    coinData.columns[j] = fraction;
+                }
+
+                coinDatas.push(coinData);
+            }
+        }
+
+        const templateData = {coinDatas};
+        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
+        game.sfc.itemDescription = content;
     }
 }

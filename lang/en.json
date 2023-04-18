@@ -32,18 +32,31 @@
             "RestoreDefaultsContents":"<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>"
         },
 
+        "CoinConfigItem": {
+            "Enabled": "Enabled",
+            "Name": "Coin Name",
+            "ShortName": "Short Name",
+            "Icon": "Icon",
+            "Value": "Value",
+            "Weight": "Weight"
+        },
+
+        "CoinItemDescription": {
+            "TableName": "Coins & exchange value",
+            "CoinHeader": "Coin"
+        },
+
         "Settings": {
             "ShowInitButtonName": "Show Init Coins Button",
             "ShowInitButtonHint": "When active, an Init Coins button will be added to the character sheet."
+        },
+
+        "Errors": {
+            "NegativeValues" : "Negative values are not supported"
         }
     },
 
-    "SFC.Enabled": "Enabled",
     "SFC.DisableWarning": "Warning: Disabled coins are removed from actor inventories when running Initialize All Characters.",
-    "SFC.Icon": "Icon",
-    "SFC.CoinName": "Coin Name",
-    "SFC.Value": "Value",
-    "SFC.Weight": "Weight",
     "SFC.Yes": "Yes",
     "SFC.No": "No"
 }

@@ -63,8 +63,12 @@ export class Utils {
         await loadTemplates(templates)
     }
 
-    static consoleMessage(type, source, {objects=[], message="", subStr=[]}) {
-        const msg = `${SFC_CONFIG.TITLE} | ${source} :: ${message}`;
+    static showNotification(type, message, options) {
+        const msg = `${SFC_CONFIG.SHORT_TITLE} | ${message}`;
+        return ui.notifications[type](msg, options);
+    }
+    static consoleMessage(type, {objects=[], message="", subStr=[]}) {
+        const msg = `${SFC_CONFIG.TITLE} | ${message}`;
         const params = [];
         if (objects && objects.length) params.push(objects);
         if (msg) params.push(msg);

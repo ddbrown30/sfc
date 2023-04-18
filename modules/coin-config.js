@@ -1,5 +1,6 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
+import { Coins } from "./coins.js";
 
 export class CoinConfig extends FormApplication {
     constructor() {
@@ -49,7 +50,8 @@ export class CoinConfig extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, this.workingCoinMap);
+        await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, this.workingCoinMap);
+        Coins.buildItemDescriptionText();
     }
 
     async restoreDefaults() {
@@ -95,6 +97,10 @@ export class CoinConfig extends FormApplication {
         } else if (name.startsWith("coin-name")) {
             coin.name = event.target.value;
         } else if (name.startsWith("coin-value")) {
+            if (event.target.value < 0) {
+                Utils.showNotification("error", game.i18n.localize("SFC.Errors.NegativeValues"));
+                return this.render();
+            }
             coin.flags.sfc.value = event.target.value;
         } else if (name.startsWith("coin-weight")) {
             coin.system.weight = event.target.value;

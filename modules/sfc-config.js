@@ -1,6 +1,7 @@
 export const NAME = "sfc";
 
 export const TITLE = "SWADE Fantasy Currencies";
+export const SHORT_TITLE = "SFC";
 
 export const PATH = "modules/sfc";
 
@@ -12,8 +13,15 @@ export const DEFAULT_CONFIG = {
         initAllActorsButton: `${PATH}/templates/init-all-actors-button.hbs`,
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
+        itemDescription: `${PATH}/templates/coin-item-description.hbs`,
     },
     coins: {
+        types: {
+            copper: "copper",
+            silver: "silver",
+            gold: "gold",
+            plat: "plat"
+        },
         icons: {
             copper: "icons/commodities/currency/coins-wheat-stack-copper.webp",
             silver: "icons/commodities/currency/coins-shield-sword-stack-silver.webp",
@@ -25,6 +33,12 @@ export const DEFAULT_CONFIG = {
             silver: "Silver coins",
             gold: "Gold coins",
             plat: "Platinum coins"
+        },
+        shortNames: {
+            copper: "cp",
+            silver: "sp",
+            gold: "gp",
+            plat: "pp"
         },
         values: {
             copper: 0.01,
