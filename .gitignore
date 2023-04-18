@@ -118,3 +118,4 @@ dist
 # foundry vtt
 foundry.js
 .vscode/launch.json
+Thumbs.db
