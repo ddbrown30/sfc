@@ -2,10 +2,14 @@
     <div class='coins'>
         <span class='label'>{{currencyName}}:</span>
         <span class='value'>{{numberFormat currencyAmount decimals=2}}</span>
-        
-    {{#each coinData}}
-        <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}'/>
+
+        {{#each coinData}}
+        <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
         <input name='flags.sfc.{{countFlagName}}' type='text' data-dtype='Number' value='{{count}}' />
-    {{/each}}
+        {{/each}}
+
+        {{#if showInitButton}}
+        <button type="button" class="init-button" data-key="init-actor-button"><label>Init Coins</label></button>
+        {{/if}}
     </div>
 </div>

@@ -34,4 +34,13 @@ export function registerSettings() {
         type: CoinConfig,
         restricted: true,
     });
+
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.showInitButton, {
+        name: "SFC.Settings.ShowInitButtonName",
+        hint: "SFC.Settings.ShowInitButtonHint",
+        scope: "world",
+        type: Boolean,
+        config: true,
+        default: SFC_CONFIG.DEFAULT_CONFIG.defaultShowInitButton
+    });
 }

@@ -9,8 +9,9 @@ export const DEFAULT_CONFIG = {
     templates: {
         coinsDisplay: `${PATH}/templates/coins-display.hbs`,
         coinConfig: `${PATH}/templates/coin-config.hbs`,
-        initActorsButton: `${PATH}/templates/init-actors-button.hbs`,
-        initActorsDialog: `${PATH}/templates/init-actors-dialog.hbs`,
+        initAllActorsButton: `${PATH}/templates/init-all-actors-button.hbs`,
+        initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
+        initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
     },
     coins: {
         icons: {
@@ -32,7 +33,8 @@ export const DEFAULT_CONFIG = {
             plat: 10
         },
         weight: 0.02
-    }
+    },
+    defaultShowInitButton: false
 }
 
 export const FLAGS = {
@@ -45,5 +47,6 @@ export const FLAGS = {
 export const SETTING_KEYS = {
     coinMap: "coinMap",
     defaultCoinMap: "defaultCoinMap",
+    showInitButton: "showInitButton",
 }
 

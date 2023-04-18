@@ -15,6 +15,11 @@
     margin-left: 10px;
 }
 
+.sfc .coins > button {
+    background-color:rgba(0, 0, 0, 0.1) !important;
+    border-style: ridge !important;
+}
+
 .sfc .coins > input {
   font-weight: 700;
   max-width: 65px;
