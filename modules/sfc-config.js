@@ -48,7 +48,8 @@ export const DEFAULT_CONFIG = {
         },
         weight: 0.02
     },
-    defaultShowInitButton: false
+    defaultShowInitButton: false,
+    defaultShowCurrency: true
 }
 
 export const FLAGS = {
@@ -62,5 +63,6 @@ export const SETTING_KEYS = {
     coinMap: "coinMap",
     defaultCoinMap: "defaultCoinMap",
     showInitButton: "showInitButton",
+    showCurrency: "showCurrency",
 }
 

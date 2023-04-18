@@ -80,9 +80,10 @@ export class Coins {
         }
 
         const showInitButton = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showInitButton);
+        const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
         const currencyName = game.settings.get("swade", "currencyName");
         const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
-        const templateData = {currencyAmount, currencyName, coinData, showInitButton};
+        const templateData = {currencyAmount, currencyName, coinData, showInitButton, showCurrency};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
         
         //Find the existing currency section and replace it with ours

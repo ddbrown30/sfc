@@ -48,7 +48,9 @@
 
         "Settings": {
             "ShowInitButtonName": "Show Init Coins Button",
-            "ShowInitButtonHint": "When active, an Init Coins button will be added to the character sheet."
+            "ShowInitButtonHint": "When active, an Init Coins button will be added to the character sheet.",
+            "ShowCurrencyName": "Show Currency on Sheet",
+            "ShowCurrencyHint": "When active, the total value of currency will be displayed on the character sheet."
         },
 
         "Errors": {
