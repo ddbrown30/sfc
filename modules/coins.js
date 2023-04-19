@@ -250,6 +250,7 @@ export class Coins {
                 });
             } else {
                 coin.system.quantity = numCoins;
+                coin.system.description = game.sfc.itemDescription;
                 createData.push(coin);
             }
 

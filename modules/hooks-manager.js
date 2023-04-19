@@ -1,6 +1,7 @@
 import { Utils } from "./utils.js";
 import { registerSettings } from "./settings.js";
 import { Coins } from "./coins.js";
+import { CoinAPI } from "./coin-api.js";
 
 export class HooksManager {
     /**
@@ -15,6 +16,7 @@ export class HooksManager {
 
             Utils.loadTemplates();
             registerSettings();
+            CoinAPI.registerAPIFunctions();
         });
 
         Hooks.on("ready", () => {

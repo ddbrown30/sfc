@@ -14,6 +14,7 @@ export const DEFAULT_CONFIG = {
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
         itemDescription: `${PATH}/templates/coin-item-description.hbs`,
+        purchaseDialog: `${PATH}/templates/purchase-dialog.hbs`,
     },
     coins: {
         types: {
