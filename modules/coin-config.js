@@ -44,9 +44,6 @@ export class CoinConfig extends FormApplication {
         inputs.on("change", event => this.onChangeInputs(event));
         html.find('#reset').click(() => this.restoreDefaults());
         html.find('#submit').click(() => this.close());
-        html
-            .find('.attributes')
-            .on('click', '.attribute-control', (e) => this._onClickAttributeControl(e));
     }
 
     async _updateObject(event, formData) {
