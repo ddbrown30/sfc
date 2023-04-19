@@ -99,6 +99,8 @@ export class Coins {
         currencySection.remove();        
 
         const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
+
+        //Respond to the init actor button
         html.find('[data-key="init-actor-button"]').click(ev => {
             const dialog = new Dialog({
                 title: game.i18n.localize("SFC.InitActors.SingleLabel"),
@@ -250,6 +252,7 @@ export class Coins {
                 });
             } else {
                 coin.system.quantity = numCoins;
+                coin.system.description = game.sfc.itemDescription;
                 createData.push(coin);
             }
 
