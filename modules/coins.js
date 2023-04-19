@@ -152,6 +152,7 @@ export class Coins {
         let actor = doc.actor;
         if ((typeof quantity !== "undefined") && type && actor) {
             this.refreshCurrency(actor);
+            await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
     }
     
@@ -231,15 +232,15 @@ export class Coins {
             }
 
             if (coinItem) {
-                await coinItem.updateSource({
+                updateData.push({
+                    _id: coinItem.id,
                     "name": coin.name,
                     "img": coin.img,
                     "system.quantity": numCoins,
                     "system.weight": coin.system.weight,
-                    "system.description": game.sfc.itemDescription
+                    "system.description": game.sfc.itemDescription,
+                    "flags.sfc.value": coin.flags.sfc.value
                 });
-                await coinItem.setFlag(SFC_CONFIG.NAME, "value", coin.flags.sfc.value);
-                updateData.push(coinItem);
             } else {
                 coin.system.quantity = numCoins;
                 createData.push(coin);
@@ -254,7 +255,7 @@ export class Coins {
         if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
         if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
 
-        for (let cd of countData ) {            
+        for (let cd of countData ) {
             await actor.setFlag(SFC_CONFIG.NAME, cd.flagName, cd.numCoins);
         }
 
