@@ -96,6 +96,8 @@ export class CoinConfig extends FormApplication {
             coin.img = event.target.value;
         } else if (name.startsWith("coin-name")) {
             coin.name = event.target.value;
+        } else if (name.startsWith("coin-shortname")) {
+            coin.flags.sfc.shortName = event.target.value;
         } else if (name.startsWith("coin-value")) {
             if (event.target.value < 0) {
                 Utils.showNotification("error", game.i18n.localize("SFC.Errors.NegativeValues"));

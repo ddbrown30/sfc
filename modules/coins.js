@@ -14,6 +14,13 @@ export class Coins {
         if (!Object.values(game.sfc.coinMap).length) {
             Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, duplicate(defaultMap));
         }
+        
+        //Since I added shortName after release, I need to set a default value to it for people who already had a saved coinMap
+        for (const coin of Object.values(game.sfc.coinMap)) {
+            if ((typeof coin.flags.sfc.shortName === "undefined")) {
+                coin.flags.sfc.shortName = defaultMap[coin.flags.sfc.type].flags.sfc.shortName;
+            }
+        }
 
         Coins.buildItemDescriptionText();
     }

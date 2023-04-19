@@ -13,7 +13,7 @@
 
         {{#each coinDatas}}
         <tr>
-            <td>{{name}} ({{shortName}})</td>
+            <td>{{name}} {{#if shortName}}({{shortName}}){{/if}}</td>
             {{#each columns}}
             <td class="centered">{{this}}</td>
             {{/each}}
