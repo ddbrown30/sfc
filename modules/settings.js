@@ -35,15 +35,6 @@ export function registerSettings() {
         restricted: true,
     });
 
-    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.showInitButton, {
-        name: "SFC.Settings.ShowInitButtonName",
-        hint: "SFC.Settings.ShowInitButtonHint",
-        scope: "world",
-        type: Boolean,
-        config: true,
-        default: SFC_CONFIG.DEFAULT_CONFIG.defaultShowInitButton
-    });
-
     Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.showCurrency, {
         name: "SFC.Settings.ShowCurrencyName",
         hint: "SFC.Settings.ShowCurrencyHint",

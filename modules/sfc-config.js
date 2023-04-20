@@ -14,6 +14,7 @@ export const DEFAULT_CONFIG = {
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
         itemDescription: `${PATH}/templates/coin-item-description.hbs`,
+        coinManager: `${PATH}/templates/coin-manager.hbs`,
     },
     coins: {
         types: {
@@ -48,7 +49,6 @@ export const DEFAULT_CONFIG = {
         },
         weight: 0.02
     },
-    defaultShowInitButton: false,
     defaultShowCurrency: true
 }
 
@@ -62,7 +62,6 @@ export const FLAGS = {
 export const SETTING_KEYS = {
     coinMap: "coinMap",
     defaultCoinMap: "defaultCoinMap",
-    showInitButton: "showInitButton",
     showCurrency: "showCurrency",
 }
 

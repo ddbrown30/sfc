@@ -1,0 +1,97 @@
+<form autocomplete='off' id="coin-manager-grid" class='main-grid'>
+  <nav class='tabs coin-manager'>
+    <a class='item active' data-tab='add-remove'>
+      <i class="fas fa-plus-minus"></i>
+      {{localize 'SFC.CoinManager.AddRemoveTab'}}
+    </a>
+    <a class='item' data-tab='exchange'>
+      <i class='fas fa-coins'></i>
+      {{localize 'SFC.CoinManager.ExchangeTab'}}
+    </a>
+    <a class='item' data-tab='system'>
+      <i class='fas fa-cogs'></i>
+      {{localize 'SFC.CoinManager.SystemTab'}}
+    </a>
+  </nav>
+  <section id="coin-manager-sheet-body" class='sheet-body'>
+    <section class='tab active' data-tab='add-remove'>
+      <p>{{localize "SFC.CoinManager.AddDescription"}}</p>
+      <p>{{localize "SFC.CoinManager.RemoveDescription"}}</p>
+      <p>{{localize "SFC.CoinManager.AddRemoveWarning"}}</p>
+      <div class='sfc'>
+        <div class='coins'>
+          <select id="behaviour">
+            <option value="coins" {{#if (eq behaviour "coins" )}}selected{{/if}}>{{localize "SFC.CoinManager.UseCoins"}}</option>
+            <option value="currency" {{#if (eq behaviour "currency" )}}selected{{/if}}>{{localize "SFC.CoinManager.UseCurrency"}}</option>
+          </select>
+        </div>
+      </div>
+      <div class='sfc' style="padding-top: 10px; padding-bottom: 10px;">
+        <div class='coins'>
+          {{#if (eq behaviour "currency")}}
+          <label for="currency" style="padding-right: 10px">{{localize "SFC.CoinManager.CurrencyLabel"}}</label>
+          <input name='currency' type='number' min="0" step="any" data-dtype='Number' />
+          {{else}}
+          {{#each coinData}}
+          <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
+          <input name='coin-{{type}}' type='number' min="0" step="1" data-dtype='Number' />
+          {{/each}}
+          {{/if}}
+        </div>
+      </div>
+      <div class='flexrow'>
+        <button type='button' name='add' id='add'>
+          <i class="fas fa-circle-plus"></i> {{localize "SFC.CoinManager.AddButton"}}
+        </button>
+        <button type='button' name='remove' id='remove'>
+          <i class="fas fa-circle-minus"></i> {{localize "SFC.CoinManager.RemoveButton"}}
+        </button>
+      </div>
+    </section>
+    <section class='tab' data-tab='exchange'>
+      <p>{{localize "SFC.CoinManager.ExchangeAllDescription"}}</p>
+      <button type='button' name='exchange-all' id='exchange-all-button'>
+        <i class="fas fa-arrow-right-arrow-left"></i> {{localize "SFC.CoinManager.ExchangeAllButton"}}
+      </button>
+      <br>
+      <br>
+      <p>{{localize "SFC.CoinManager.ExchangeDescription"}}</p>
+      <table>
+        <tbody>
+          <tr>
+            <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeAmount'}}</th>
+            <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeFrom'}}</th>
+            <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeTo'}}</th>
+          </tr>
+
+          <tr>
+            <td><input name='exchange-amount' type='number' min="0" step="1" data-dtype='Number' /></td>
+
+            <td>
+              <select name='exchange-from' id="exchange-from">
+              {{#each coinData}}              
+              <option value="coin-{{type}}">{{name}}</option>
+              {{/each}}
+            </select>
+            </td>
+            <td>
+            <select name='exchange-to' id="exchange-to">
+              {{#each coinData}}
+              <option value="coin-{{type}}">{{name}}</option>
+              {{/each}}
+            </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type='button' name='exchange' id='exchange-button'>
+        <i class="fas fa-right-to-line"></i> {{localize "SFC.CoinManager.ExchangeButton"}}
+      </button>
+    </section>
+    <section class='tab' data-tab='system'>
+      <button type="button" class="sfc coins manager-button" id="init-actor-button">
+        <i class="fas fa-arrow-rotate-right"></i> {{localize "SFC.CoinManager.InitButton"}}
+      </button>
+    </section>
+  </section>
+</form>
