@@ -14,9 +14,6 @@
             <input name='flags.sfc.{{countFlagName}}' type='number' data-dtype='Number' value='{{count}}' />
         </div>
         {{/each}}
-        {{#if showInitButton}}
-        <button type="button" class="button init-button" data-key="init-actor-button">Init Coins</button>
-        {{/if}}
-        <button type="button" class="coins manager-button" id="manager-button"><label>{{localize "SFC.CoinManager.ButtonName"}}</label></button>
+        <button type="button" class="coins manager-button" id="manager-button">{{localize "SFC.CoinManager.ButtonName"}}</button>
     </div>
 </div>
