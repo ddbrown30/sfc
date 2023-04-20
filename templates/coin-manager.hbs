@@ -13,7 +13,7 @@
       {{localize 'SFC.CoinManager.SystemTab'}}
     </a>
   </nav>
-  <section id="coin-manager-sheet-body" class='sheet-body'>
+  <section id="coin-manager-sheet-body" class='sheet-body sfc'>
     <section class='tab active' data-tab='add-remove'>
       <p>{{localize "SFC.CoinManager.AddDescription"}}</p>
       <p>{{localize "SFC.CoinManager.RemoveDescription"}}</p>
@@ -69,7 +69,7 @@
 
             <td>
               <select name='exchange-from' id="exchange-from">
-              {{#each coinData}}              
+              {{#each coinData}}
               <option value="coin-{{type}}">{{name}}</option>
               {{/each}}
             </select>
