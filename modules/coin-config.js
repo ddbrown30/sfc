@@ -14,19 +14,9 @@ export class CoinConfig extends FormApplication {
             id: 'coin-config',
             title: game.i18n.localize('SFC.CoinConfig.Name'),
             template: SFC_CONFIG.DEFAULT_CONFIG.templates.coinConfig,
-            classes: ['setting-config', 'sheet'],
-            tabs: [
-                {
-                    navSelector: '.tabs',
-                    contentSelector: '.sheet-body',
-                    initial: 'basics',
-                },
-            ],
-            scrollY: ['.sheet-body .tab'],
             width: 600,
             height: 700,
-            resizable: false,
-            closeOnSubmit: false
+            resizable: false
         });
     }
 
@@ -40,10 +30,14 @@ export class CoinConfig extends FormApplication {
 
     activateListeners(html) {
         super.activateListeners(html);
-        const inputs = html.find("input");
-        inputs.on("change", event => this.onChangeInputs(event));
         html.find('#reset').click(() => this.restoreDefaults());
-        html.find('#submit').click(() => this.close());
+        html.find('#save').click(() => {
+            if (this.form.checkValidity()) {
+                this.submit();
+            } else {
+                this.form.reportValidity();
+            }
+        });
     }
 
     async _updateObject(event, formData) {
@@ -78,14 +72,12 @@ export class CoinConfig extends FormApplication {
         this.render(true);
     }
 
-    async onChangeInputs(event) {
+    async _onChangeInput(event) {
         const name = event.target.name;
         const row = event.target.name.split("-").pop();
         if (!row) {
             return;
         }
-
-        event.preventDefault();
         
         let coin = this.workingCoinMap[row];
 
@@ -96,10 +88,6 @@ export class CoinConfig extends FormApplication {
         } else if (name.startsWith("coin-shortname")) {
             coin.flags.sfc.shortName = event.target.value;
         } else if (name.startsWith("coin-value")) {
-            if (event.target.value < 0) {
-                Utils.showNotification("error", game.i18n.localize("SFC.Errors.NegativeValues"));
-                return this.render();
-            }
             coin.flags.sfc.value = event.target.value;
         } else if (name.startsWith("coin-weight")) {
             coin.system.weight = event.target.value;
@@ -107,6 +95,7 @@ export class CoinConfig extends FormApplication {
             coin.flags.sfc.enabled = event.target.checked;
         }
 
-        return this.render();
+        event.target.blur();
+        event.target.reportValidity();
     }
 }
