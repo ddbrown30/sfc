@@ -17,24 +17,20 @@
                     <div class="coin">
                         <div class="wrapper-rel">
                             <label for="coin-name-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Name"}}</label>
-                            <input type="text" name="coin-name-{{key}}" title="Coin" value="{{coin.name}}"
-                                class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.Name"}}' data-dtype="String">
+                            <input type="text" name="coin-name-{{key}}" title="Coin" value="{{coin.name}}" class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.Name"}}' data-dtype="String">
                         </div>
                         <div class="wrapper-rel">
                             <label for="coin-shortname-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.ShortName"}}</label>
-                            <input type="text" name="coin-shortname-{{key}}" title="Coin" value="{{coin.flags.sfc.shortName}}"
-                                class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.ShortName"}}' data-dtype="String">
+                            <input type="text" name="coin-shortname-{{key}}" title="Coin" value="{{coin.flags.sfc.shortName}}" class="coin coin-text-input" placeholder='{{localize "SFC.CoinConfigItem.ShortName"}}' data-dtype="String">
                         </div>
                     </div>
                 </div>
                 <div class="flexrow path">
                     <div class="wrapper-rel">
                         <label for="icon-path-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Icon"}}</label>
-                        <input type="text" name="icon-path-{{key}}" title="Icon Path" class="icon-path coin-text-input"
-                            value="{{coin.img}}" placeholder="/icons/example.svg" data-dtype="String">
+                        <input type="text" name="icon-path-{{key}}" title="Icon Path" class="icon-path coin-text-input" value="{{coin.img}}" placeholder="/icons/example.svg" data-dtype="String">
                     </div>
-                    <button type="button" name="file-picker-{{key}}" class="file-picker" data-type="image"
-                        data-target="icon-path-{{key}}" title="Browse Files" tabindex="-1">
+                    <button type="button" name="file-picker-{{key}}" class="file-picker" data-type="image" data-target="icon-path-{{key}}" title="Browse Files" tabindex="-1">
                         <i class="fas fa-file-import fa-fw"></i>
                     </button>
                 </div>
@@ -45,13 +41,11 @@
                 <div class="flexrow path">
                     <div class="wrapper-rel">
                         <label for="coin-value-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Value"}}</label>
-                        <input type="number" name="coin-value-{{key}}" title="Value" class="value coin-text-input" min="0" step="any"
-                            value="{{coin.flags.sfc.value}}" placeholder='{{localize "SFC.CoinConfigItem.Value" }}' data-dtype="Number">
+                        <input type="number" name="coin-value-{{key}}" title="Value" class="value coin-text-input" min="0" step="any" value="{{coin.flags.sfc.value}}" placeholder='{{localize "SFC.CoinConfigItem.Value" }}' data-dtype="Number">
                     </div>
                     <div class="wrapper-rel">
                         <label for="coin-weight-{{key}}" class="inset-label">{{localize "SFC.CoinConfigItem.Weight"}}</label>
-                        <input type="number" name="coin-weight-{{key}}" title="Weight" class="weight coin-text-input" min="0" step="any"
-                            value="{{coin.system.weight}}" placeholder='{{localize "SFC.CoinConfigItem.Weight"}}' data-dtype="Number">
+                        <input type="number" name="coin-weight-{{key}}" title="Weight" class="weight coin-text-input" min="0" step="any" value="{{coin.system.weight}}" placeholder='{{localize "SFC.CoinConfigItem.Weight"}}' data-dtype="Number">
                     </div>
                 </div>
             </div>

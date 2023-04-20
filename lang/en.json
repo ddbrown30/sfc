@@ -14,7 +14,7 @@
                 "Contents7": "If the actor does not have a coin in its inventory at this time, it will be treated as 0.",
                 "Contents8": "For more information, visit the SFC project page.",
                 "Contents9": "This process can not be undone. Are you sure you would like to continue?",
-                "BehaviourOptions":{
+                "BehaviourOptions": {
                     "KeepCurrencyValue": "Keep Currency",
                     "KeepCurrencyTitle": "Generates coin quantities based on currency",
                     "KeepCoinsValue": "Keep Coins",
@@ -29,7 +29,7 @@
             "Hint": "Configure the coins in your game. You will need to run Initialize All Characters after making any changes.",
             "RestoreDefaultsButton": "Restore Defaults",
             "RestoreDefaultsTitle": "Restore Defaults",
-            "RestoreDefaultsContents":"<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>"
+            "RestoreDefaultsContents": "<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>"
         },
 
         "CoinConfigItem": {
@@ -46,14 +46,50 @@
             "CoinHeader": "Coin"
         },
 
+        "CoinManager": {
+            "Name": "Coin Manager",
+            "ButtonName": "Manage",
+            "AddRemoveTab": "Add/Remove Coins",
+            "ExchangeTab": "Coin Exchange",
+            "SystemTab": "System",
+            "AddDescription": "When adding currency, higher value coins will be added first. When adding coins, the number of each coin entered will be added.",
+            "RemoveDescription": "When removing with either method, the lowest value coins will be removed first, converting higher value coins into smaller value coins as necessary.",
+            "AddRemoveWarning": "Warning: If your coin values do not evenly divide into each other or if you try to remove an amount that does not evenly divide into your coin values, the remainders will be lost.",
+            "UseCurrency": "Use Currency",
+            "UseCoins": "Use Coins",
+            "CurrencyLabel": "Currency",
+            "AddButton": "Add",
+            "RemoveButton": "Remove",
+            "ExchangeAllDescription": "Exchange All will reduce the character's coins to the minimum number while retaining value e.g. 650 copper becomes 6 gold and 5 silver.",
+            "ExchangeAllButton": "Exchange All",
+            "ExchangeDescription": "Exchange will attempt to convert the entered amount of coins from the first type to the second.",
+            "ExchangeAmount": "Amount",
+            "ExchangeFrom": "From",
+            "ExchangeTo": "To",
+            "ExchangeButton": "Exchange",
+            "InitButton": "Initialize Character",
+
+            "Dialog": {
+                "AddConfirmTitle": "Add Coins",
+                "AddConfirmContent": "<p>Add coins to this character?</p><br>",
+                "RemoveConfirmTitle": "Remove Coins",
+                "RemoveConfirmContent": "<p>Remove coins from this character?</p><br>",
+                "ExchangeAllConfirmTitle": "Exchange All Coins",
+                "ExchangeAllConfirmContent": "<p>Exchange all the coins for this character?</p><br>",
+                "ExchangeConfirmTitle": "Exchange Coins",
+                "ExchangeConfirmContent": "<p>Exchange coins for this character?</p><br>"
+            }
+        },
+
         "Settings": {
-            "ShowInitButtonName": "Show Init Coins Button",
-            "ShowInitButtonHint": "When active, an Init Coins button will be added to the character sheet.",
             "ShowCurrencyName": "Show Currency on Sheet",
             "ShowCurrencyHint": "When active, the total value of currency will be displayed on the character sheet."
+        },
+
+        "Errors": {
+            "CannotAfford": "Cannot afford"
         }
     },
-
     "SFC.DisableWarning": "Warning: Disabled coins are removed from actor inventories when running Initialize All Characters.",
     "SFC.Yes": "Yes",
     "SFC.No": "No"

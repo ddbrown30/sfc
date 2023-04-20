@@ -7,6 +7,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
+    align-items: center;
 }
 
 .sfc .coins .value {
@@ -15,9 +16,9 @@
     margin-left: 10px;
 }
 
-.sfc .coins > button {
-    background-color:rgba(0, 0, 0, 0.1) !important;
-    border-style: ridge !important;
+.sfc.coins.manager-button.manager-button {
+    /* background-color:rgba(0, 0, 0, 0.1); */
+    border-style: ridge;
 }
 
 .sfc .coins > input {
@@ -60,7 +61,7 @@
 }
 
 .coin-config .flexcol.text-entry .path,
-.coin-config  .flexcol.text-entry .coin {
+.coin-config .flexcol.text-entry .coin {
     display: flex;
     flex: 1;
     /* margin: 0px 3px 3px 0px; */
@@ -76,4 +77,17 @@
 
 .coin-config .flexcol {
     margin: 3px;
+}
+
+.coin-manager.tabs {
+    grid-row: 1;
+}
+
+#coin-manager-sheet-body {
+    margin: 10px;
+}
+
+#coin-manager-grid {
+    display: block;
+    margin: 10px;
 }

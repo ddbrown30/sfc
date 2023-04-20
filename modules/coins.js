@@ -1,5 +1,6 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
+import { CoinManager } from "./coin-manager.js"
 
 export class Coins {
 
@@ -86,44 +87,20 @@ export class Coins {
             }
         }
 
-        const showInitButton = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showInitButton);
         const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
         const currencyName = game.settings.get("swade", "currencyName");
         const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
-        const templateData = {currencyAmount, currencyName, coinData, showInitButton, showCurrency};
+        const templateData = {currencyAmount, currencyName, coinData, showCurrency};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
         
         //Find the existing currency section and replace it with ours
         const currencySection = html[0].querySelector("div.form-group.currency");
         currencySection.parentNode.insertAdjacentHTML("afterend", content);
-        currencySection.remove();        
-
-        const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
+        currencySection.remove();
 
         //Respond to the init actor button
-        html.find('[data-key="init-actor-button"]').click(ev => {
-            const dialog = new Dialog({
-                title: game.i18n.localize("SFC.InitActors.SingleLabel"),
-                content: dialogContent,
-                buttons: {
-                    yes: {
-                        icon: `<i class="fa fa-check"></i>`,
-                        label: game.i18n.localize("SFC.Yes"),
-                        callback: async (html) => {
-                            const behaviour = html.find(`#behaviour`)[0].value;
-                            const keepCurrency = behaviour == "keep-coins" ? false  : true;
-                            await Coins.initActorInventory(actor, keepCurrency);
-                        }
-                    },
-                    no: {
-                        icon: `<i class="fa fa-times"></i>`,
-                        label: game.i18n.localize("SFC.No"),
-                        callback: event => { }
-                    }
-                },
-                default: "no"
-            });
-            dialog.render(true);
+        html.find('[id="manager-button"]').click(ev => {
+            new CoinManager(actor, app).render(true);
         });
     }
 
