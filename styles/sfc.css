@@ -1,30 +1,45 @@
-.sfc img.coin-icon {
-    height: var(--form-field-height);
-}
-
 .sfc .coins {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: start;
+    gap: .5em;
+}
+
+.sfc .currency-display {
+  width: 100%;
+  white-space: nowrap;
 }
 
 .sfc .coins .value {
     font-weight: 700;
-    width: 80px;
-    margin-left: 10px;
+}
+.sfc .coin-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items:stretch;
+  flex-wrap: nowrap;
 }
 
-.sfc .coins > button {
-    background-color:rgba(0, 0, 0, 0.1) !important;
-    border-style: ridge !important;
+.sfc .coin-group .coin-icon {
+  height: var(--form-field-height);
+  border-radius: 3px 0 0 3px;
+  object-fit: contain;
+  min-width: 26px;
 }
 
-.sfc .coins > input {
+.sfc .coin-group input {
+  border-radius: 0 3px 3px 0;
   font-weight: 700;
-  max-width: 65px;
-  margin-right: 10px;
 }
+
+.swade-official .sfc .coins .init-button {
+    background-color:rgba(0, 0, 0, 0.1) !important;
+    margin: 0;
+    padding: 0 .5em;
+    border-radius: 3px;
+    height: var(--form-field-height);
+    white-space: nowrap;
+}
+
 
 .coin-config .icon {
     flex: 0 0 60px;
