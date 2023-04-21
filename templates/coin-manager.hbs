@@ -13,7 +13,7 @@
       {{localize 'SFC.CoinManager.SystemTab'}}
     </a>
   </nav>
-  <section id="coin-manager-sheet-body" class='sheet-body'>
+  <section id="coin-manager-sheet-body" class='sheet-body sfc'>
     <section class='tab active' data-tab='add-remove'>
       <p>{{localize "SFC.CoinManager.AddDescription"}}</p>
       <p>{{localize "SFC.CoinManager.RemoveDescription"}}</p>
@@ -29,12 +29,16 @@
       <div class='sfc' style="padding-top: 10px; padding-bottom: 10px;">
         <div class='coins'>
           {{#if (eq behaviour "currency")}}
-          <label for="currency" style="padding-right: 10px">{{localize "SFC.CoinManager.CurrencyLabel"}}</label>
-          <input name='currency' type='number' min="0" step="any" data-dtype='Number' />
+          <div class="coin-group">
+            <label for="currency" style="padding-right: 10px">{{localize "SFC.CoinManager.CurrencyLabel"}}</label>
+            <input name='currency' type='number' min="0" step="any" data-dtype='Number' />
+          </div>
           {{else}}
           {{#each coinData}}
-          <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
-          <input name='coin-{{type}}' type='number' min="0" step="1" data-dtype='Number' />
+          <div class="coin-group">
+            <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
+            <input name='coin-{{type}}' type='number' min="0" step="1" data-dtype='Number' />
+          </div>
           {{/each}}
           {{/if}}
         </div>
@@ -69,7 +73,7 @@
 
             <td>
               <select name='exchange-from' id="exchange-from">
-              {{#each coinData}}              
+              {{#each coinData}}
               <option value="coin-{{type}}">{{name}}</option>
               {{/each}}
             </select>

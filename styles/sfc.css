@@ -1,30 +1,53 @@
-.sfc img.coin-icon {
-    height: var(--form-field-height);
-}
-
 .sfc .coins {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
+    gap: 0.5em;
+}
+
+.sfc .currency-display {
+    width: 100%;
+    white-space: nowrap;
 }
 
 .sfc .coins .value {
     font-weight: 700;
-    width: 80px;
-    margin-left: 10px;
 }
 
-.sfc.coins.manager-button.manager-button {
-    /* background-color:rgba(0, 0, 0, 0.1); */
-    border-style: ridge;
+.sfc .coin-group {
+    display: flex;
+    flex-wrap: nowrap;
 }
 
-.sfc .coins > input {
-  font-weight: 700;
-  max-width: 65px;
-  margin-right: 10px;
+.sfc .coin-group .coin-icon {
+    height: var(--form-field-height);
+    border-radius: 3px 0 0 3px;
+    object-fit: contain;
+    min-width: 26px;
+}
+
+.swade-official .sfc .coins.manager-button,
+.swpf-sheet .sfc .coins.manager-button,
+.swade-official .sfc.coins.manager-button,
+.swpf-sheet .sfc.coins.manager-button {
+    display: flex;
+    align-items: center;
+    height: var(--form-field-height);
+    margin: 0;
+    padding: 1px 6px;
+    height: 34px;
+    line-height: 28px;
+    white-space: nowrap;
+    border: 2px groove var(--color-border-light-highlight);
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.swade-official .sfc .coins.manager-button,
+.swpf-sheet .sfc .coins.manager-button {
+    height: 27px;
+}
+
+.sfc .coin-group input {
+    border-radius: 0 3px 3px 0;
+    font-weight: 700;
 }
 
 .coin-config .icon {
