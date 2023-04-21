@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+* Tweaked CSS for better button appearance (Thanks kristianserrano!)
+* Refactored the data structure and did a bunch of code cleanup
+
 ## 0.4.0
 
 * Added a coin manager to the character sheet
