@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3
+
+* We now save the migrated map
+
 ## 0.4.2
 
 * Fix display bug when currency is hidden
