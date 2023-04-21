@@ -9,18 +9,26 @@ export class Coins {
     /* -------------------------------------------- */
 
     static async onReady() {
-        const defaultMap = Coins.createDefaultCoinMap();
+        const defaultMap = Coins.createDefaultCoinDataMap();
 
-        game.sfc.coinMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinMap);
-        if (!Object.values(game.sfc.coinMap).length) {
-            Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, duplicate(defaultMap));
+        game.sfc.coinDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
+        if (!Object.values(game.sfc.coinDataMap).length) {
+            Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, duplicate(defaultMap));
         }
-        
-        //Since I added shortName after release, I need to set a default value to it for people who already had a saved coinMap
-        for (const coin of Object.values(game.sfc.coinMap)) {
-            if ((typeof coin.flags.sfc.shortName === "undefined")) {
-                coin.flags.sfc.shortName = defaultMap[coin.flags.sfc.type].flags.sfc.shortName;
+
+        //Migration of old coin map to the new one
+        if ((typeof game.sfc.coinDataMap["copper"].enabled === "undefined")) {
+            let newMap = duplicate(defaultMap);
+            for (const oldCoinData of Object.values(game.sfc.coinDataMap)) {
+                let newCoinData = newMap[oldCoinData.flags.sfc.type];
+                newCoinData.enabled = oldCoinData.flags.sfc.enabled;
+                newCoinData.img = oldCoinData.img;
+                newCoinData.name = oldCoinData.name;
+                newCoinData.shortName = oldCoinData.flags.sfc.shortName;
+                newCoinData.value = oldCoinData.flags.sfc.value;
+                newCoinData.weight = oldCoinData.system.weight;
             }
+            game.sfc.coinDataMap = newMap;
         }
 
         Coins.buildItemDescriptionText();
@@ -69,20 +77,20 @@ export class Coins {
         }
         
         //Sort the coins from highest value to lowest
-        let coinArray = Object.values(game.sfc.coinMap);
-        coinArray.sort((a, b) => {
-            return b.flags.sfc.value - a.flags.sfc.value;
+        let coinDataArray = Object.values(game.sfc.coinDataMap);
+        coinDataArray.sort((a, b) => {
+            return b.value - a.value;
         });
 
         //Create an array of processed data for handlebars to use
-        let coinData = [];
-        for (const coin of coinArray) {
-            if (coin.flags.sfc.enabled) {
-                coinData.push({
-                    name: coin.name,
-                    img: coin.img,
-                    count: actor.flags.sfc ? actor.flags.sfc[coin.flags.sfc.countFlagName] : 0,
-                    countFlagName: coin.flags.sfc.countFlagName
+        let coinTemplateData = [];
+        for (const coinData of coinDataArray) {
+            if (coinData.enabled) {
+                coinTemplateData.push({
+                    name: coinData.name,
+                    img: coinData.img,
+                    count: actor.flags.sfc ? actor.flags.sfc[coinData.countFlagName] : 0,
+                    countFlagName: coinData.countFlagName
                 });
             }
         }
@@ -90,7 +98,7 @@ export class Coins {
         const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
         const currencyName = game.settings.get("swade", "currencyName");
         const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
-        const templateData = {currencyAmount, currencyName, coinData, showCurrency};
+        const templateData = {currencyAmount, currencyName, coinTemplateData, showCurrency};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
         
         //Find the existing currency section and replace it with ours
@@ -110,11 +118,11 @@ export class Coins {
             return;
         }
 
-        for (const coin of Object.values(game.sfc.coinMap)) {
-            const count = Utils.getFlag(updateData, coin.flags.sfc.countFlagName);
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            const count = Utils.getModuleFlag(updateData, coinData.countFlagName);
             if ((typeof count !== "undefined")) {
                 //This is an update to the count of one of our coins. Find the coin item and update it
-                let coinItem = actor.items.find(item => Utils.getFlag(item, "type") == Utils.getFlag(coin, "type"));
+                let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
                 if (!coinItem) {
                     //The actor doesn't have this coin item. Create it if needed
                     if (count == 0) {
@@ -122,7 +130,7 @@ export class Coins {
                         continue;
                     }
 
-                    coinItem = await Coins.addCoinItem(actor, coin);
+                    coinItem = await Coins.addCoinItem(actor, coinData);
                 }
 
                 if (coinItem.system.quantity != count) {
@@ -160,10 +168,10 @@ export class Coins {
     static async refreshCurrency(actor) {
         //Loop over all the coins in our inventory to calculate our total currency
         let totalCurrency = 0;
-        for (const coin of Object.values(game.sfc.coinMap)) {
-            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coin.flags.sfc.type);
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
             if (coinItem) {
-                totalCurrency += coinItem.system.quantity * coin.flags.sfc.value;
+                totalCurrency += coinItem.system.quantity * coinData.value;
             }
         }
         
@@ -190,14 +198,14 @@ export class Coins {
         let countData = [];
 
         //Sort the coins by highest to lowest value so that we convert currency to the fewest total coins
-        let coinArray = duplicate(Object.values(game.sfc.coinMap));
-        coinArray.sort((a, b) => {
-            return b.flags.sfc.value - a.flags.sfc.value;
+        let coinDataArray = duplicate(Object.values(game.sfc.coinDataMap));
+        coinDataArray.sort((a, b) => {
+            return b.value - a.value;
         });
 
-        for (const coin of coinArray) {
-            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coin.flags.sfc.type);
-            if (!coin.flags.sfc.enabled) {
+        for (const coinData of coinDataArray) {
+            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
+            if (!coinData.enabled) {
                 if (coinItem) {
                     deleteData.push(coinItem.id);
                 }
@@ -207,7 +215,7 @@ export class Coins {
             let numCoins = 0;
             if (keepCurrency) {
                 //If we're keeping currency, we want to make as many coins as will divide evenly into our remaining currency
-                const valueInt = Math.floor(coin.flags.sfc.value * 1000);
+                const valueInt = Math.floor(coinData.value * 1000);
                 numCoins = Math.floor(remainingCurrencyInt / valueInt);
 
                 //Subtract the value of the coins we just created from the remaining currency
@@ -220,29 +228,27 @@ export class Coins {
             if (coinItem) {
                 updateData.push({
                     _id: coinItem.id,
-                    "name": coin.name,
-                    "img": coin.img,
+                    "name": coinData.name,
+                    "img": coinData.img,
                     "system.quantity": numCoins,
-                    "system.weight": coin.system.weight,
-                    "system.description": game.sfc.itemDescription,
-                    "flags.sfc.value": coin.flags.sfc.value
+                    "system.weight": coinData.weight,
+                    "system.description": game.sfc.itemDescription
                 });
             } else {
-                coin.system.quantity = numCoins;
-                coin.system.description = game.sfc.itemDescription;
-                createData.push(coin);
+                const itemData = this.buildItemDataFromCoinData(coinData);
+                createData.push(itemData);
             }
 
             //Set the count flag for this coin type on the actor, as the UI doesn't use the items directly
             //We push it here and actually set it later because this will trigger an update in the actor before we're ready to handle it
-            countData.push({flagName: coin.flags.sfc.countFlagName, numCoins: numCoins});
+            countData.push({flagName: coinData.countFlagName, numCoins: numCoins});
         }
         
         if (createData.length) await actor.createEmbeddedDocuments("Item", createData);
         if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
         if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
 
-        for (let cd of countData ) {
+        for (let cd of countData) {
             await actor.setFlag(SFC_CONFIG.NAME, cd.flagName, cd.numCoins);
         }
 
@@ -252,91 +258,79 @@ export class Coins {
         }
     }
 
-    static async addCoinItem(actor, coin) {
-        const createdItems = await actor.createEmbeddedDocuments("Item", [coin]);
+    static buildItemDataFromCoinData(coinData) {
+        return {
+            type: 'gear',
+            name: coinData.name,
+            img: coinData.img,
+            flags: {
+                sfc: {
+                    type: coinData.type,
+                    countFlagName: coinData.countFlagName
+                }
+            },
+            system: {
+                quantity: 0,
+                weight: coinData.weight,
+                description: game.sfc.itemDescription
+            }
+        };
+    }
+
+    static async addCoinItem(actor, coinData) {
+        const itemData = this.buildItemDataFromCoinData(coinData);
+        const createdItems = await actor.createEmbeddedDocuments("Item", [itemData]);
         return createdItems[0];
     }
 
-    static createDefaultCoinMap() {
+    static createDefaultCoinDataMap() {
         let defaultMap = {};
 
         defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper] = {
+            enabled: true,
             name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.copper,
-            type: 'gear',
             img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.copper,
-            flags: {
-                sfc: {
-                    value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.copper,
-                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper,
-                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.copper,
-                    countFlagName: SFC_CONFIG.FLAGS.copperCount,
-                    enabled: true
-                }
-            },
-            system: {
-                quantity: 0,
-                weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
-            }
-        };
-        
-        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver] = {
-            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.silver,
-            type: 'gear',
-            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.silver,
-            flags: {
-                sfc: {
-                    value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.silver,
-                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver,
-                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.silver,
-                    countFlagName: SFC_CONFIG.FLAGS.silverCount,
-                    enabled: true
-                }
-            },
-            system: {
-                quantity: 0,
-                weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
-            }
-        };
-        
-        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold] = {
-            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.gold,
-            type: 'gear',
-            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.gold,
-            flags: {
-                sfc: {
-                    value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.gold,
-                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold,
-                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.gold,
-                    countFlagName: SFC_CONFIG.FLAGS.goldCount,
-                    enabled: true
-                }
-            },
-            system: {
-                quantity: 0,
-                weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
-            }
-        };
-        
-        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat] = {
-            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.plat,
-            type: 'gear',
-            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.plat,
-            flags: {
-                sfc: {
-                    value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.plat,
-                    type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat,
-                    shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.plat,
-                    countFlagName: SFC_CONFIG.FLAGS.platCount,
-                    enabled: true
-                }
-            },
-            system: {
-                quantity: 0,
-                weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
-            }
+            value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.copper,
+            shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.copper,
+            type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper,
+            countFlagName: SFC_CONFIG.FLAGS.copperCount,
+            weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
         };
 
-        Utils.setSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinMap, defaultMap);
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver] = {
+            enabled: true,
+            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.silver,
+            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.silver,
+            value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.silver,
+            shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.silver,
+            type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.silver,
+            countFlagName: SFC_CONFIG.FLAGS.silverCount,
+            weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
+        };
+
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold] = {
+            enabled: true,
+            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.gold,
+            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.gold,
+            value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.gold,
+            shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.gold,
+            type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.gold,
+            countFlagName: SFC_CONFIG.FLAGS.goldCount,
+            weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
+        };
+
+        defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat] = {
+            enabled: true,
+            name: SFC_CONFIG.DEFAULT_CONFIG.coins.names.plat,
+            img: SFC_CONFIG.DEFAULT_CONFIG.coins.icons.plat,
+            value: SFC_CONFIG.DEFAULT_CONFIG.coins.values.plat,
+            shortName: SFC_CONFIG.DEFAULT_CONFIG.coins.shortNames.plat,
+            type: SFC_CONFIG.DEFAULT_CONFIG.coins.types.plat,
+            countFlagName: SFC_CONFIG.FLAGS.platCount,
+            weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
+        };
+
+        Utils.setSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap, defaultMap);
         return defaultMap;
     }
 
@@ -363,42 +357,42 @@ export class Coins {
 
     static async buildItemDescriptionText() {
         //Sort the coins from lowest value to highest
-        let coinArray = Object.values(game.sfc.coinMap);
-        coinArray.sort((a, b) => {
-            return a.flags.sfc.value - b.flags.sfc.value;
+        let coinDataArray = Object.values(duplicate(game.sfc.coinDataMap));
+        coinDataArray.sort((a, b) => {
+            return a.value - b.value;
         });
 
-        let coinDatas = [];
-        for (let i = 0; i < coinArray.length; ++i) {
-            const coin = coinArray[i];
-            if (coin.flags.sfc.enabled) {
-                let coinData = {
-                    name: coin.name,
-                    shortName: coin.flags.sfc.shortName,
-                    shortNameUpper: coin.flags.sfc.shortName.toUpperCase(),
+        let coinDescriptionDatas = [];
+        for (let i = 0; i < coinDataArray.length; ++i) {
+            const coinData = coinDataArray[i];
+            if (coinData.enabled) {
+                let coinDescriptionData = {
+                    name: coinData.name,
+                    shortName: coinData.shortName,
+                    shortNameUpper: coinData.shortName.toUpperCase(),
                     columns: []
                 };
 
-                for (let j = 0; j < coinArray.length; ++j) {
-                    if (!coinArray[j].flags.sfc.enabled) {
+                for (let j = 0; j < coinDataArray.length; ++j) {
+                    if (!coinDataArray[j].enabled) {
                         continue;
                     }
 
                     if (i == j) {
-                        coinData.columns[j] = "1";
+                        coinDescriptionData.columns[j] = "1";
                         continue;
                     }
                     
-                    const decimal = (coin.flags.sfc.value * 1000) / (coinArray[j].flags.sfc.value * 1000);
+                    const decimal = (coinData.value * 1000) / (coinDataArray[j].value * 1000);
                     const fraction = this.decimalToFraction(decimal);
-                    coinData.columns[j] = fraction;
+                    coinDescriptionData.columns[j] = fraction;
                 }
 
-                coinDatas.push(coinData);
+                coinDescriptionDatas.push(coinDescriptionData);
             }
         }
 
-        const templateData = {coinDatas};
+        const templateData = {coinDescriptionDatas};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
         game.sfc.itemDescription = content;
     }

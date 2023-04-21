@@ -4,22 +4,22 @@ import { Utils } from "./utils.js";
 
 export function registerSettings() {
 
-    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.coinMap, {
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, {
         name: "Coin map",
         hint: "Map of the different coins we use",
         scope: "world",
         type: Object,
         default: {},
-        onChange: async coinMap => {
+        onChange: async coinDataMap => {
             // Save the active coin map to a convenience property
             if (game.sfc) {
-                game.sfc.coinMap = coinMap;
+                game.sfc.coinDataMap = coinDataMap;
             }
         }
     });
 
-    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinMap, {
-        name: "Default coin map",
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap, {
+        name: "Default coin data map",
         hint: "Contains the default coin config for SFC",
         scope: "world",
         type: Object,

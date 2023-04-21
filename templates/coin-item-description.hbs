@@ -6,12 +6,12 @@
         </tr>
         <tr>
             <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinItemDescription.CoinHeader'}}</th>
-            {{#each coinDatas}}
+            {{#each coinDescriptionDatas}}
             <th class="sub-heading">{{shortNameUpper}}</th>
             {{/each}}
         </tr>
 
-        {{#each coinDatas}}
+        {{#each coinDescriptionDatas}}
         <tr>
             <td>{{name}} {{#if shortName}}({{shortName}}){{/if}}</td>
             {{#each columns}}

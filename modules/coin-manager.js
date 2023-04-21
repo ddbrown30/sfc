@@ -18,23 +18,22 @@ export class CoinManager extends FormApplication {
         super(object, options);
 
         this.behaviour = "coins";
-        this.coinArray = [];
+        this.coinDataArray = [];
 
-        for (const coin of Object.values(game.sfc.coinMap)) {
-            if (coin.flags.sfc.enabled) {
-                coin.count = 0;
-                this.coinArray.push({
-                    type: coin.flags.sfc.type,
-                    name: coin.name,
-                    img: coin.img,
-                    count: coin.count,
-                    valueInt: coin.flags.sfc.value * 1000
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            if (coinData.enabled) {
+                this.coinDataArray.push({
+                    type: coinData.type,
+                    name: coinData.name,
+                    img: coinData.img,
+                    quantity: 0,
+                    valueInt: coinData.value * 1000
                 });
             }
         };
 
         //Sort the coins from highest value to lowest
-        this.coinArray.sort((a, b) => {
+        this.coinDataArray.sort((a, b) => {
             return b.valueInt - a.valueInt;
         });
     }
@@ -60,7 +59,7 @@ export class CoinManager extends FormApplication {
         const data = super.getData();
 
         data.behaviour = this.behaviour;
-        data.coinData = this.coinArray;
+        data.coinData = this.coinDataArray;
         data.actor = this.object;
 
         return data;
@@ -124,89 +123,89 @@ export class CoinManager extends FormApplication {
     }
 
     async removeCurrencyFromInventory(currency, actor) {
-        let sortedCoinArray = duplicate(this.coinArray);//coinArray is sorted high to low in the constructor
-        sortedCoinArray.sort((a, b) => {
+        let sortedCoinDataArray = duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
+        sortedCoinDataArray.sort((a, b) => {
             return a.valueInt - b.valueInt;
         });
 
-        for (const coin of sortedCoinArray) {
-            let coinItem = actor.items.find(item => Utils.getFlag(item, "type") == coin.type);
-            coin.count = coinItem ? coinItem.system.quantity : 0;
-            coin.item = coinItem;
+        for (const coinData of sortedCoinDataArray) {
+            let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
+            coinData.quantity = coinItem ? coinItem.system.quantity : 0;
+            coinData.item = coinItem;
         }
 
         //To remove the currency, we'll focus on removing the lowest value coins
         //When we run out of those, we'll start converting higher value coins into smaller value coins
-        let remainingLowestCoin = Math.ceil(currency / sortedCoinArray[0].valueInt);
+        let remainingLowestCoin = Math.ceil(currency / sortedCoinDataArray[0].valueInt);
         while (true) {
-            if (remainingLowestCoin <= sortedCoinArray[0].count) {
-                sortedCoinArray[0].count -= remainingLowestCoin;
+            if (remainingLowestCoin <= sortedCoinDataArray[0].quantity) {
+                sortedCoinDataArray[0].quantity -= remainingLowestCoin;
                 remainingLowestCoin = 0;
                 break;
             }
 
-            remainingLowestCoin -= sortedCoinArray[0].count;
-            sortedCoinArray[0].count = 0;
+            remainingLowestCoin -= sortedCoinDataArray[0].quantity;
+            sortedCoinDataArray[0].quantity = 0;
 
             //In this loop, we move up higher values until we find at least one coin and then we convert that coin back downwards
             //This will give us more of the lowest value coin to work with in the next pass
-            for (let i = 1; i < sortedCoinArray.length; ++i) {
-                if (sortedCoinArray[i].count > 0) {
+            for (let i = 1; i < sortedCoinDataArray.length; ++i) {
+                if (sortedCoinDataArray[i].quantity > 0) {
                     for (let j = i; j > 0; --j) {
-                        --sortedCoinArray[j].count;
-                        sortedCoinArray[j - 1].count += Math.floor(sortedCoinArray[j].valueInt / sortedCoinArray[j - 1].valueInt);
+                        --sortedCoinDataArray[j].quantity;
+                        sortedCoinDataArray[j - 1].quantity += Math.floor(sortedCoinDataArray[j].valueInt / sortedCoinDataArray[j - 1].valueInt);
                     }
                     break;
                 }
             }
 
-            if (sortedCoinArray[0].count == 0) {
+            if (sortedCoinDataArray[0].quantity == 0) {
                 //We have no more coins to convert. We can't afford this
                 Utils.showNotification("error", game.i18n.localize("SFC.Errors.CannotAfford"));
                 return;
             }
         }
 
-        for (const coin of sortedCoinArray) {
-            if (!coin.item) {
-                if (coin.count <= 0) {
+        for (const coinData of sortedCoinDataArray) {
+            if (!coinData.item) {
+                if (coinData.quantity <= 0) {
                     continue;
                 }
 
-                coin.item = await Coins.addCoinItem(actor, game.sfc.coinMap[coin.type]);
+                coinData.item = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
             }
 
-            await coin.item.update({ "system.quantity": coin.count });
+            await coinData.item.update({ "system.quantity": coinData.quantity });
         }
     }
 
     convertCurrencyToCoins(currency) {
-        let sortedCoinArray = duplicate(this.coinArray);//coinArray is sorted high to low in the constructor
+        let sortedCoinDataArray = duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
 
-        let coins = {};
+        let covertedCoins = {};
         let remainingCurrencyInt = Math.floor(currency * 1000);
-        for (const coin of sortedCoinArray) {
+        for (const coinData of sortedCoinDataArray) {
             //We want to add as many coins as will divide evenly into our remaining currency
-            let numCoins = Math.floor(remainingCurrencyInt / coin.valueInt);
+            let numCoins = Math.floor(remainingCurrencyInt / coinData.valueInt);
 
             if (numCoins == 0) {
                 continue;
             }
 
-            coins[coin.type] = {
-                count: numCoins,
-                type: coin.type
+            covertedCoins[coinData.type] = {
+                quantity: numCoins,
+                type: coinData.type
             };
 
             //Subtract the value of the coins we just added from the remaining currency
-            remainingCurrencyInt -= numCoins * coin.valueInt;
+            remainingCurrencyInt -= numCoins * coinData.valueInt;
 
             if (remainingCurrencyInt <= 0) {
                 break;
             }
         }
 
-        return coins;
+        return covertedCoins;
     }
 
     async addCoins() {
@@ -215,23 +214,23 @@ export class CoinManager extends FormApplication {
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
                 const coinsToAdd = this.convertCurrencyToCoins(formData.currency);
-                for (const coin of Object.values(coinsToAdd)) {
-                    let coinItem = actor.items.find(item => Utils.getFlag(item, "type") == coin.type);
+                for (const coinData of Object.values(coinsToAdd)) {
+                    let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
                     if (!coinItem) {
-                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinMap[coin.type]);
+                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
                     }
 
-                    await coinItem.update({ "system.quantity": coinItem.system.quantity + coin.count });
+                    await coinItem.update({ "system.quantity": coinItem.system.quantity + coinData.quantity });
                 }
             }
         } else {
-            for (const coin of this.coinArray) {
-                const inputName = "coin-" + coin.type;
+            for (const coinData of this.coinDataArray) {
+                const inputName = "coin-" + coinData.type;
                 const coinAmount = formData[inputName];
                 if (coinAmount > 0) {
-                    let coinItem = actor.items.find(item => Utils.getFlag(item, "type") == coin.type);
+                    let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
                     if (!coinItem) {
-                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinMap[coin.type]);
+                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
                     }
 
                     await coinItem.update({ "system.quantity": coinItem.system.quantity + coinAmount });
@@ -254,11 +253,11 @@ export class CoinManager extends FormApplication {
             }
         } else {
             let totalCurrency = 0;
-            for (const coin of this.coinArray) {
-                const inputName = "coin-" + coin.type;
+            for (const coinData of this.coinDataArray) {
+                const inputName = "coin-" + coinData.type;
                 const coinAmount = formData[inputName];
                 if (coinAmount > 0) {
-                    totalCurrency += coinAmount * (game.sfc.coinMap[coin.type].flags.sfc.value * 1000);
+                    totalCurrency += coinAmount * coinData.valueInt;
                 }
             }
 
@@ -283,8 +282,6 @@ export class CoinManager extends FormApplication {
     async _onChangeInput(event) {
         event.target.blur();
         event.target.reportValidity();
-        let blah = this._getSubmitData();
-        blah = null;
     }
 
     async exchange() {
@@ -296,17 +293,17 @@ export class CoinManager extends FormApplication {
         }
 
         const fromSelect = formData["exchange-from"];
-        const toSelect = formData["exchange-to"];
-        if (fromSelect == toSelect) {
+        const destSelect = formData["exchange-to"];
+        if (fromSelect == destSelect) {
             //Exchanging the same type. Nothing to do
             return;
         }
 
         const fromType = fromSelect.split("-").pop();
-        const toType = toSelect.split("-").pop();
+        const destType = destSelect.split("-").pop();
 
-        let fromCoinItem = actor.items.find(item => Utils.getFlag(item, "type") == fromType);
-        let toCoinItem = actor.items.find(item => Utils.getFlag(item, "type") == toType);
+        let fromCoinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == fromType);
+        let destCoinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == destType);
         if (!fromCoinItem) {
             //We don't have the from item so there's nothing to exchange
             return;
@@ -314,57 +311,57 @@ export class CoinManager extends FormApplication {
 
         exchangeAmount = exchangeAmount < fromCoinItem.system.quantity ? exchangeAmount : fromCoinItem.system.quantity;
 
-        const fromValueInt = Math.floor(game.sfc.coinMap[fromType].flags.sfc.value * 1000);
-        const toValueInt = Math.floor(game.sfc.coinMap[toType].flags.sfc.value * 1000);
+        const fromValueInt = Math.floor(game.sfc.coinDataMap[fromType].value * 1000);
+        const destValueInt = Math.floor(game.sfc.coinDataMap[destType].value * 1000);
 
         let fromTotalAmountCurrency = fromValueInt * exchangeAmount;
 
         let newCoinValues = {};
-        const amountToAdded = Math.floor(fromTotalAmountCurrency / toValueInt);
-        if (amountToAdded <= 0) {
+        const amountDestAdded = Math.floor(fromTotalAmountCurrency / destValueInt);
+        if (amountDestAdded <= 0) {
             //Nothing exchanged
             return;
         }
 
-        const toCoinsQuantity = toCoinItem ? toCoinItem.system.quantity : 0;
-        const newToCoins = toCoinsQuantity + amountToAdded;
-        newCoinValues[toType] = {
-            type: toType,
-            count: newToCoins
+        const destCoinsQuantity = destCoinItem ? destCoinItem.system.quantity : 0;
+        const newDestCoins = destCoinsQuantity + amountDestAdded;
+        newCoinValues[destType] = {
+            type: destType,
+            quantity: newDestCoins
         };
 
-        fromTotalAmountCurrency -= amountToAdded * toValueInt;
+        fromTotalAmountCurrency -= amountDestAdded * destValueInt;
         const amountFromRemaining = fromTotalAmountCurrency <= 0 ? 0 : (fromTotalAmountCurrency / fromValueInt);
         const amountFromRemoved = exchangeAmount - amountFromRemaining;
         const newFromCoins = fromCoinItem.system.quantity - amountFromRemoved;
         newCoinValues[fromType] = {
             type: fromType,
-            count: newFromCoins
+            quantity: newFromCoins
         };
 
-        if (!toCoinItem) {
-            toCoinItem = await Coins.addCoinItem(actor, game.sfc.coinMap[toType]);
+        if (!destCoinItem) {
+            destCoinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[destType]);
         }
 
-        await fromCoinItem.update({ "system.quantity": newCoinValues[fromType].count });
-        await toCoinItem.update({ "system.quantity": newCoinValues[toType].count });
+        await fromCoinItem.update({ "system.quantity": newCoinValues[fromType].quantity });
+        await destCoinItem.update({ "system.quantity": newCoinValues[destType].quantity });
     }
 
     async exchangeAll() {
         let actor = this.object;
         const convertedCoins = this.convertCurrencyToCoins(actor.system.details.currency);
-        for (const coin of this.coinArray) {
-            const count = convertedCoins[coin.type] ? convertedCoins[coin.type].count : 0;
-            let coinItem = actor.items.find(item => Utils.getFlag(item, "type") == coin.type);
+        for (const coinData of this.coinDataArray) {
+            const quantity = convertedCoins[coinData.type] ? convertedCoins[coinData.type].quantity : 0;
+            let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
             if (!coinItem) {
-                if (count <= 0) {
+                if (quantity <= 0) {
                     continue;
                 }
 
-                coinItem = await Coins.addCoinItem(actor, game.sfc.coinMap[coin.type]);
+                coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
             }
 
-            await coinItem.update({ "system.quantity": count });
+            await coinItem.update({ "system.quantity": quantity });
         }
     }
 

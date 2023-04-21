@@ -60,8 +60,8 @@ export const FLAGS = {
 }
 
 export const SETTING_KEYS = {
-    coinMap: "coinMap",
-    defaultCoinMap: "defaultCoinMap",
+    coinDataMap: "coinMap",
+    defaultCoinDataMap: "defaultCoinMap",
     showCurrency: "showCurrency",
 }
 

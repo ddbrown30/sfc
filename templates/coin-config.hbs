@@ -2,7 +2,7 @@
   <p class="notes" style="padding: 0 0 0 2em"><strong>{{localize "SFC.DisableWarning"}}</strong></p>
 
   <ol class="coin-config list">
-    {{#each coinMap as |coin key|}}
+    {{#each coinDataMap as |coin key|}}
     {{> "modules/sfc/templates/partials/coin-config-item.hbs" coin=coin key=key}}
     {{/each}}
   </ol>

@@ -8,7 +8,7 @@
             <span class='value'>{{numberFormat currencyAmount decimals=2}}</span>
             {{/if}}
         </div>
-        {{#each coinData}}
+        {{#each coinTemplateData}}
         <div class="coin-group">
             <label for="flags.sfc.{{countFlagName}}"><img name="icon-{{@index}}" src='{{img}}' class="coin-icon" data-tooltip="{{name}}" title='{{name}}' /></label>
             <input name='flags.sfc.{{countFlagName}}' type='number' data-dtype='Number' value='{{count}}' />

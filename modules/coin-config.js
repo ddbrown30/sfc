@@ -5,8 +5,8 @@ import { Coins } from "./coins.js";
 export class CoinConfig extends FormApplication {
     constructor() {
         super();
-        this.initialMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinMap);
-        this.workingCoinMap = duplicate(this.initialMap);
+        this.initialDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
+        this.workingCoinDataMap = duplicate(this.initialDataMap);
     }
     
     static get defaultOptions() {
@@ -21,9 +21,9 @@ export class CoinConfig extends FormApplication {
     }
 
     getData() {
-        const coinMap = this.workingCoinMap;
+        const coinDataMap = this.workingCoinDataMap;
         const data = {
-            coinMap
+            coinDataMap
         };
         return data;
     }
@@ -41,7 +41,7 @@ export class CoinConfig extends FormApplication {
     }
 
     async _updateObject(event, formData) {
-        await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinMap, this.workingCoinMap);
+        await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, this.workingCoinDataMap);
         Coins.buildItemDescriptionText();
     }
 
@@ -54,9 +54,9 @@ export class CoinConfig extends FormApplication {
                     icon: `<i class="fa fa-check"></i>`,
                     label: game.i18n.localize("SFC.Yes"),
                     callback: async event => {
-                        const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinMap);
-                        this.initialMap = defaultMap;
-                        this.workingCoinMap = duplicate(this.initialMap);
+                        const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
+                        this.initialDataMap = defaultMap;
+                        this.workingCoinDataMap = duplicate(this.initialDataMap);
                         this.render();
                     }
                 },
@@ -79,20 +79,20 @@ export class CoinConfig extends FormApplication {
             return;
         }
         
-        let coin = this.workingCoinMap[row];
+        let coinData = this.workingCoinDataMap[row];
 
         if (name.startsWith("icon-path")) {
-            coin.img = event.target.value;
+            coinData.img = event.target.value;
         } else if (name.startsWith("coin-name")) {
-            coin.name = event.target.value;
+            coinData.name = event.target.value;
         } else if (name.startsWith("coin-shortname")) {
-            coin.flags.sfc.shortName = event.target.value;
+            coinData.shortName = event.target.value;
         } else if (name.startsWith("coin-value")) {
-            coin.flags.sfc.value = event.target.value;
+            coinData.value = event.target.value;
         } else if (name.startsWith("coin-weight")) {
-            coin.system.weight = event.target.value;
+            coinData.weight = event.target.value;
         } else if (name.startsWith("coin-enabled")) {
-            coin.flags.sfc.enabled = event.target.checked;
+            coinData.enabled = event.target.checked;
         }
 
         event.target.blur();

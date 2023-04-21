@@ -84,7 +84,7 @@ export class Utils {
         return obj.flags[SFC_CONFIG.NAME] ? true : false;
     }
 
-    static getFlag(obj, flag) {
+    static getModuleFlag(obj, flag) {
         if (!Utils.hasModuleFlags(obj)) {
             return;
         }
