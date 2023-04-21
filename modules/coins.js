@@ -28,7 +28,7 @@ export class Coins {
                 newCoinData.value = oldCoinData.flags.sfc.value;
                 newCoinData.weight = oldCoinData.system.weight;
             }
-            game.sfc.coinDataMap = newMap;
+            Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, newMap);
         }
 
         Coins.buildItemDescriptionText();
