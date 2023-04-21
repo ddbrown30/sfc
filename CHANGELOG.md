@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+
+* Fix display bug when currency is hidden
+
 ## 0.4.1
 
 * Tweaked CSS for better button appearance (Thanks kristianserrano!)
