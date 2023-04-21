@@ -39,6 +39,7 @@
     border: 2px groove var(--color-border-light-highlight);
     border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.1);
+    max-width: 170px;
 }
 .swade-official .sfc .coins.manager-button,
 .swpf-sheet .sfc .coins.manager-button {
@@ -113,4 +114,10 @@
 #coin-manager-grid {
     display: block;
     margin: 10px;
+}
+
+.flexrow.coin-manager-buttons {
+    justify-content: space-between;
+    max-width: 300px;
+    gap: 10px;
 }

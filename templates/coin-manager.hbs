@@ -43,20 +43,22 @@
           {{/if}}
         </div>
       </div>
-      <div class='flexrow'>
-        <button type='button' name='add' id='add'>
+      <div class='flexrow coin-manager-buttons'>
+        <button type='button' class="sfc coins manager-button" name='add' id='add'>
           <i class="fas fa-circle-plus"></i> {{localize "SFC.CoinManager.AddButton"}}
         </button>
-        <button type='button' name='remove' id='remove'>
+        <button type='button' class="sfc coins manager-button" name='remove' id='remove'>
           <i class="fas fa-circle-minus"></i> {{localize "SFC.CoinManager.RemoveButton"}}
         </button>
       </div>
     </section>
     <section class='tab' data-tab='exchange'>
       <p>{{localize "SFC.CoinManager.ExchangeAllDescription"}}</p>
-      <button type='button' name='exchange-all' id='exchange-all-button'>
-        <i class="fas fa-arrow-right-arrow-left"></i> {{localize "SFC.CoinManager.ExchangeAllButton"}}
-      </button>
+      <div class='flexrow coin-manager-buttons'>
+        <button type='button' class="sfc coins manager-button" name='exchange-all' id='exchange-all-button'>
+          <i class="fas fa-arrow-right-arrow-left"></i> {{localize "SFC.CoinManager.ExchangeAllButton"}}
+        </button>
+      </div>
       <br>
       <br>
       <p>{{localize "SFC.CoinManager.ExchangeDescription"}}</p>
@@ -88,9 +90,11 @@
           </tr>
         </tbody>
       </table>
-      <button type='button' name='exchange' id='exchange-button'>
-        <i class="fas fa-right-to-line"></i> {{localize "SFC.CoinManager.ExchangeButton"}}
-      </button>
+      <div class='flexrow coin-manager-buttons'>
+        <button type='button' class="sfc coins manager-button" name='exchange' id='exchange-button'>
+          <i class="fas fa-right-to-line"></i> {{localize "SFC.CoinManager.ExchangeButton"}}
+        </button>
+      </div>
     </section>
     <section class='tab' data-tab='system'>
       <button type="button" class="sfc coins manager-button" id="init-actor-button">
