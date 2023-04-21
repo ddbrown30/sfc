@@ -1,3 +1,4 @@
+
 This module for Foundry VTT adds fantasy style currencies to Savage Worlds.
 
 - [Installation](#installation)
@@ -41,6 +42,34 @@ Using SFC is simple. On the gear tab of the character sheet, the normal currency
 Deleting coins from the inventory is also supported and will be equivalent to setting the amount to 0. A coin item will be automatically created if the coin value is set again later.
 
 ![Preview](./sheet_view.jpg?raw=true)
+
+# Coin Manager
+
+For more complex interaction with the coins, you can use the Coin Manager. The manager is accessed by clicking the Manage button to the right side of the coin display on the Gear tab.
+
+All of the examples below are assumed to be using the default coin configuration.
+
+#### Add/Remove Tab
+The Add/Remove tab allows you to add and remove coins or currency from the character's coins.
+
+When adding currency, the system will try to add the fewest possible coins to satisfy the provided value. For example, if you added $12.13, it would add 10 platinum, 2 gold, 1 silver, and 3 copper.
+
+When adding coins, whatever coins are entered are what is added to the actor's inventory without any exchange i.e. if you add 10 gold, it will just increase the number of gold coins by 10.
+
+When removing either currency or coins, the system will remove lower value coins first. For example, if you had 10 silver and 15 copper and removed 2 silver, you would end up with 9 silver and 5 copper, as 10 of the copper would have been exchanged to pay for 1 of the silver.
+
+If you attempt to remove more currency or coins than you have in your inventory, the operation will be aborted and an error message will be displayed.
+
+#### Exchange Tab
+The Exchange tab allows you to convert coins from one type to another.
+
+The Exchange All button will reduce your coins to the minimum number possible. For example, if you have 1 gold, 21 silver, and 15 copper, you will end up with 3 gold, 2 silver, and 5 copper as each is converter to the higher value.
+
+The Exchange section allows you to input a value and convert that many coins of one type into another. For example, if you exchange 2 platinum into silver, you would add 200 silver to your inventory. The system will only exchange what fits and leave the rest, so if you were to attempt to exchange 15 silver into gold, you would only get 1 gold and the remaining 5 silver would be left intact.
+
+#### System Tab
+The System tab is where you can reinitialize the character. This should only be needed if the properties of the coins were changed in the coin config. If something seems out of sync, this is probably where you need to be.
+If you already have coins and are just trying to update something, such as the icon or the name, make sure to use the Keep Coins option or it may end up affecting your total number of coins.
 
 # Configuration
 
