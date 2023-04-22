@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+* Reworked the initialize flow to hopefully be less confusing
+
 ## 0.4.3
 
 * We now save the migrated map
