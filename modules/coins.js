@@ -36,36 +36,53 @@ export class Coins {
     
     static async onRenderSettingsConfig(app, el, data) {
         //Add the init actors button
-        const button = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
+        const initButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
         const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsDialog, {});
 
-        button.find('[data-key="init-actors-button"]').click(ev => {
+        initButton.find('[data-key="init-actors-button"]').click(ev => {
             const dialog = new Dialog({
                 title: game.i18n.localize("SFC.InitActors.AllLabel"),
                 content: dialogContent,
                 buttons: {
-                    yes: {
-                        icon: `<i class="fa fa-check"></i>`,
-                        label: game.i18n.localize("SFC.Yes"),
+                    currency: {
+                        icon: `<i class="fas fa-dollar-sign"></i>`,
+                        label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCurrency"),
                         callback: async (html) => {
-                            const behaviour = html.find(`#behaviour`)[0].value;
-                            const keepCurrency = behaviour == "keep-coins" ? false  : true;
-                            await Coins.initActorInventories(keepCurrency);
+                            let keepCurrency = true;
+                            await Coins.initAllActorInventories(keepCurrency);
                         }
                     },
-                    no: {
-                        icon: `<i class="fa fa-times"></i>`,
-                        label: game.i18n.localize("SFC.No"),
+                    coins: {
+                        icon: `<i class="fas fa-coins"></i>`,
+                        label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCoins"),
+                        callback: async (html) => {
+                            let keepCurrency = false;
+                            await Coins.initAllActorInventories(keepCurrency);
+                        }
+                    },
+                    cancel: {
+                        icon: `<i class="fas fa-times"></i>`,
+                        label: game.i18n.localize("SFC.InitActors.Dialog.Cancel"),
                         callback: event => { }
                     }
-                },
-                default: "no"
-            });
+                }
+            }, {classes: ["dialog", "init-dialog"]});
             dialog.render(true);
+        });        
+        
+        const refreshButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
+
+        refreshButton.find('[data-key="refresh-coin-items-button"]').click(ev => {
+            Dialog.confirm({
+                title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel"),
+                content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
+                yes: () => Coins.refreshAllActorItems(),
+            });
         });
 
-        //Find the start of the SFC section and add the button there
-        el.find('[data-tab="sfc"] h2').after(button);
+        //Find the start of the SFC section and add the buttons there
+        el.find('[data-tab="sfc"] h2').after(refreshButton);
+        el.find('[data-tab="sfc"] h2').after(initButton);
     }
     
     static async onRenderActorSheet(app, html, data) {
@@ -178,7 +195,7 @@ export class Coins {
         actor.update({"system.details.currency": Number(totalCurrency.toFixed(2))});
     }
 
-    static async initActorInventories(keepCurrency) {
+    static async initAllActorInventories(keepCurrency) {
         for (const actor of game.actors) {
             if (actor.type !== "character") {
                 //Only player characters use coins
@@ -253,6 +270,43 @@ export class Coins {
         }
 
         await Coins.refreshCurrency(actor);
+        if (actor.sheet.rendered) {
+            actor.sheet.render();
+        }
+    }
+
+    static async refreshAllActorItems() {
+        for (const actor of game.actors) {
+            if (actor.type !== "character") {
+                //Only player characters use coins
+                continue;
+            }
+
+            await this.refreshActorItems(actor);
+        }
+    }
+
+    static async refreshActorItems(actor) {
+        let updateData = [];
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
+            if (!coinItem) {
+                continue;
+            }
+
+            if (coinItem) {
+                updateData.push({
+                    _id: coinItem.id,
+                    "name": coinData.name,
+                    "img": coinData.img,
+                    "system.weight": coinData.weight,
+                    "system.description": game.sfc.itemDescription
+                });
+            }
+        }
+        
+        if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
+
         if (actor.sheet.rendered) {
             actor.sheet.render();
         }

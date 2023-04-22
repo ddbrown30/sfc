@@ -13,6 +13,7 @@ export const DEFAULT_CONFIG = {
         initAllActorsButton: `${PATH}/templates/init-all-actors-button.hbs`,
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
+        refreshAllCoinItemsButton: `${PATH}/templates/refresh-all-coin-items-button.hbs`,
         itemDescription: `${PATH}/templates/coin-item-description.hbs`,
         coinManager: `${PATH}/templates/coin-manager.hbs`,
     },

@@ -7,8 +7,9 @@ export class CoinConfig extends FormApplication {
         super();
         this.initialDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
         this.workingCoinDataMap = duplicate(this.initialDataMap);
+        this.restoredMap = false;
     }
-    
+
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: 'coin-config',
@@ -33,7 +34,40 @@ export class CoinConfig extends FormApplication {
         html.find('#reset').click(() => this.restoreDefaults());
         html.find('#save').click(() => {
             if (this.form.checkValidity()) {
-                this.submit();
+                const hasCoins = this.hasAnyActiveCoins();
+                const dataChanged = this.restoredMap || !foundry.utils.isEmpty(foundry.utils.diffObject(this.initialDataMap, this.workingCoinDataMap));
+                if (!hasCoins || !dataChanged) {
+                    this.submit();
+                    return;
+                }
+
+                let valueChanged = false;
+                for (let coinData of Object.values(this.initialDataMap)) {
+                    if (this.workingCoinDataMap[coinData.type].value != coinData.value) {
+                        valueChanged = true;
+                        break;
+                    }
+                }
+
+                function showRefreshPrompt(app) {                    
+                    app.submit();
+
+                    Dialog.confirm({
+                        title: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataTitle"),
+                        content: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataContent"),
+                        yes: () => Coins.refreshAllActorItems(),
+                    });
+                }
+
+                if (valueChanged) {
+                    Dialog.prompt({
+                        title: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedTitle"),
+                        content: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedContent"),
+                        callback: () => showRefreshPrompt(this)
+                    });
+                } else {
+                    showRefreshPrompt(this);
+                }
             } else {
                 this.form.reportValidity();
             }
@@ -57,18 +91,18 @@ export class CoinConfig extends FormApplication {
                         const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
                         this.initialDataMap = defaultMap;
                         this.workingCoinDataMap = duplicate(this.initialDataMap);
+                        this.restoredMap = true;
                         this.render();
                     }
                 },
-                no :{
+                no: {
                     icon: `<i class="fa fa-times"></i>`,
                     label: game.i18n.localize("SFC.No"),
-                    callback: event => {}
+                    callback: event => { }
                 }
             },
             default: "no"
-        });
-        dialog.render(true);
+        }).render(true);
         this.render(true);
     }
 
@@ -78,7 +112,7 @@ export class CoinConfig extends FormApplication {
         if (!row) {
             return;
         }
-        
+
         let coinData = this.workingCoinDataMap[row];
 
         if (name.startsWith("icon-path")) {
@@ -97,5 +131,30 @@ export class CoinConfig extends FormApplication {
 
         event.target.blur();
         event.target.reportValidity();
+    }
+
+    //Searches through all the actors and checks if any of them contain coin data
+    hasAnyActiveCoins() {
+        let countFlags = []
+        
+        for (let coinData of Object.values(game.sfc.coinDataMap)) {
+            countFlags.push(coinData.countFlagName);
+        }
+
+        for (const actor of game.actors) {
+            if (actor.type !== "character") {
+                //Only player characters use coins
+                continue;
+            }
+
+            for (let countFlag of countFlags) {
+                if (Utils.getModuleFlag(actor, countFlag) > 0) {
+                    //We have some coins on this actor
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

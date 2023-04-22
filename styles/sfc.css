@@ -8,6 +8,10 @@
     white-space: nowrap;
 }
 
+.init-dialog .dialog-buttons {
+    display: block;
+}
+
 .sfc .coins .value {
     font-weight: 700;
 }

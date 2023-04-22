@@ -4,16 +4,20 @@
             "AllLabel": "Initialize All Characters",
             "SingleLabel": "Initialize Character",
             "Dialog": {
-                "AllContents1": "This will process all player character actors, adding coin items and initializing values.",
-                "SingleContents1": "This will process this character, adding coin items and initializing values.",
-                "Contents2": "When using the Keep Currency behaviour, the actor's current currency will be used to set the starting quantities of coins based on the value for each coin.",
-                "Contents3": "If the values of the coins is such that the current currency cannot be evenly divided, the remaining amount will be lost.",
-                "Contents4": "(Note: This is only a potential issue if you've modified the values in the coin config. The default values will always work correctly.)",
-                "Contents5": "If this is your first time running this process, you should use Keep Currency.",
-                "Contents6": "When using the Keep Coins behaviour, the quantity of coins in the actor's inventory is maintained and the actor's currency is updated based on the value of those coins.",
-                "Contents7": "If the actor does not have a coin in its inventory at this time, it will be treated as 0.",
+                "AllContents1": "This will process all player characters in the world.",
+                "SingleContents1": "This will process only this character",
+                "Contents2": "The process will create coin items in the actor's inventory and then update the coins or currency based on which behaviour you select below.",
+                "Contents3": "Preserving currency will ensure total currency of the character remains the same and will set coin numbers that equal that amount. This will recalculate and stomp over existing coin counts if the character already has coins.",
+                "Contents4": "Preserving coin counts will leave the existing coins in the character's inventory untouched and will set the currency to the total value of said coins. If a character has no coins, this will set the currency to 0.",
+                "Contents5": "<strong>If this is your first time running this process, you should use the preserve currency option.</strong>",
+                "Contents6": "If your world has characters with coins already, you should use the preserve coins option.",
+                "Contents7": "<strong>This process can not be undone. Are you sure you would like to continue?</strong>",
                 "Contents8": "For more information, visit the SFC project page.",
-                "Contents9": "This process can not be undone. Are you sure you would like to continue?",
+                
+                "InitKeepCurrency": "Initialize and preserve currency value",
+                "InitKeepCoins": "Initialize and preserve coin counts",
+                "Cancel": "Cancel",
+
                 "BehaviourOptions": {
                     "KeepCurrencyValue": "Keep Currency",
                     "KeepCurrencyTitle": "Generates coin quantities based on currency",
@@ -23,13 +27,27 @@
             }
         },
 
+        "RefreshCoinItems": {
+            "AllLabel": "Refresh All Coin Items",
+            "AllContent": "<p>Would you like to update existing coins on all characters?</p><p>(This will not affect currency or coin totals.)</p>",
+            "SingleLabel": "Refresh Coin Items",
+            "SingleContent": "<p>Would you like to update existing coins on this character?</p><p>(This will not affect currency or coin totals.)</p>"
+        },
+
         "CoinConfig": {
             "Name": "Coin Config",
             "Label": "Open Coin Config",
-            "Hint": "Configure the coins in your game. You will need to run Initialize All Characters after making any changes.",
+            "Hint": "Configure the coins in your game.",
             "RestoreDefaultsButton": "Restore Defaults",
             "RestoreDefaultsTitle": "Restore Defaults",
-            "RestoreDefaultsContents": "<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>"
+            "RestoreDefaultsContents": "<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>",
+        
+            "Dialog": {
+                "RefreshDataTitle": "Data Changed",
+                "RefreshDataContent": "<p>Changes were made to one or more coins.</p><p>Would you like to update existing coins on characters?</p><p>(This will not apply value changes. You must still run a full initialize if you made changes to coin values.)",
+                "ValueChangedTitle": "Values Changed",
+                "ValueChangedContent": "<p>You have changed one or more coin values and you have characters with coins in your world.</p><p><strong>You must reinitialize those characters after doing this.</strong></p><br>"
+            }
         },
 
         "CoinConfigItem": {
@@ -83,7 +101,7 @@
 
         "Settings": {
             "ShowCurrencyName": "Show Currency on Sheet",
-            "ShowCurrencyHint": "When active, the total value of currency will be displayed on the character sheet."
+            "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet."
         },
 
         "Errors": {

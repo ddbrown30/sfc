@@ -117,6 +117,13 @@ export class CoinManager extends FormApplication {
             }
         });
         html.find("button[id='init-actor-button']").click(() => this.initActor());
+        html.find("button[id='refresh-coin-items-button']").click(ev => {
+            Dialog.confirm({
+                title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel"),
+                content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
+                yes: () => Coins.refreshAllActorItems(),
+            });
+        });
     }
 
     async _updateObject(event, formData) {
@@ -372,23 +379,29 @@ export class CoinManager extends FormApplication {
             title: game.i18n.localize("SFC.InitActors.SingleLabel"),
             content: dialogContent,
             buttons: {
-                yes: {
-                    icon: `<i class="fa fa-check"></i>`,
-                    label: game.i18n.localize("SFC.Yes"),
+                currency: {
+                    icon: `<i class="fas fa-dollar-sign"></i>`,
+                    label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCurrency"),
                     callback: async (html) => {
-                        const behaviour = html.find(`#behaviour`)[0].value;
-                        const keepCurrency = behaviour == "keep-coins" ? false : true;
+                        let keepCurrency = true;
                         await Coins.initActorInventory(actor, keepCurrency);
                     }
                 },
-                no: {
-                    icon: `<i class="fa fa-times"></i>`,
-                    label: game.i18n.localize("SFC.No"),
+                coins: {
+                    icon: `<i class="fas fa-coins"></i>`,
+                    label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCoins"),
+                    callback: async (html) => {
+                        let keepCurrency = false;
+                        await Coins.initActorInventory(actor, keepCurrency);
+                    }
+                },
+                cancel: {
+                    icon: `<i class="fas fa-times"></i>`,
+                    label: game.i18n.localize("SFC.InitActors.Dialog.Cancel"),
                     callback: event => { }
                 }
-            },
-            default: "no"
-        });
+            }
+        }, {classes: ["dialog", "init-dialog"]});
         dialog.render(true);
     }
 }
