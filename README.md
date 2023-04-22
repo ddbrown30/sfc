@@ -25,15 +25,16 @@ When you first start using SWADE Fantasy Currencies (SFC), it's recommended to r
 To do this, follow these steps:
 1. Open the Configure Settings menu from the Game Configuration tab
 2. Select SWADE Fantasy Currencies on the left
-3. Click the Initialize All Characters button and press Yes to confirm
+3. Click the Initialize All Characters button
+4. Click the Initialize and preserve currency value button
 
 This will then grab all character actors in your game (skipping npcs and vehicles) and will do the following:
 - Add a coin item to the actor's inventory for each coin defined in the Coin Config. By default, this will be Copper Coins, Silver Coins, Gold Coins, and Platinum Coins.
 - Using the actor's current amount of currency, it will give a quantity of coins that adds up to that amount using the largest denominations possible. For example, if the actor had $5.27, they will be awarded 0 platinum, 5 gold, 2 silver, and 7 copper coins.
 
-You might notice the behaviour dropdown on the confirmation dropdown. You should leave that on the default value of Keep Currency for the first time you run it. The Keep Coins option is useful for initializing characters after you have been using SFC for awhile. Instead of using the actor's currency to calculate the number of coins they should have, it instead will keep the quantity of coins the same and will calculate the currency based on the value of the coins the actor has. This is important because if, for instance, an actor has 1000 copper coins (which is equal to $10 of currency) running the init step with Keep Currency would convert those coins to 10 gold coins.
+You might notice the other button in the initialize dialog. You should always use the preserve currency button for the first time you run this process. The preserve coins option is useful for initializing characters after you have been using SFC for awhile. Instead of using the actor's currency to calculate the number of coins they should have, it instead will keep the quantity of coins the same and will calculate the currency based on the value of the coins the actor has. This is important because if, for instance, an actor has 1000 copper coins (which is equal to $10 of currency) preserving currency would convert those coins to 10 gold coins.
 
-If processing all the characters in your game makes you nervous, you can instead enable the Init Coins button in the settings. You can then go into each character, one by one, and click the button there to initialize just that character. It otherwise functions exactly as above.
+If processing all the characters in your game makes you nervous, you can instead use the Coin Manager, accessible from the Gear tab of the character sheet. From there, go to the System tab and select Initialize Character. You can do this one by one for each character you would like to initialize.
 
 # Usage Instructions
 
@@ -77,10 +78,9 @@ If your world has different types of coins than the standard fantasy RPG denomin
 
 From here, you can set the name, icon, value, and weight for each coin. Note that if you change the value of coins, you'll need to run the Initialize Characters step again in order to have the coins and currency match. If you set your coin values such that it's no longer possible to evenly divide the currency among your coins, the extra currency will be lost during the init process.
 
-You can also choose to disable coins that you don't want. Disabled coins will no longer affect the currency or appear in the coin display. Disabled coins will be removed from the inventory the next time that Initialize Characters is run.
+You can also choose to disable coins that you don't want. Disabled coins will no longer affect the currency or appear in the coin display. Disabled coins will be removed from the inventory the next time Initialize Characters is run.
 
 ![Preview](./coin_config.jpg?raw=true)
-
 
 # Feedback
 
