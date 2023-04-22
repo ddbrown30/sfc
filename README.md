@@ -25,8 +25,8 @@ When you first start using SWADE Fantasy Currencies (SFC), it's recommended to r
 To do this, follow these steps:
 1. Open the Configure Settings menu from the Game Configuration tab
 2. Select SWADE Fantasy Currencies on the left
-3. Click the Initialize All Characters button
-4. Click the Initialize and preserve currency value button
+3. Click the "Initialize All Characters" button
+4. Click the "Initialize and preserve currency value" button
 
 This will then grab all character actors in your game (skipping npcs and vehicles) and will do the following:
 - Add a coin item to the actor's inventory for each coin defined in the Coin Config. By default, this will be Copper Coins, Silver Coins, Gold Coins, and Platinum Coins.
