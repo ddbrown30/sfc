@@ -7,7 +7,7 @@
     "verified": "10.291",
     "maximum": "10"
   },
-  "version": "0.5.0",
+  "version": "0.5.1",
   "relationships": {
     "systems": [
       {
@@ -36,8 +36,8 @@
     "styles/sfc.css"
   ],
   "url": "https://github.com/ddbrown30/sfc",
-  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.5.0/module.json",
-  "download": "https://github.com/ddbrown30/sfc/releases/download/0.5.0/module.zip",
+  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.5.1/module.json",
+  "download": "https://github.com/ddbrown30/sfc/releases/download/0.5.1/module.zip",
   "bugs": "https://github.com/ddbrown30/sfc/issues",
   "authors": [
     {

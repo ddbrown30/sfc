@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+* Fixed render after changing icon in the coin config
+
 ## 0.5.0
 
 * Reworked the initialize flow to hopefully be less confusing
