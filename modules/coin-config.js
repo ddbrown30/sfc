@@ -131,6 +131,7 @@ export class CoinConfig extends FormApplication {
 
         event.target.blur();
         event.target.reportValidity();
+        this.render(true);
     }
 
     //Searches through all the actors and checks if any of them contain coin data
