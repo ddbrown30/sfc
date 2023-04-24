@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+* Added a repair process on load to hopefully fix issues when upgrading from older versions
+
 ## 0.5.1
 
 * Fixed render after changing icon in the coin config
