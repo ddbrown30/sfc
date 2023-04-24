@@ -9,15 +9,15 @@ export class Coins {
     /* -------------------------------------------- */
 
     static async onReady() {
-        const defaultMap = Coins.createDefaultCoinDataMap();
+        const defaultMap = await Coins.createDefaultCoinDataMap();
 
         game.sfc.coinDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
         if (!Object.values(game.sfc.coinDataMap).length) {
-            Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, duplicate(defaultMap));
+            await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, duplicate(defaultMap));
         }
 
         //Migration of old coin map to the new one
-        if ((typeof game.sfc.coinDataMap["copper"].enabled === "undefined")) {
+        if ((typeof game.sfc?.coinDataMap["copper"]?.enabled === "undefined")) {
             let newMap = duplicate(defaultMap);
             for (const oldCoinData of Object.values(game.sfc.coinDataMap)) {
                 let newCoinData = newMap[oldCoinData.flags.sfc.type];
@@ -28,9 +28,10 @@ export class Coins {
                 newCoinData.value = oldCoinData.flags.sfc.value;
                 newCoinData.weight = oldCoinData.system.weight;
             }
-            Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, newMap);
+            await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, newMap);
         }
 
+        Coins.validateAndRepairCoinMap();
         Coins.buildItemDescriptionText();
     }
     
@@ -337,7 +338,7 @@ export class Coins {
         return createdItems[0];
     }
 
-    static createDefaultCoinDataMap() {
+    static async createDefaultCoinDataMap() {
         let defaultMap = {};
 
         defaultMap[SFC_CONFIG.DEFAULT_CONFIG.coins.types.copper] = {
@@ -384,7 +385,7 @@ export class Coins {
             weight: SFC_CONFIG.DEFAULT_CONFIG.coins.weight
         };
 
-        Utils.setSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap, defaultMap);
+        await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap, defaultMap);
         return defaultMap;
     }
 
@@ -449,5 +450,18 @@ export class Coins {
         const templateData = {coinDescriptionDatas};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
         game.sfc.itemDescription = content;
+    }
+
+    static validateAndRepairCoinMap() {
+        const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
+        for (let coinData of Object.values(game.sfc.coinDataMap)) {
+            coinData.enabled = (typeof coinData.enabled === "undefined") ? defaultMap[coinData.type].enabled : coinData.enabled;
+            coinData.img = (typeof coinData.img === "undefined") ? defaultMap[coinData.type].img : coinData.img;
+            coinData.name = (typeof coinData.name === "undefined") ? defaultMap[coinData.type].name : coinData.name;
+            coinData.shortName = (typeof coinData.shortName === "undefined") ? defaultMap[coinData.type].shortName : coinData.shortName;
+            coinData.value = (typeof coinData.value === "undefined") ? defaultMap[coinData.type].value : coinData.value;
+            coinData.weight = (typeof coinData.weight === "undefined") ? defaultMap[coinData.type].weight : coinData.weight;
+            coinData.countFlagName = (typeof coinData.countFlagName === "undefined") ? defaultMap[coinData.type].countFlagName : coinData.countFlagName;
+        }
     }
 }
