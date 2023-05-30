@@ -4,8 +4,7 @@
   "description": "<p>A module that overrides the default currency behaviour of SWADE and replaces it with a configurable set of currencies.</p>",
   "compatibility": {
     "minimum": "10",
-    "verified": "10.291",
-    "maximum": "10"
+    "verified": "11.299"
   },
   "version": "0.5.2",
   "relationships": {
@@ -29,9 +28,9 @@
       "flags": {}
     }
   ],
-    "esmodules": [
-        "sfc.js"
-    ],
+  "esmodules": [
+    "sfc.js"
+  ],
   "styles": [
     "styles/sfc.css"
   ],
