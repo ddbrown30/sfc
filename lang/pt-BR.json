@@ -1,0 +1,114 @@
+{
+    "SFC": {
+        "InitActors": {
+            "AllLabel": "Inicializar Todos Personagens",
+            "SingleLabel": "Inicializar Personagem",
+            "Dialog": {
+                "AllContents1": "Isto vai processar todos personagens de jogadores neste mundo.",
+                "SingleContents1": "Isto vai processar somente este persoangem",
+                "Contents2": "O processo vai criar itens de moedas no inventário deste ator e então atualizar as moedas ou valor baseado no comportamento que você selecionar abaixo.",
+                "Contents3": "Preservando o valor irá assegurar o valor total dos pertences do personagem e vai definir os número de moedas iguais ao valor. Isto vai recalcular e sobreescrever quantidades de moedas se o personagem já possuir moedas.",
+                "Contents4": "Preservando a quantidadde de moedas vai deixar intocadas as moedas existentes no invetário do persoangem e e vai definir o valor total de moedas ditas. Se o perosnagem não tiver moedas, será definido o valor de 0.",
+                "Contents5": "<strong>Se for a sua prmeira vez rodado o processo, você deveria usar a opção de manter valor.</strong>",
+                "Contents6": "Se você já tem personagens com moedas, você deveria usar a opção de manter moedas.",
+                "Contents7": "<strong>Este processo não pode ser desfeito. Você tem certeza que quer continuar?</strong>",
+                "Contents8": "Para mais informações, viste a página do projeto SFC.",
+                
+                "InitKeepCurrency": "Inicializa e preserva o valor",
+                "InitKeepCoins": "Inicializa e preserva as moedas",
+                "Cancel": "Cancelar",
+
+                "BehaviourOptions": {
+                    "KeepCurrencyValue": "Manter Valor",
+                    "KeepCurrencyTitle": "Gera quantidades de moedas baseadas no valor",
+                    "KeepCoinsValue": "Manter Moedas",
+                    "KeepCoinsTitle": "Calcula o valor baseado na moedas existentes"
+                }
+            }
+        },
+
+        "RefreshCoinItems": {
+            "AllLabel": "Atualiza Todos os Itens de Moedas",
+            "AllContent": "<p>Gostaria de atualizar as moedas existentes de todos os personagens?</p><p>(Isto não afetará o valor ou o total de moedas.)</p>",
+            "SingleLabel": "Atualiza os Itens de Moedas",
+            "SingleContent": "<p>Gostaria de atualizar as moedas existentes neste personagem?</p><p>(Isto não afetará o valor ou o total de moedas.)</p>"
+        },
+
+        "CoinConfig": {
+            "Name": "Configuração de Moedas",
+            "Label": "Abrir Configuração de Moedas",
+            "Hint": "Configura as moedas em seu jogo.",
+            "RestoreDefaultsButton": "Restaurar Padrão",
+            "RestoreDefaultsTitle": "Restaurar Padrão",
+            "RestoreDefaultsContents": "<p>Você tem certeza que quer restaurar a configuração de moedas padrão?</p><p><strong>Isto vai reiniciar qualquer mudança  que tenha feito na moedas.</strong></p>",
+        
+            "Dialog": {
+                "RefreshDataTitle": "Dados Alterados",
+                "RefreshDataContent": "<p>Mudanças foram feitas em um tipo ou mais de moedas.</p><p>Você gostaria de atualizar as moedas existentes nos personagens?</p><p>(Isto não aplicará mudança de valoress. Você precisará ainda de uma reinicialização completa se tiver feito mudanças nos valores das moedas.)",
+                "ValueChangedTitle": "Valores Alterados",
+                "ValueChangedContent": "<p>Você mudou um tipo ou mais de valores de moedas e você tem personagens com moedas em seu mundo.</p><p><strong>Você precisa reiniciar estes personagens após ter feito isto.</strong></p><br>"
+            }
+        },
+
+        "CoinConfigItem": {
+            "Enabled": "Habilitado",
+            "Name": "Nome da Moeda",
+            "ShortName": "Abreviação",
+            "Icon": "Ícone",
+            "Value": "Valor",
+            "Weight": "Peso"
+        },
+
+        "CoinItemDescription": {
+            "TableName": "Moedas & valores de troca",
+            "CoinHeader": "Moeda"
+        },
+
+        "CoinManager": {
+            "Name": "Gerenciador de Moedas",
+            "ButtonName": "Gerenciar",
+            "AddRemoveTab": "Adicionar/Remover Moedas",
+            "ExchangeTab": "Trocar Moedas",
+            "SystemTab": "Sistema",
+            "AddDescription": "Quando adicionar valor, o valor maior será adicionado primeiro. Ao adicionar moedas, o número inserido de cada moeda será adicionado.",
+            "RemoveDescription": "Quando removendo com qualquer método, o valor mais baixo de moedas será removido primeiro, convertendo o valor de moeda mais alto no valor de moeda mais baixo conforme necessário.",
+            "AddRemoveWarning": "Aviso: Se o valor de sua moeda não se dividir em nenhum outro valor ou se você tentar remover uma quantidade que não possa ser dividida em valores de suas moedas, o vaor menescente será perdido.",
+            "UseCurrency": "Valor",
+            "UseCoins": "Moedas",
+            "CurrencyLabel": "Valor",
+            "AddButton": "Adicionar",
+            "RemoveButton": "Remover",
+            "ExchangeAllDescription": "Trocar Tudo vai reduzir as moedas do personagem para o número mínimo enquanto retém o valor ex: 650 peças de cobre se tornam 6 peças de ouro e 5 peças de prata.",
+            "ExchangeAllButton": "Trocar Tudo",
+            "ExchangeDescription": "Trocar vai tentar converter a quantidade inserida de moedas do primeiro tipo para o segundo.",
+            "ExchangeAmount": "Quantidade",
+            "ExchangeFrom": "De",
+            "ExchangeTo": "Para",
+            "ExchangeButton": "Trocar",
+            "InitButton": "Inicializar Personagem",
+
+            "Dialog": {
+                "AddConfirmTitle": "Adicionar Moedas",
+                "AddConfirmContent": "<p>Adicionar moedas a este personagem?</p><br>",
+                "RemoveConfirmTitle": "Remover Moedas",
+                "RemoveConfirmContent": "<p>Remover moedas deste personagem?</p><br>",
+                "ExchangeAllConfirmTitle": "Trocar Todas as Moedas",
+                "ExchangeAllConfirmContent": "<p>Trocar todas as moedas deste personagem?</p><br>",
+                "ExchangeConfirmTitle": "Trocar Moedas",
+                "ExchangeConfirmContent": "<p>Trocar moedas deste personagem?</p><br>"
+            }
+        },
+
+        "Settings": {
+            "ShowCurrencyName": "Mostrar Valor na Ficha",
+            "ShowCurrencyHint": "Mostra o valor total de todas as moedas como valor na ficha do personagem."
+        },
+
+        "Errors": {
+            "CannotAfford": "Não pode adiquirir"
+        }
+    },
+    "SFC.DisableWarning": "Aviso: Moedas desabilitadas são removidas do inventário do ator quando rodar Inicializar Todos Personagens.",
+    "SFC.Yes": "Sim",
+    "SFC.No": "Não"
+}
