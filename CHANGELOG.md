@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.4
+
+* Added support for Brazilian Portugueses
+* Adjusted some CSS to better support localization
+
+## 0.5.3
+
+* Enabled for v11
+
 ## 0.5.2
 
 * Added a repair process on load to hopefully fix issues when upgrading from older versions
