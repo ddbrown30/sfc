@@ -21,11 +21,21 @@
     flex-wrap: nowrap;
 }
 
+.sfc .currency-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
 .sfc .coin-group .coin-icon {
     height: var(--form-field-height);
     border-radius: 3px 0 0 3px;
     object-fit: contain;
     min-width: 26px;
+}
+
+.form-group.sfc .settings-button {
+    flex: 2;
 }
 
 .swade-official .sfc .coins.manager-button,
@@ -43,7 +53,7 @@
     border: 2px groove var(--color-border-light-highlight);
     border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.1);
-    max-width: 170px;
+    max-width: max-content;
 }
 .swade-official .sfc .coins.manager-button,
 .swpf-sheet .sfc .coins.manager-button {
@@ -109,6 +119,7 @@
 
 .coin-manager.tabs {
     grid-row: 1;
+    flex-wrap: nowrap;
 }
 
 #coin-manager-sheet-body {
@@ -121,7 +132,6 @@
 }
 
 .flexrow.coin-manager-buttons {
-    justify-content: space-between;
     max-width: 300px;
     gap: 10px;
 }

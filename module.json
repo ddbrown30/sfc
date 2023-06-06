@@ -6,7 +6,7 @@
     "minimum": "10",
     "verified": "11.299"
   },
-  "version": "0.5.3",
+  "version": "0.5.4",
   "relationships": {
     "systems": [
       {
@@ -26,6 +26,12 @@
       "name": "English",
       "path": "lang/en.json",
       "flags": {}
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json",
+      "flags": {}
     }
   ],
   "esmodules": [
@@ -35,8 +41,8 @@
     "styles/sfc.css"
   ],
   "url": "https://github.com/ddbrown30/sfc",
-  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.5.3/module.json",
-  "download": "https://github.com/ddbrown30/sfc/releases/download/0.5.3/module.zip",
+  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.5.4/module.json",
+  "download": "https://github.com/ddbrown30/sfc/releases/download/0.5.4/module.zip",
   "bugs": "https://github.com/ddbrown30/sfc/issues",
   "authors": [
     {
