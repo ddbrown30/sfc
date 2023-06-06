@@ -1,19 +1,19 @@
 <div class='sfc'>
     <div class='coins'>
-        {{#if showCurrency}}
         <div class="currency-display">
+            {{#if showCurrency}}
             {{#if currencyName}}
             <span class='label'>{{currencyName}}:</span>
             {{/if}}
             <span class='value'>{{numberFormat currencyAmount decimals=2}}</span>
+            {{/if}}
+            <button type="button" class="coins manager-button" id="manager-button">{{localize "SFC.CoinManager.ButtonName"}}</button>
         </div>
-        {{/if}}
         {{#each coinTemplateData}}
         <div class="coin-group">
             <label for="flags.sfc.{{countFlagName}}"><img name="icon-{{@index}}" src='{{img}}' class="coin-icon" data-tooltip="{{name}}" title='{{name}}' /></label>
             <input name='flags.sfc.{{countFlagName}}' type='number' data-dtype='Number' value='{{count}}' />
         </div>
         {{/each}}
-        <button type="button" class="coins manager-button" id="manager-button">{{localize "SFC.CoinManager.ButtonName"}}</button>
     </div>
 </div>
