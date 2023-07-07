@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.5
+
+* Fixed header alignment in the description table
+
 ## 0.5.4
 
 * Added support for Brazilian Portugueses
