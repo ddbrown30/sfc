@@ -43,4 +43,13 @@ export function registerSettings() {
         config: true,
         default: SFC_CONFIG.DEFAULT_CONFIG.defaultShowCurrency
     });
+
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.npcCoins, {
+        name: "SFC.Settings.NpcCoinsName",
+        hint: "SFC.Settings.NpcCoinsHint",
+        scope: "world",
+        type: Boolean,
+        config: true,
+        default: SFC_CONFIG.DEFAULT_CONFIG.defaultNpcCoins
+    });
 }

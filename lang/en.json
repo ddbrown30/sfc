@@ -13,7 +13,7 @@
                 "Contents6": "If your world has characters with coins already, you should use the preserve coins option.",
                 "Contents7": "<strong>This process can not be undone. Are you sure you would like to continue?</strong>",
                 "Contents8": "For more information, visit the SFC project page.",
-                
+
                 "InitKeepCurrency": "Initialize and preserve currency value",
                 "InitKeepCoins": "Initialize and preserve coin counts",
                 "Cancel": "Cancel",
@@ -41,7 +41,7 @@
             "RestoreDefaultsButton": "Restore Defaults",
             "RestoreDefaultsTitle": "Restore Defaults",
             "RestoreDefaultsContents": "<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>",
-        
+
             "Dialog": {
                 "RefreshDataTitle": "Data Changed",
                 "RefreshDataContent": "<p>Changes were made to one or more coins.</p><p>Would you like to update existing coins on characters?</p><p>(This will not apply value changes. You must still run a full initialize if you made changes to coin values.)",
@@ -101,7 +101,9 @@
 
         "Settings": {
             "ShowCurrencyName": "Show Currency on Sheet",
-            "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet."
+            "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet.",
+            "NpcCoinsName": "Enable Coins for NPCs",
+            "NpcCoinsHint": "Adds coin Items to NPC Actors."
         },
 
         "Errors": {
