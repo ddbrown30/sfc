@@ -476,7 +476,10 @@ export class Coins {
                     abbreviation: `{#} ${coinData.shortName}`,
                     exchangeRate: coinData.value
                 };
-                itemPileCurrency.data = this.buildItemDataFromCoinData(coinData);
+                itemPileCurrency.data = {
+                    item: this.buildItemDataFromCoinData(coinData),
+                    uuid: false,
+                };
                 newItemPileCurrencies.push(itemPileCurrency);
             }
         }
