@@ -77,8 +77,11 @@ export class CoinConfig extends FormApplication {
     async _updateObject(event, formData) {
         await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, this.workingCoinDataMap);
         Coins.buildItemDescriptionText();
-        const itemPilesConfig = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig);
-        if (itemPilesConfig) Coins.itemPilesConfig();
+        const itemPilesActive = game.modules.get('item-piles')?.active ? true : false;
+        if (itemPilesActive) {
+            const itemPilesConfig = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig);
+            if (itemPilesConfig) Coins.itemPilesConfig();
+        }
     }
 
     async restoreDefaults() {
