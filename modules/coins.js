@@ -34,7 +34,7 @@ export class Coins {
         Coins.validateAndRepairCoinMap();
         Coins.buildItemDescriptionText();
     }
-    
+
     static async onRenderSettingsConfig(app, el, data) {
         //Add the init actors button
         const initButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
@@ -69,8 +69,8 @@ export class Coins {
                 }
             }, {classes: ["dialog", "init-dialog"]});
             dialog.render(true);
-        });        
-        
+        });
+
         const refreshButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
 
         refreshButton.find('[data-key="refresh-coin-items-button"]').click(ev => {
@@ -85,7 +85,7 @@ export class Coins {
         el.find('[data-tab="sfc"] h2').after(refreshButton);
         el.find('[data-tab="sfc"] h2').after(initButton);
     }
-    
+
     static async onRenderActorSheet(app, html, data) {
         let actor = app.actor;
 
@@ -93,7 +93,7 @@ export class Coins {
         if (actor.type != "character") {
             return;
         }
-        
+
         //Sort the coins from highest value to lowest
         let coinDataArray = Object.values(game.sfc.coinDataMap);
         coinDataArray.sort((a, b) => {
@@ -118,7 +118,7 @@ export class Coins {
         const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
         const templateData = {currencyAmount, currencyName, coinTemplateData, showCurrency};
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
-        
+
         //Find the existing currency section and replace it with ours
         const currencySection = html[0].querySelector("div.form-group.currency");
         currencySection.parentNode.insertAdjacentHTML("afterend", content);
@@ -157,7 +157,7 @@ export class Coins {
             }
         }
     }
-    
+
     static async onUpdateItem(doc, updateData, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = updateData.system?.quantity;
@@ -167,7 +167,7 @@ export class Coins {
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
     }
-    
+
     static async onDeleteItem(doc, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let actor = doc.actor;
@@ -192,7 +192,7 @@ export class Coins {
                 totalCurrency += coinItem.system.quantity * coinData.value;
             }
         }
-        
+
         actor.update({"system.details.currency": Number(totalCurrency.toFixed(2))});
     }
 
@@ -261,7 +261,7 @@ export class Coins {
             //We push it here and actually set it later because this will trigger an update in the actor before we're ready to handle it
             countData.push({flagName: coinData.countFlagName, numCoins: numCoins});
         }
-        
+
         if (createData.length) await actor.createEmbeddedDocuments("Item", createData);
         if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
         if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
@@ -305,7 +305,7 @@ export class Coins {
                 });
             }
         }
-        
+
         if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
 
         if (actor.sheet.rendered) {
@@ -396,17 +396,17 @@ export class Coins {
               b = parseInt(b);
             return gcd(b, a % b);
           };
-          
+
           var len = decimal.toString().length - 2;
           len = len > 1 ? len : 1; //If decimal is a whole number, we don't want to shift the denominator
-          
+
           var denominator = Math.pow(10, len);
           var numerator = decimal * denominator;
-          
-          var divisor = gcd(numerator, denominator);          
+
+          var divisor = gcd(numerator, denominator);
           numerator /= divisor;
           denominator /= divisor;
-          
+
           return numerator.toFixed() + '/' + denominator.toFixed();
     }
 
@@ -437,7 +437,7 @@ export class Coins {
                         coinDescriptionData.columns[j] = "1";
                         continue;
                     }
-                    
+
                     const decimal = (coinData.value * 1000) / (coinDataArray[j].value * 1000);
                     const fraction = this.decimalToFraction(decimal);
                     coinDescriptionData.columns[j] = fraction;
@@ -463,5 +463,23 @@ export class Coins {
             coinData.weight = (typeof coinData.weight === "undefined") ? defaultMap[coinData.type].weight : coinData.weight;
             coinData.countFlagName = (typeof coinData.countFlagName === "undefined") ? defaultMap[coinData.type].countFlagName : coinData.countFlagName;
         }
+    }
+
+    static itemPilesConfig() {
+        const newItemPileCurrencies = [];
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            if (coinData.enabled) {
+                const itemPileCurrency = {
+                    primary: coinData.value === 1,
+                    name: coinData.name,
+                    img: coinData.img,
+                    abbreviation: `{#} ${coinData.shortName}`,
+                    exchangeRate: coinData.value
+                };
+                itemPileCurrency.data = this.buildItemDataFromCoinData(coinData);
+                newItemPileCurrencies.push(itemPileCurrency);
+            }
+        }
+        game.settings.set("item-piles", "currencies", newItemPileCurrencies);
     }
 }

@@ -64,5 +64,6 @@ export const SETTING_KEYS = {
     coinDataMap: "coinMap",
     defaultCoinDataMap: "defaultCoinMap",
     showCurrency: "showCurrency",
+    itemPilesConfig: "itemPilesConfig",
 }
 

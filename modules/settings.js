@@ -43,4 +43,13 @@ export function registerSettings() {
         config: true,
         default: SFC_CONFIG.DEFAULT_CONFIG.defaultShowCurrency
     });
+
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig, {
+        name: "SFC.Settings.ItemPilesConfigName",
+        hint: "SFC.Settings.ItemPilesConfigHint",
+        scope: "world",
+        type: Boolean,
+        config: true,
+        default: SFC_CONFIG.DEFAULT_CONFIG.defaultItemPilesConfig
+    });
 }

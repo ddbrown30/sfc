@@ -49,7 +49,7 @@ export class CoinConfig extends FormApplication {
                     }
                 }
 
-                function showRefreshPrompt(app) {                    
+                function showRefreshPrompt(app) {
                     app.submit();
 
                     Dialog.confirm({
@@ -77,6 +77,8 @@ export class CoinConfig extends FormApplication {
     async _updateObject(event, formData) {
         await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, this.workingCoinDataMap);
         Coins.buildItemDescriptionText();
+        const itemPilesConfig = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig);
+        if (itemPilesConfig) Coins.itemPilesConfig();
     }
 
     async restoreDefaults() {
@@ -137,7 +139,7 @@ export class CoinConfig extends FormApplication {
     //Searches through all the actors and checks if any of them contain coin data
     hasAnyActiveCoins() {
         let countFlags = []
-        
+
         for (let coinData of Object.values(game.sfc.coinDataMap)) {
             countFlags.push(coinData.countFlagName);
         }
