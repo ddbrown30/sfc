@@ -4,9 +4,9 @@
   "description": "<p>A module that overrides the default currency behaviour of SWADE and replaces it with a configurable set of currencies.</p>",
   "compatibility": {
     "minimum": "10",
-    "verified": "11.299"
+    "verified": "11.308"
   },
-  "version": "0.5.5",
+  "version": "0.6.0",
   "relationships": {
     "systems": [
       {
@@ -15,7 +15,7 @@
         "manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
         "compatibility": {
           "minimum": "2.2.5",
-          "verified": "3.0.4"
+          "verified": "3.1.4"
         }
       }
     ]
@@ -41,13 +41,13 @@
     "styles/sfc.css"
   ],
   "url": "https://github.com/ddbrown30/sfc",
-  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.5.5/module.json",
-  "download": "https://github.com/ddbrown30/sfc/releases/download/0.5.5/module.zip",
+  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.6.0/module.json",
+  "download": "https://github.com/ddbrown30/sfc/releases/download/0.6.0/module.zip",
   "bugs": "https://github.com/ddbrown30/sfc/issues",
   "authors": [
     {
       "name": "Dan Brown",
-      "discord": "TheChemist#6059",
+      "discord": "thechemist30",
       "flags": {}
     }
   ]
