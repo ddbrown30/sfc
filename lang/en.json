@@ -103,7 +103,12 @@
             "ShowCurrencyName": "Show Currency on Sheet",
             "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet.",
             "ItemPilesConfigName": "Configure Item Piles Currencies",
-            "ItemPilesConfigHint": "Updates the currencies in Item Piles settings."
+            "ItemPilesConfigHint": "Updates the currencies in Item Piles settings.",
+            
+            "Dialog": {
+                "ItemPilesTitle": "Enable Item Piles",
+                "ItemPilesContent": "<p>Enabling Item Piles support in SWADE Fantasy Currencies will overwrite the Currencies configuration in Item Piles. This cannot be undone.</p><p>Would you like to continue?</p>"
+            }
         },
 
         "Errors": {
