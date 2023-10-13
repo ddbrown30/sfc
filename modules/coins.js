@@ -1,6 +1,6 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
-import { CoinManager } from "./coin-manager.js"
+import { CoinManager } from "./coin-manager.js";
 
 export class Coins {
 
@@ -385,8 +385,8 @@ export class Coins {
     static decimalToFraction(decimal) {
         var gcd = function(a, b) {
             if (!b) return a;
-              a = parseInt(a);
-              b = parseInt(b);
+            a = parseInt(a);
+            b = parseInt(b);
             return gcd(b, a % b);
           };
 
@@ -456,5 +456,26 @@ export class Coins {
             coinData.weight = (typeof coinData.weight === "undefined") ? defaultMap[coinData.type].weight : coinData.weight;
             coinData.countFlagName = (typeof coinData.countFlagName === "undefined") ? defaultMap[coinData.type].countFlagName : coinData.countFlagName;
         }
+    }
+
+    static itemPilesConfig() {
+        const newItemPileCurrencies = [];
+        for (const coinData of Object.values(game.sfc.coinDataMap)) {
+            if (coinData.enabled) {
+                const itemPileCurrency = {
+                    primary: coinData.value === 1,
+                    name: coinData.name,
+                    img: coinData.img,
+                    abbreviation: `{#} ${coinData.shortName}`,
+                    exchangeRate: coinData.value
+                };
+                itemPileCurrency.data = {
+                    item: this.buildItemDataFromCoinData(coinData),
+                    uuid: false,
+                };
+                newItemPileCurrencies.push(itemPileCurrency);
+            }
+        }
+        game.settings.set("item-piles", "currencies", newItemPileCurrencies);
     }
 }

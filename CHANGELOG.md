@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+* Added support for Item Piles
+
 ## 0.5.5
 
 * Fixed header alignment in the description table

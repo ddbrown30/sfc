@@ -1,5 +1,6 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { CoinConfig } from "./coin-config.js";
+import { Coins } from "./coins.js";
 import { Utils } from "./utils.js";
 
 export function registerSettings() {
@@ -52,4 +53,26 @@ export function registerSettings() {
         config: true,
         default: SFC_CONFIG.DEFAULT_CONFIG.defaultNpcCoins
     });
+
+    if (game.modules.get('item-piles')?.active) {
+        Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig, {
+            name: "SFC.Settings.ItemPilesConfigName",
+            hint: "SFC.Settings.ItemPilesConfigHint",
+            scope: "world",
+            type: Boolean,
+            config: true,
+            default: SFC_CONFIG.DEFAULT_CONFIG.defaultItemPilesConfig,
+            onChange: async itemPilesConfig => {
+                if (itemPilesConfig) {
+                    await Dialog.confirm({
+                        title: game.i18n.localize("SFC.Settings.Dialog.ItemPilesTitle"),
+                        content: game.i18n.localize("SFC.Settings.Dialog.ItemPilesContent"),
+                        yes: () => Coins.itemPilesConfig(),
+                        no: () => Utils.setSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig, false)
+                    });
+                }
+            }
+        });
+    }
+
 }

@@ -82,8 +82,15 @@ You can also choose to disable coins that you don't want. Disabled coins will no
 
 ![Preview](./coin_config.jpg?raw=true)
 
+
+# Item Piles
+
+If you use the Item Piles module and would like the SFC coins to work with it, you can enable the option in the SFC settings. This will configure the currencies in the System Specific Settings tab of Item Piles to use the coin items from SFC as its currencies. This will be automatically updated any time changes are made in the SFC coin config.
+
+Disclaimer: This support was done independently of the Item Piles module and was last confirmed to be working on version 2.7.12 of Item Piles. Changes to the Item Piles module in the future may cause this to stop working. Feel free to enter an issue (see below) if you believe that this is no longer working.
+
 # Feedback
 
-Suggestions and feedback are appreciated. You can contact me on Discord at TheChemist#6059 if you have any questions or comments.
+Suggestions and feedback are appreciated. You can contact me on Discord at thechemist30 if you have any questions or comments.
 
 To report a bug, please open a new issue [in the tracker](https://github.com/ddbrown30/sfc/issues) or use the [Bug Reporter module](https://www.foundryvtt-hub.com/package/bug-reporter/)
