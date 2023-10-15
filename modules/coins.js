@@ -1,6 +1,6 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
-import { CoinManager } from "./coin-manager.js"
+import { CoinManager } from "./coin-manager.js";
 
 export class Coins {
 
@@ -89,45 +89,50 @@ export class Coins {
     static async onRenderActorSheet(app, html, data) {
         let actor = app.actor;
 
-        //When rendering a player character sheet, we replace the normal currency section with the SFC display
-        if (actor.type != "character") {
+        if (actor.sheet.options.classes.includes("swade-official") == false) {
+            //We only support showing the currency on swade-official sheets
+            //Note: This includes the Fantasy Companion, Pathfinder, and Deadlands sheets and likely more
             return;
         }
 
-        //Sort the coins from highest value to lowest
-        let coinDataArray = Object.values(game.sfc.coinDataMap);
-        coinDataArray.sort((a, b) => {
-            return b.value - a.value;
-        });
+        //When rendering a player character sheet, we replace the normal currency section with the SFC display
+        if (Utils.isSupportedActorType(actor.type)) {
 
-        //Create an array of processed data for handlebars to use
-        let coinTemplateData = [];
-        for (const coinData of coinDataArray) {
-            if (coinData.enabled) {
-                coinTemplateData.push({
-                    name: coinData.name,
-                    img: coinData.img,
-                    count: actor.flags.sfc ? actor.flags.sfc[coinData.countFlagName] : 0,
-                    countFlagName: coinData.countFlagName
-                });
+            //Sort the coins from highest value to lowest
+            let coinDataArray = Object.values(game.sfc.coinDataMap);
+            coinDataArray.sort((a, b) => {
+                return b.value - a.value;
+            });
+
+            //Create an array of processed data for handlebars to use
+            let coinTemplateData = [];
+            for (const coinData of coinDataArray) {
+                if (coinData.enabled) {
+                    coinTemplateData.push({
+                        name: coinData.name,
+                        img: coinData.img,
+                        count: actor.flags.sfc ? actor.flags.sfc[coinData.countFlagName] : 0,
+                        countFlagName: coinData.countFlagName
+                    });
+                }
             }
+
+            const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
+            const currencyName = game.settings.get("swade", "currencyName");
+            const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
+            const templateData = { currencyAmount, currencyName, coinTemplateData, showCurrency };
+            const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
+
+            //Find the existing currency section and replace it with ours
+            const currencySection = html[0].querySelector("div.form-group.currency");
+            currencySection.parentNode.insertAdjacentHTML("afterend", content);
+            currencySection.remove();
+
+            //Respond to the init actor button
+            html.find('[id="manager-button"]').click(ev => {
+                new CoinManager(actor, app).render(true);
+            });
         }
-
-        const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
-        const currencyName = game.settings.get("swade", "currencyName");
-        const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
-        const templateData = {currencyAmount, currencyName, coinTemplateData, showCurrency};
-        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
-
-        //Find the existing currency section and replace it with ours
-        const currencySection = html[0].querySelector("div.form-group.currency");
-        currencySection.parentNode.insertAdjacentHTML("afterend", content);
-        currencySection.remove();
-
-        //Respond to the init actor button
-        html.find('[id="manager-button"]').click(ev => {
-            new CoinManager(actor, app).render(true);
-        });
     }
 
     static async onPreUpdateActor(actor, updateData, options, userId) {
@@ -198,12 +203,9 @@ export class Coins {
 
     static async initAllActorInventories(keepCurrency) {
         for (const actor of game.actors) {
-            if (actor.type !== "character") {
-                //Only player characters use coins
-                continue;
+            if (Utils.isSupportedActorType(actor.type)) {
+                await this.initActorInventory(actor, keepCurrency);
             }
-
-            await this.initActorInventory(actor, keepCurrency);
         }
     }
 
@@ -278,12 +280,9 @@ export class Coins {
 
     static async refreshAllActorItems() {
         for (const actor of game.actors) {
-            if (actor.type !== "character") {
-                //Only player characters use coins
-                continue;
+            if (Utils.isSupportedActorType(actor.type)) {
+                await this.initActorInventory(actor, keepCurrency);
             }
-
-            await this.refreshActorItems(actor);
         }
     }
 
@@ -392,8 +391,8 @@ export class Coins {
     static decimalToFraction(decimal) {
         var gcd = function(a, b) {
             if (!b) return a;
-              a = parseInt(a);
-              b = parseInt(b);
+            a = parseInt(a);
+            b = parseInt(b);
             return gcd(b, a % b);
           };
 

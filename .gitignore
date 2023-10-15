@@ -120,3 +120,6 @@ foundry.js
 .vscode/launch.json
 Thumbs.db
 sfc.lock
+
+# macOS
+.DS_Store

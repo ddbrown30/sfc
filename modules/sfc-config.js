@@ -50,7 +50,8 @@ export const DEFAULT_CONFIG = {
         },
         weight: 0.02
     },
-    defaultShowCurrency: true
+    defaultShowCurrency: true,
+    defaultEnableNpcCoins: false
 }
 
 export const FLAGS = {
@@ -64,6 +65,7 @@ export const SETTING_KEYS = {
     coinDataMap: "coinMap",
     defaultCoinDataMap: "defaultCoinMap",
     showCurrency: "showCurrency",
+    enableNpcCoins: "enableNpcCoins",
     itemPilesConfig: "itemPilesConfig",
 }
 

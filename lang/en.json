@@ -14,6 +14,7 @@
                 "Contents7": "<strong>This process can not be undone. Are you sure you would like to continue?</strong>",
                 "Contents8": "For more information, visit the SFC project page.",
 
+
                 "InitKeepCurrency": "Initialize and preserve currency value",
                 "InitKeepCoins": "Initialize and preserve coin counts",
                 "Cancel": "Cancel",
@@ -41,6 +42,7 @@
             "RestoreDefaultsButton": "Restore Defaults",
             "RestoreDefaultsTitle": "Restore Defaults",
             "RestoreDefaultsContents": "<p>Are you sure you want to restore the default coin config?</p><p><strong>This will reset any changes you've made to the coins.</strong></p>",
+
 
             "Dialog": {
                 "RefreshDataTitle": "Data Changed",
@@ -102,12 +104,15 @@
         "Settings": {
             "ShowCurrencyName": "Show Currency on Sheet",
             "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet.",
+            "NpcCoinsName": "Enable Coins for NPCs",
+            "NpcCoinsHint": "Allows NPCs to use coins. Only works correctly when using a PC character sheet.",
             "ItemPilesConfigName": "Configure Item Piles Currencies",
             "ItemPilesConfigHint": "Updates the currencies in Item Piles settings.",
-            
             "Dialog": {
                 "ItemPilesTitle": "Enable Item Piles",
-                "ItemPilesContent": "<p>Enabling Item Piles support in SWADE Fantasy Currencies will overwrite the Currencies configuration in Item Piles. This cannot be undone.</p><p>Would you like to continue?</p>"
+                "ItemPilesContent": "<p>Enabling Item Piles support in SWADE Fantasy Currencies will overwrite the Currencies configuration in Item Piles. This cannot be undone.</p><p>Would you like to continue?</p>",
+                "EnableNpcWarningTitle": "Enable NPCs",
+                "EnableNpcWarningContent": "<p><b>Warning:</b> Using coins with NPCs requires using a Player Character sheet to view the NPC. Using the NPC sheet will not work and can result in broken values.</p><p>Use at your own risk.</p>"
             }
         },
 
