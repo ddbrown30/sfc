@@ -4,9 +4,9 @@
   "description": "<p>A module that overrides the default currency behaviour of SWADE and replaces it with a configurable set of currencies.</p>",
   "compatibility": {
     "minimum": "10",
-    "verified": "11.308"
+    "verified": "11.313"
   },
-  "version": "0.6.0",
+  "version": "0.7.0",
   "relationships": {
     "systems": [
       {
@@ -41,8 +41,8 @@
     "styles/sfc.css"
   ],
   "url": "https://github.com/ddbrown30/sfc",
-  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.6.0/module.json",
-  "download": "https://github.com/ddbrown30/sfc/releases/download/0.6.0/module.zip",
+  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.7.0/module.json",
+  "download": "https://github.com/ddbrown30/sfc/releases/download/0.7.0/module.zip",
   "bugs": "https://github.com/ddbrown30/sfc/issues",
   "authors": [
     {

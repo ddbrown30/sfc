@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+* Added option to allow NPCs to also use coins
+
 ## 0.6.0
 
 * Added support for Item Piles
