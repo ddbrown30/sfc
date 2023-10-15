@@ -28,7 +28,7 @@ To do this, follow these steps:
 3. Click the "Initialize All Characters" button
 4. Click the "Initialize and preserve currency value" button
 
-This will then grab all character actors in your game (skipping npcs and vehicles) and will do the following:
+This will then grab all character actors in your game (skipping vehicles and only using NPC actors if they are enabled in the SFC settings) and will do the following:
 - Add a coin item to the actor's inventory for each coin defined in the Coin Config. By default, this will be Copper Coins, Silver Coins, Gold Coins, and Platinum Coins.
 - Using the actor's current amount of currency, it will give a quantity of coins that adds up to that amount using the largest denominations possible. For example, if the actor had $5.27, they will be awarded 0 platinum, 5 gold, 2 silver, and 7 copper coins.
 

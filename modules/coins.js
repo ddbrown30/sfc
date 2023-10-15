@@ -89,8 +89,14 @@ export class Coins {
     static async onRenderActorSheet(app, html, data) {
         let actor = app.actor;
 
+        if (actor.sheet.options.classes.includes("swade-official") == false) {
+            //We only support showing the currency on swade-official sheets
+            //Note: This includes the Fantasy Companion, Pathfinder, and Deadlands sheets and likely more
+            return;
+        }
+
         //When rendering a player character sheet, we replace the normal currency section with the SFC display
-        if (actor.type === "character" || (actor.type === "npc" && Utils.getSetting(SFC_CONFIG.SETTING_KEYS.npcCoins) && actor.sheet.options.classes.includes("swade-official"))) {
+        if (Utils.isSupportedActorType(actor.type)) {
 
             //Sort the coins from highest value to lowest
             let coinDataArray = Object.values(game.sfc.coinDataMap);
@@ -197,7 +203,7 @@ export class Coins {
 
     static async initAllActorInventories(keepCurrency) {
         for (const actor of game.actors) {
-            if (actor.type === "character" || (actor.type === 'npc' && Utils.getSetting(SFC_CONFIG.SETTING_KEYS.npcCoins))) {
+            if (Utils.isSupportedActorType(actor.type)) {
                 await this.initActorInventory(actor, keepCurrency);
             }
         }
@@ -274,7 +280,7 @@ export class Coins {
 
     static async refreshAllActorItems() {
         for (const actor of game.actors) {
-            if (actor.type === "character" || (actor.type === 'npc' && Utils.getSetting(SFC_CONFIG.SETTING_KEYS.npcCoins))) {
+            if (Utils.isSupportedActorType(actor.type)) {
                 await this.initActorInventory(actor, keepCurrency);
             }
         }

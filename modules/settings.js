@@ -45,13 +45,21 @@ export function registerSettings() {
         default: SFC_CONFIG.DEFAULT_CONFIG.defaultShowCurrency
     });
 
-    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.npcCoins, {
+    Utils.registerSetting(SFC_CONFIG.SETTING_KEYS.enableNpcCoins, {
         name: "SFC.Settings.NpcCoinsName",
         hint: "SFC.Settings.NpcCoinsHint",
         scope: "world",
         type: Boolean,
         config: true,
-        default: SFC_CONFIG.DEFAULT_CONFIG.defaultNpcCoins
+        default: SFC_CONFIG.DEFAULT_CONFIG.defaultEnableNpcCoins,
+        onChange: async enableNpcCoins => {
+            if (enableNpcCoins) {
+                await Dialog.prompt({
+                    title: game.i18n.localize("SFC.Settings.Dialog.EnableNpcWarningTitle"),
+                    content: game.i18n.localize("SFC.Settings.Dialog.EnableNpcWarningContent")
+                });
+            }
+        }
     });
 
     if (game.modules.get('item-piles')?.active) {

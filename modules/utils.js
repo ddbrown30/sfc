@@ -91,4 +91,8 @@ export class Utils {
 
         return obj.flags[SFC_CONFIG.NAME][flag];
     }
+
+    static isSupportedActorType(type) {
+        return type === "character" || (type === "npc" && Utils.getSetting(SFC_CONFIG.SETTING_KEYS.enableNpcCoins));
+    }
 }
