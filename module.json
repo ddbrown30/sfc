@@ -6,6 +6,16 @@
     "minimum": "10",
     "verified": "11.313"
   },
+  "packs": [
+    {
+      "label": "Macros",
+      "type": "Macro",
+      "name": "macros",
+      "path": "packs/macros.db",
+      "system": "swade",
+      "package": "sfc"
+    }
+  ],
   "version": "0.7.0",
   "relationships": {
     "systems": [

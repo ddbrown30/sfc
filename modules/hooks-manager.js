@@ -1,6 +1,7 @@
 import { Utils } from "./utils.js";
 import { registerSettings } from "./settings.js";
 import { Coins } from "./coins.js";
+import { CoinsAPI } from "./coins-api.js";
 
 export class HooksManager {
     /**
@@ -12,6 +13,9 @@ export class HooksManager {
 
         Hooks.on("init", () => {
             game.sfc = game.sfc ?? {};
+            
+            // Expose API methods
+            game.sfc.awardCoins = CoinsAPI.awardCoins;
 
             Utils.loadTemplates();
             registerSettings();

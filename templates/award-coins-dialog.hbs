@@ -1,0 +1,21 @@
+<div class='sfc'>
+    <label for="targetId">{{{localize "SFC.AwardCoinsDialog.TargetSelectionLabel"}}}</label>
+    <select id="targetId">
+        <option value="all-targets" selected>{{localize "SFC.AwardCoinsDialog.AllTargets"}}</option>
+        {{#each targets}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select>
+    <br>
+    <br>
+    <div class='coins'>
+        {{#each coinTemplateData}}
+        <div class="coin-group">
+            <label for="icon-{{@index}}" style="padding-right: 5px"><b>{{shortNameUpper}}</b></label>
+            <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
+            <input id='coin-{{type}}' type='number' min="0" step="1" data-dtype='Number' />
+        </div>
+        {{/each}}
+    </div>
+    <br>
+</div>
