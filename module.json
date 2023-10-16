@@ -8,10 +8,10 @@
   },
   "packs": [
     {
-      "label": "Macros",
+      "label": "SFC Macros",
       "type": "Macro",
-      "name": "macros",
-      "path": "packs/macros.db",
+      "name": "sfc-macros",
+      "path": "packs/macros",
       "system": "swade",
       "package": "sfc"
     }
