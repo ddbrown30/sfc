@@ -19,6 +19,7 @@
 .sfc .coin-group {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
 }
 
 .sfc .currency-group {

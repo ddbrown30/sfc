@@ -101,6 +101,14 @@
             }
         },
 
+        "AwardCoinsDialog": {
+            "AwardCoinsTitle": "Award Coins",
+            "AwardButtonName": "Award",
+            "CancelButtonName": "Cancel",
+            "TargetSelectionLabel": "<b>Target:</b>",
+            "AllTargets": "All Selected"
+        },
+
         "Settings": {
             "ShowCurrencyName": "Show Currency on Sheet",
             "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet.",

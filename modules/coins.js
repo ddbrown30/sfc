@@ -337,6 +337,15 @@ export class Coins {
         return createdItems[0];
     }
 
+    static async addCoinAmount(actor, coinData, coinAmount) {
+        let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
+        if (!coinItem) {
+            coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
+        }
+
+        await coinItem.update({ "system.quantity": coinItem.system.quantity + Number(coinAmount) });
+    }
+
     static async createDefaultCoinDataMap() {
         let defaultMap = {};
 

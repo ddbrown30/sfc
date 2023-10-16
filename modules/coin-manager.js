@@ -222,12 +222,7 @@ export class CoinManager extends FormApplication {
             if (formData.currency > 0) {
                 const coinsToAdd = this.convertCurrencyToCoins(formData.currency);
                 for (const coinData of Object.values(coinsToAdd)) {
-                    let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-                    if (!coinItem) {
-                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
-                    }
-
-                    await coinItem.update({ "system.quantity": coinItem.system.quantity + coinData.quantity });
+                    await Coins.addCoinAmount(actor, coinData, coinData.quantity);
                 }
             }
         } else {
@@ -235,12 +230,7 @@ export class CoinManager extends FormApplication {
                 const inputName = "coin-" + coinData.type;
                 const coinAmount = formData[inputName];
                 if (coinAmount > 0) {
-                    let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-                    if (!coinItem) {
-                        coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
-                    }
-
-                    await coinItem.update({ "system.quantity": coinItem.system.quantity + coinAmount });
+                    await Coins.addCoinAmount(actor, coinData, coinAmount);
                 }
             }
         }
