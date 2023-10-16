@@ -16,6 +16,7 @@ export const DEFAULT_CONFIG = {
         refreshAllCoinItemsButton: `${PATH}/templates/refresh-all-coin-items-button.hbs`,
         itemDescription: `${PATH}/templates/coin-item-description.hbs`,
         coinManager: `${PATH}/templates/coin-manager.hbs`,
+        awardCoinsDialog: `${PATH}/templates/award-coins-dialog.hbs`,
     },
     coins: {
         types: {
