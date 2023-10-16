@@ -106,7 +106,8 @@
             "AwardButtonName": "Award",
             "CancelButtonName": "Cancel",
             "TargetSelectionLabel": "<b>Target:</b>",
-            "AllTargets": "All Selected"
+            "AllTargets": "All Selected",
+            "SelectTokensError": "Select one or more valid tokens."
         },
 
         "Settings": {

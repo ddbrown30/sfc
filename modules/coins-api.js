@@ -1,4 +1,5 @@
 import * as SFC_CONFIG from "./sfc-config.js";
+import { Utils } from "./utils.js";
 import { Coins } from "./coins.js";
 
 /**
@@ -11,18 +12,20 @@ export class CoinsAPI {
     /* -------------------------------------------- */
 
     static async awardCoins() {
-        if (canvas.tokens.controlled[0]===undefined ) {
-            ui.notifications.error("Select one or more tokens.");
-            return;
-        }
-
         let targets = [];
         for (const token of canvas.tokens.controlled) {
-            targets.push({
-                name: token.name,
-                id: token.actor.id,
-                actor: token.actor
-            })
+            if (Utils.isSupportedActorType(token.actor.type)) {
+                targets.push({
+                    name: token.name,
+                    id: token.actor.id,
+                    actor: token.actor
+                })
+            }
+        }
+
+        if (targets.length == 0) {
+            Utils.showNotification("error", game.i18n.localize("SFC.AwardCoinsDialog.SelectTokensError"));
+            return;
         }
 
         targets.sort((a, b) => {
