@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+* Added a macro to award coins to one or more tokens
+
 ## 0.7.0
 
 * Added option to allow NPCs to also use coins
