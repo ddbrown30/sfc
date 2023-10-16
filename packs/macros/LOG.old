@@ -1,7 +1,6 @@
-2023/10/15-17:31:19.747 16fc Recovering log #26
-2023/10/15-17:31:19.753 16fc Delete type=0 #26
-2023/10/15-17:31:19.753 16fc Delete type=3 #24
-2023/10/15-17:32:00.431 2edc Level-0 table #31: started
-2023/10/15-17:32:00.431 2edc Level-0 table #31: 0 bytes OK
-2023/10/15-17:32:00.434 2edc Delete type=0 #29
-2023/10/15-17:32:00.434 2edc Manual compaction at level-0 from '!macros!aQvQwo7Hy2qiUrTT' @ 72057594037927935 : 1 .. '!macros!aQvQwo7Hy2qiUrTT' @ 0 : 0; will stop at (end)
+2023/10/15-17:37:18.739 bd8 Log #33: 0 ops saved to Table #34 OK
+2023/10/15-17:37:18.740 bd8 Archiving C:\Users\Dan\foundrydata\Data\modules\sfc\packs\macros/000033.log: OK
+2023/10/15-17:37:18.740 bd8 Table #8: 2 entries OK
+2023/10/15-17:37:18.740 bd8 Table #19: 1 entries OK
+2023/10/15-17:37:18.744 bd8 Archiving C:\Users\Dan\foundrydata\Data\modules\sfc\packs\macros/MANIFEST-000032: OK
+2023/10/15-17:37:18.748 bd8 **** Repaired leveldb C:\Users\Dan\foundrydata\Data\modules\sfc\packs\macros; recovered 2 files; 5638 bytes. Some data may have been lost. ****
