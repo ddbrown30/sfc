@@ -152,7 +152,6 @@ export class Coins {
                         //Our count is 0 so no need to make a new item
                         continue;
                     }
-
                     coinItem = await Coins.addCoinItem(actor, coinData);
                 }
 
@@ -163,11 +162,25 @@ export class Coins {
         }
     }
 
+    static async onCreateItem(doc, options, userId) {
+        let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
+        if (!type) return; // If it's not a coin, stop.
+        let quantity = doc.system?.quantity;
+        let actor = doc.actor;
+        if (!actor) return; // If the coin doesn't have an actor, stop.
+        if ((typeof quantity !== "undefined")) {
+            this.refreshCurrency(actor);
+            await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
+        }
+    }
+
     static async onUpdateItem(doc, updateData, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
-        let quantity = updateData.system?.quantity;
+        if (!type) return; // If it's not a coin, stop.
+        let quantity = doc.system?.quantity;
         let actor = doc.actor;
-        if ((typeof quantity !== "undefined") && type && actor) {
+        if (!actor) return; // If the coin doesn't have an actor, stop.
+        if ((typeof quantity !== "undefined")) {
             this.refreshCurrency(actor);
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
@@ -175,13 +188,13 @@ export class Coins {
 
     static async onDeleteItem(doc, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
+        if (!type) return; // If it's not a coin, stop.
         let actor = doc.actor;
-        if (type && actor) {
-            //The user just deleted a coin item from their inventory
-            //Update our currency value and set the count to 0 for the relevant coin count
-            this.refreshCurrency(actor);
-            await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, 0);
-        }
+        if (!actor) return; // If the coin doesn't have an actor, stop.
+        //The user just deleted a coin item from their inventory
+        //Update our currency value and set the count to 0 for the relevant coin count
+        this.refreshCurrency(actor);
+        await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, 0);
     }
 
     /* -------------------------------------------- */
@@ -479,18 +492,20 @@ export class Coins {
             if (coinData.enabled) {
                 const itemPileCurrency = {
                     primary: coinData.value === 1,
+                    secondary: false,
                     name: coinData.name,
                     img: coinData.img,
                     abbreviation: `{#} ${coinData.shortName}`,
-                    exchangeRate: coinData.value
-                };
-                itemPileCurrency.data = {
-                    item: this.buildItemDataFromCoinData(coinData),
-                    uuid: false,
+                    exchangeRate: coinData.value,
+                    type: 'item',
+                    data: {
+                        item: this.buildItemDataFromCoinData(coinData),
+                        uuid: null,
+                    }
                 };
                 newItemPileCurrencies.push(itemPileCurrency);
             }
         }
-        game.settings.set("item-piles", "currencies", newItemPileCurrencies);
+        game.itempiles.API.setCurrencies(newItemPileCurrencies);
     }
 }
