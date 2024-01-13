@@ -13,7 +13,7 @@ export class HooksManager {
 
         Hooks.on("init", () => {
             game.sfc = game.sfc ?? {};
-            
+
             // Expose API methods
             game.sfc.awardCoins = CoinsAPI.awardCoins;
 
@@ -28,7 +28,7 @@ export class HooksManager {
         /* -------------------------------------------- */
         /*                    Render                    */
         /* -------------------------------------------- */
-        
+
         Hooks.on("renderActorSheet", (app, html, data) => {
             Coins.onRenderActorSheet(app, html, data);
         });
@@ -43,6 +43,10 @@ export class HooksManager {
 
         Hooks.on("preUpdateActor", (doc, updateData, options, userId) => {
             Coins.onPreUpdateActor(doc, updateData, options, userId);
+        });
+
+        Hooks.on("createItem", (doc, options, userId) => {
+            Coins.onCreateItem(doc, options, userId);
         });
 
         Hooks.on("updateItem", (doc, change, options, userId) => {
