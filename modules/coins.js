@@ -152,7 +152,6 @@ export class Coins {
                         //Our count is 0 so no need to make a new item
                         continue;
                     }
-
                     coinItem = await Coins.addCoinItem(actor, coinData);
                 }
 
@@ -160,6 +159,16 @@ export class Coins {
                     await coinItem.update({"system.quantity": count});
                 }
             }
+        }
+    }
+
+    static async onCreateItem(doc, options, userId) {
+        let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
+        let quantity = doc.system?.quantity;
+        let actor = doc.actor;
+        if ((typeof quantity !== "undefined") && type && actor) {
+            this.refreshCurrency(actor);
+            await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
     }
 
@@ -479,18 +488,20 @@ export class Coins {
             if (coinData.enabled) {
                 const itemPileCurrency = {
                     primary: coinData.value === 1,
+                    secondary: false,
                     name: coinData.name,
                     img: coinData.img,
                     abbreviation: `{#} ${coinData.shortName}`,
-                    exchangeRate: coinData.value
-                };
-                itemPileCurrency.data = {
-                    item: this.buildItemDataFromCoinData(coinData),
-                    uuid: false,
+                    exchangeRate: coinData.value,
+                    type: 'item',
+                    data: {
+                        item: this.buildItemDataFromCoinData(coinData),
+                        uuid: null,
+                    }
                 };
                 newItemPileCurrencies.push(itemPileCurrency);
             }
         }
-        game.settings.set("item-piles", "currencies", newItemPileCurrencies);
+        game.itempiles.API.setCurrencies(newItemPileCurrencies);
     }
 }
