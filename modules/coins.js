@@ -164,11 +164,9 @@ export class Coins {
 
     static async onCreateItem(doc, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
-        if (!type) return; // If it's not a coin, stop.
         let quantity = doc.system?.quantity;
         let actor = doc.actor;
-        if (!actor) return; // If the coin doesn't have an actor, stop.
-        if ((typeof quantity !== "undefined")) {
+        if ((typeof quantity !== "undefined") && type && actor) {
             this.refreshCurrency(actor);
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
@@ -176,11 +174,9 @@ export class Coins {
 
     static async onUpdateItem(doc, updateData, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
-        if (!type) return; // If it's not a coin, stop.
-        let quantity = doc.system?.quantity;
+        let quantity = updateData.system?.quantity;
         let actor = doc.actor;
-        if (!actor) return; // If the coin doesn't have an actor, stop.
-        if ((typeof quantity !== "undefined")) {
+        if ((typeof quantity !== "undefined") && type && actor) {
             this.refreshCurrency(actor);
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
@@ -188,13 +184,13 @@ export class Coins {
 
     static async onDeleteItem(doc, options, userId) {
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
-        if (!type) return; // If it's not a coin, stop.
         let actor = doc.actor;
-        if (!actor) return; // If the coin doesn't have an actor, stop.
-        //The user just deleted a coin item from their inventory
-        //Update our currency value and set the count to 0 for the relevant coin count
-        this.refreshCurrency(actor);
-        await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, 0);
+        if (type && actor) {
+            //The user just deleted a coin item from their inventory
+            //Update our currency value and set the count to 0 for the relevant coin count
+            this.refreshCurrency(actor);
+            await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, 0);
+        }
     }
 
     /* -------------------------------------------- */
