@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1
+
+* Adding new coin items to an actor now correctly updates the currency
+* Fixed bugs with Item Piles data 
+
 ## 0.8.0
 
 * Added a macro to award coins to one or more tokens

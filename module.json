@@ -16,7 +16,7 @@
       "package": "sfc"
     }
   ],
-  "version": "0.8.0",
+  "version": "0.8.1",
   "relationships": {
     "systems": [
       {
@@ -51,8 +51,8 @@
     "styles/sfc.css"
   ],
   "url": "https://github.com/ddbrown30/sfc",
-  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.8.0/module.json",
-  "download": "https://github.com/ddbrown30/sfc/releases/download/0.8.0/module.zip",
+  "manifest": "https://github.com/ddbrown30/sfc/releases/download/0.8.1/module.json",
+  "download": "https://github.com/ddbrown30/sfc/releases/download/0.8.1/module.zip",
   "bugs": "https://github.com/ddbrown30/sfc/issues",
   "authors": [
     {
