@@ -136,6 +136,10 @@ export class Coins {
     }
 
     static async onPreUpdateActor(actor, updateData, options, userId) {
+        if (game.user.id !== userId) {
+          // return because we're not the user making the change
+          return;
+        }
         if (!Utils.hasModuleFlags(updateData)) {
             //We don't care about this update
             return;
@@ -163,6 +167,10 @@ export class Coins {
     }
 
     static async onCreateItem(doc, options, userId) {
+        if (game.user.id !== userId) {
+          // return because we're not the user making the change
+          return;
+        }
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = doc.system?.quantity;
         let actor = doc.actor;
@@ -173,6 +181,10 @@ export class Coins {
     }
 
     static async onUpdateItem(doc, updateData, options, userId) {
+        if (game.user.id !== userId) {
+          // return because we're not the user making the change
+          return;
+        }
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = updateData.system?.quantity;
         let actor = doc.actor;
@@ -183,6 +195,10 @@ export class Coins {
     }
 
     static async onDeleteItem(doc, options, userId) {
+        if (game.user.id !== userId) {
+          // return because we're not the user making the change
+          return;
+        }
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let actor = doc.actor;
         if (type && actor) {
