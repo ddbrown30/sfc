@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2
+
+* Fix so that only the modifying user runs the item hooks
+
 ## 0.8.1
 
 * Adding new coin items to an actor now correctly updates the currency
