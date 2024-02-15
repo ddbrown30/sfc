@@ -306,7 +306,7 @@ export class Coins {
     static async refreshAllActorItems() {
         for (const actor of game.actors) {
             if (Utils.isSupportedActorType(actor.type)) {
-                await this.initActorInventory(actor, keepCurrency);
+                await this.refreshActorItems(actor);
             }
         }
     }
