@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3
+
+* Fixed a copy+paste bug that broke coin refresh
+
 ## 0.8.2
 
 * Fix so that only the modifying user runs the item hooks
