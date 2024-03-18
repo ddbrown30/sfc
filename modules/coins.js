@@ -96,7 +96,7 @@ export class Coins {
         }
 
         //When rendering a player character sheet, we replace the normal currency section with the SFC display
-        if (Utils.isSupportedActorType(actor.type)) {
+        if (actor.isOwner && Utils.isSupportedActorType(actor.type)) {
 
             //Sort the coins from highest value to lowest
             let coinDataArray = Object.values(game.sfc.coinDataMap);
