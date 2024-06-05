@@ -1,0 +1,27 @@
+{
+  "name": "Award Coins",
+  "type": "script",
+  "author": "UQ9simz41eIsn2rv",
+  "img": "icons/commodities/currency/coins-leather-pouch-stone.webp",
+  "scope": "global",
+  "command": "game.sfc.awardCoins();",
+  "folder": null,
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "swade",
+    "systemVersion": "3.1.4",
+    "coreVersion": "11.313",
+    "createdTime": 1697401998019,
+    "modifiedTime": 1697418021099,
+    "lastModifiedBy": "UQ9simz41eIsn2rv"
+  },
+  "ownership": {
+    "default": 0,
+    "UQ9simz41eIsn2rv": 3
+  },
+  "_id": "FewfzN8IzO9MugRS",
+  "sort": 0,
+  "_key": "!macros!FewfzN8IzO9MugRS"
+}
