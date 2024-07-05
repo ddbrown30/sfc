@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.4
+
+* Fixed a deprecation warning
+
 ## 0.8.3
 
 * Fixed a copy+paste bug that broke coin refresh
