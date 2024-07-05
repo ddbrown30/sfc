@@ -445,7 +445,7 @@ export class Coins {
 
     static async buildItemDescriptionText() {
         //Sort the coins from lowest value to highest
-        let coinDataArray = Object.values(duplicate(game.sfc.coinDataMap));
+        let coinDataArray = Object.values(foundry.utils.duplicate(game.sfc.coinDataMap));
         coinDataArray.sort((a, b) => {
             return a.value - b.value;
         });
