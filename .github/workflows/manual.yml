@@ -9,5 +9,4 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Echo
-        run: gh release view
+      - run: gh --version
