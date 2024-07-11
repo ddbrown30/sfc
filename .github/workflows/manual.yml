@@ -19,3 +19,4 @@ jobs:
       - run: echo "$AUTH_TOKEN"
       - run: echo "${{ env.AUTH_TOKEN }}"
       - run: echo "${{ fromJson(env.AUTH_TOKEN) }}"
+      - run: echo "${{ fromJson(env.AUTH_TOKEN).url }}"
