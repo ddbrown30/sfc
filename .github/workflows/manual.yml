@@ -15,8 +15,13 @@ jobs:
         id: get_release_url
         run:  |
             token=$(gh release view --repo $GITHUB_REPOSITORY --json url)
-            echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
-      - run: echo "$AUTH_TOKEN"
-      - run: echo "${{ env.AUTH_TOKEN }}"
-      - run: echo "${{ fromJson(env.AUTH_TOKEN) }}"
-      - run: echo "${{ fromJson(env.AUTH_TOKEN).url }}"
+            echo "RELEASE_URL=$token" >> "$GITHUB_ENV"
+      - run: echo "${{ fromJson(env.RELEASE_URL).url }}/module.json"
+      
+      - name: Publish Module to FoundryVTT Website
+        id: publish-to-foundry-website
+        uses: cs96and/FoundryVTT-release-package@v1
+        with:
+          package-token: ${{ secrets.PACKAGE_TOKEN }}
+          manifest-url: ${{ fromJson(env.RELEASE_URL).url }}/module.json
+          dry-run: true
