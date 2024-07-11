@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Get release url
         id: get_release_url
-        run: gh release view --repo $GITHUB_REPOSITORY --json url
+        run:  gh release view --repo $GITHUB_REPOSITORY --json url >> $GITHUB_OUTPUT
+              echo "::set-output name=packageJson::$content"
       - name: Echo url
         run: echo "${{fromJson(steps.get_release_url.outputs.url)}}"
