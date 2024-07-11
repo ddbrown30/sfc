@@ -9,4 +9,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - run: gh --version
+      - name: Get release url
+        id: get_release_url
+        run: gh release view --json url
+      - name: Echo url
+        run: echo "${{fromJson(steps.get_release_url.outputs.url)}}"
