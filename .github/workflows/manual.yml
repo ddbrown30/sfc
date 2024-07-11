@@ -4,11 +4,6 @@ name: Publish Package
 
 on:
   workflow_dispatch:
-    inputs:
-      release:
-        description: 'Release to publish'
-        required: true
-        type: string
 
 jobs:
   publish:
