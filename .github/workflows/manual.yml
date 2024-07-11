@@ -1,0 +1,23 @@
+# This is a basic workflow that is manually triggered
+
+name: Publish Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release to publish'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Module to FoundryVTT Website
+        id: publish-to-foundry-website
+        uses: cs96and/FoundryVTT-release-package@v1
+        with:
+          package-token: ${{ secrets.PACKAGE_TOKEN }}
+          manifest-url: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.json
+          dry-run: true
