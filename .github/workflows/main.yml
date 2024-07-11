@@ -39,7 +39,7 @@ jobs:
       id: create_version_release
       uses: ncipollo/release-action@v1
       with:
-        allowUpdates: true # Set this to false if you want to prevent updating existing releases
+        allowUpdates: false #true # Set this to false if you want to prevent updating existing releases
         name: ${{ github.event.release.name }}
         draft: false
         prerelease: false
