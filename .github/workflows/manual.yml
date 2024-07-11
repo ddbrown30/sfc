@@ -17,5 +17,5 @@ jobs:
             token=$(gh release view --repo $GITHUB_REPOSITORY --json url)
             echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
       - run: echo "$AUTH_TOKEN"
-      - name: Echo url
-        run: echo "${{ fromJson(env.AUTH_TOKEN.url) }}"
+      - run: echo "${{ env.AUTH_TOKEN }}"
+      - run: echo fromJson("$AUTH_TOKEN")
