@@ -18,4 +18,5 @@ jobs:
             echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
       - run: echo "$AUTH_TOKEN"
       - run: echo "${{ env.AUTH_TOKEN }}"
+      - run: echo "${{ fromJson(env.AUTH_TOKEN) }}"
       - run: echo ${{ fromJson("$AUTH_TOKEN") }}
