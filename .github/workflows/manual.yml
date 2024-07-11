@@ -4,7 +4,10 @@ name: Publish Package
 
 on:
   workflow_dispatch:
-
+  
+env:
+    GH_TOKEN: ${{ github.token }}
+    
 jobs:
   publish:
     runs-on: ubuntu-latest
