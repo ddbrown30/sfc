@@ -15,7 +15,7 @@ jobs:
       - name: Get release url
         id: get_release_url
         run:  |
-            json = $(gh release view --repo $GITHUB_REPOSITORY --json url)
+            token=$(gh release view --repo $GITHUB_REPOSITORY --json url)
             echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
       - run: echo "$AUTH_TOKEN"
       - name: Echo url
