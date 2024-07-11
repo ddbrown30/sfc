@@ -19,4 +19,4 @@ jobs:
             echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
       - run: echo "$AUTH_TOKEN"
       - name: Echo url
-        run: echo "${{fromJson(steps.get_release_url.outputs.url)}}"
+        run: echo "${{fromJson($AUTH_TOKEN.url)}}"
