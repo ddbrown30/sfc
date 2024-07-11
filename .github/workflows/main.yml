@@ -13,10 +13,8 @@ jobs:
     # Pack up the macros
     - name: Install Dependencies
       run: npm install
-    - name: Build
+    - name: Pack
       run: npm run pack
-    - name: Echo
-      run: echo "Name ${{ github.event.release.name }} Description ${{ github.event.release.body }}"
         
     # Substitute the Manifest and Download URLs in the module.json
     - name: Substitute Manifest and Download Links For Versioned Ones
