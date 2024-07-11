@@ -14,14 +14,14 @@ jobs:
       - name: Get release url
         id: get_release_url
         run:  |
-            token=$(gh release view --repo $GITHUB_REPOSITORY --json url)
-            echo "RELEASE_URL=$token" >> "$GITHUB_ENV"
-      - run: echo "${{ fromJson(env.RELEASE_URL).url }}/module.json"
+            tagName=$(gh release view --repo $GITHUB_REPOSITORY --json tagName)
+            echo "RELEASE_TAGNAME=$tagName" >> "$GITHUB_ENV"
+      - run: echo "https://github.com/${{github.repository}}/releases/download/${{ fromJson(env.RELEASE_TAGNAME).tagName }}/module.json"
       
       - name: Publish Module to FoundryVTT Website
         id: publish-to-foundry-website
         uses: cs96and/FoundryVTT-release-package@v1
         with:
           package-token: ${{ secrets.PACKAGE_TOKEN }}
-          manifest-url: ${{ fromJson(env.RELEASE_URL).url }}/module.json
+          manifest-url: https://github.com/${{github.repository}}/releases/download/${{ fromJson(env.RELEASE_TAGNAME).tagName }}/module.json
           dry-run: true
