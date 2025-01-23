@@ -33,6 +33,10 @@ export class HooksManager {
             Coins.onRenderActorSheet(app, html, data);
         });
 
+        Hooks.on("renderGroupSheet", (app, html, data) => {
+            Coins.onRenderGroupSheet(app, html, data);
+        });
+
         Hooks.on('renderSettingsConfig', (app, el, data) => {
             Coins.onRenderSettingsConfig(app, el, data);
         });

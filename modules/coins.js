@@ -129,10 +129,52 @@ export class Coins {
             currencySection.remove();
 
             //Respond to the init actor button
-            html.find('[id="manager-button"]').click(ev => {
+            const button = html.find('[id="manager-button"]');
+            button.click(ev => {
                 new CoinManager(actor, app).render(true);
             });
         }
+    }
+
+    static async onRenderGroupSheet(app, html, data) {
+        let actor = app.actor;
+
+        //Sort the coins from highest value to lowest
+        let coinDataArray = Object.values(game.sfc.coinDataMap);
+        coinDataArray.sort((a, b) => {
+            return b.value - a.value;
+        });
+
+        //Create an array of processed data for handlebars to use
+        let coinTemplateData = [];
+        for (const coinData of coinDataArray) {
+            if (coinData.enabled) {
+                coinTemplateData.push({
+                    name: coinData.name,
+                    img: coinData.img,
+                    count: actor.flags.sfc ? actor.flags.sfc[coinData.countFlagName] : 0,
+                    countFlagName: coinData.countFlagName
+                });
+            }
+        }
+
+        const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
+        const currencyName = game.settings.get("swade", "currencyName");
+        const currencyAmount = actor.system.currency ? actor.system.currency : 0;
+        const templateData = { currencyAmount, currencyName, coinTemplateData, showCurrency };
+        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
+
+        //Find the existing currency section and replace it with ours
+        const currencyInput = html.querySelector("input#currency");
+        const currencyFormGroup = currencyInput.parentNode;
+        const currencySection = currencyFormGroup.parentNode;
+        currencyFormGroup.insertAdjacentHTML("afterend", content);
+        currencyFormGroup.remove();
+
+        //Respond to the manage button
+        currencySection.querySelector('.manager-button').addEventListener("click", (ev => {
+            new CoinManager(actor, app).render(true);
+        }));
     }
 
     static async onPreUpdateActor(actor, updateData, options, userId) {

@@ -1,10 +1,10 @@
 .sfc .coins {
     display: flex;
+    align-items: center;
     gap: 0.5em;
 }
 
 .sfc .currency-display {
-    width: 100%;
     white-space: nowrap;
 }
 
@@ -19,7 +19,6 @@
 .sfc .coin-group {
     display: flex;
     flex-wrap: nowrap;
-    align-items: center;
 }
 
 .sfc .currency-group {
@@ -58,12 +57,13 @@
 }
 .swade-official .sfc .coins.manager-button,
 .swpf-sheet .sfc .coins.manager-button {
-    height: 27px;
+    height: var(--form-field-height);
 }
 
 .sfc .coin-group input {
     border-radius: 0 3px 3px 0;
     font-weight: 700;
+    height: var(--form-field-height);
 }
 
 .coin-config .icon {
