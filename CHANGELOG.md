@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0
+
+* Added an option to filter by folder when initializing actors
+
+## 0.9.0
+
+* Added the currency display to the group sheet
+
+## 0.8.5
+
+* Fixed the missing macros from the packaged build
+
 ## 0.8.4
 
 * Fixed a deprecation warning
