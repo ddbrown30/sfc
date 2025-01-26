@@ -14,12 +14,12 @@ export class Coins {
 
         game.sfc.coinDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
         if (!Object.values(game.sfc.coinDataMap).length) {
-            await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, duplicate(defaultMap));
+            await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, foundry.utils.duplicate(defaultMap));
         }
 
         //Migration of old coin map to the new one
         if ((typeof game.sfc?.coinDataMap["copper"]?.enabled === "undefined")) {
-            let newMap = duplicate(defaultMap);
+            let newMap = foundry.utils.duplicate(defaultMap);
             for (const oldCoinData of Object.values(game.sfc.coinDataMap)) {
                 let newCoinData = newMap[oldCoinData.flags.sfc.type];
                 newCoinData.enabled = oldCoinData.flags.sfc.enabled;
@@ -39,7 +39,7 @@ export class Coins {
     static async onRenderSettingsConfig(app, el, data) {
         //Add the init actors button
         const initButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
-        
+
         initButton.find('[data-key="init-actors-button"]').click(ev => {
             new InitAllActorsDialog().render(true);
         });
@@ -150,46 +150,61 @@ export class Coins {
         }));
     }
 
-    static async onPreUpdateActor(actor, updateData, options, userId) {
+    static async onUpdateActor(actor, updateData, options, userId) {
         if (game.user.id !== userId) {
-          // return because we're not the user making the change
-          return;
+            // return because we're not the user making the change
+            return;
         }
         if (!Utils.hasModuleFlags(updateData)) {
             //We don't care about this update
             return;
         }
 
-        for (const coinData of Object.values(game.sfc.coinDataMap)) {
-            const count = Utils.getModuleFlag(updateData, coinData.countFlagName);
-            if ((typeof count !== "undefined")) {
-                //This is an update to the count of one of our coins. Find the coin item and update it
-                let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-                if (!coinItem) {
-                    //The actor doesn't have this coin item. Create it if needed
-                    if (count == 0) {
-                        //Our count is 0 so no need to make a new item
-                        continue;
-                    }
-                    coinItem = await Coins.addCoinItem(actor, coinData);
-                }
+        this.refreshCurrency(actor);
 
-                if (coinItem.system.quantity != count) {
-                    await coinItem.update({"system.quantity": count});
+        const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
+        if (useCoinItems) {
+            let itemUpdateData = [];
+            for (const coinData of Object.values(game.sfc.coinDataMap)) {
+                const count = Utils.getModuleFlag(updateData, coinData.countFlagName);
+                if ((typeof count !== "undefined")) {
+                    //This is an update to the count of one of our coins. Find the coin item and update it
+                    let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
+                    if (!coinItem) {
+                        //The actor doesn't have this coin item. Create it if needed
+                        if (count == 0) {
+                            //Our count is 0 so no need to make a new item
+                            continue;
+                        }
+                        coinItem = await Coins.addCoinItem(actor, coinData);
+                    }
+
+                    if (coinItem.system.quantity != count) {
+                        itemUpdateData.push({ _id: coinItem.id, "system.quantity": count });
+                    }
                 }
             }
+            
+            if (itemUpdateData.length) await actor.updateEmbeddedDocuments("Item", itemUpdateData);
         }
     }
 
     static async onCreateItem(doc, options, userId) {
         if (game.user.id !== userId) {
-          // return because we're not the user making the change
-          return;
+            // return because we're not the user making the change
+            return;
         }
+
+        const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
+        if (!useCoinItems) {
+            return;
+        }
+
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = doc.system?.quantity;
         let actor = doc.actor;
         if ((typeof quantity !== "undefined") && type && actor) {
+            //We just added a new coin item so we need to update the coin counts to match
             this.refreshCurrency(actor);
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
@@ -197,13 +212,20 @@ export class Coins {
 
     static async onUpdateItem(doc, updateData, options, userId) {
         if (game.user.id !== userId) {
-          // return because we're not the user making the change
-          return;
+            // return because we're not the user making the change
+            return;
         }
+        
+        const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
+        if (!useCoinItems) {
+            return;
+        }
+        
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = updateData.system?.quantity;
         let actor = doc.actor;
         if ((typeof quantity !== "undefined") && type && actor) {
+            //We just updated an existing coin item so we need to update the coin counts to match
             this.refreshCurrency(actor);
             await actor.setFlag(SFC_CONFIG.NAME, doc.flags.sfc.countFlagName, quantity);
         }
@@ -211,9 +233,15 @@ export class Coins {
 
     static async onDeleteItem(doc, options, userId) {
         if (game.user.id !== userId) {
-          // return because we're not the user making the change
-          return;
+            // return because we're not the user making the change
+            return;
         }
+        
+        const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
+        if (!useCoinItems) {
+            return;
+        }
+        
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let actor = doc.actor;
         if (type && actor) {
@@ -232,13 +260,13 @@ export class Coins {
         //Loop over all the coins in our inventory to calculate our total currency
         let totalCurrency = 0;
         for (const coinData of Object.values(game.sfc.coinDataMap)) {
-            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
-            if (coinItem) {
-                totalCurrency += coinItem.system.quantity * coinData.value;
+            let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+            if (quantity) {
+                totalCurrency += quantity * coinData.value;
             }
         }
 
-        actor.update({"system.details.currency": Number(totalCurrency.toFixed(2))});
+        actor.update({ "system.details.currency": Number(totalCurrency.toFixed(2)) });
     }
 
     static async initAllActorInventories(keepCurrency, folder) {
@@ -253,23 +281,21 @@ export class Coins {
     static async initActorInventory(actor, keepCurrency) {
         const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
         let remainingCurrencyInt = Math.floor(currencyAmount * 1000); //This converts us to an int so we don't have to deal with float issues
+        const flagUpdateData = {}
         let createData = [];
         let updateData = [];
         let deleteData = [];
         let countData = [];
 
         //Sort the coins by highest to lowest value so that we convert currency to the fewest total coins
-        let coinDataArray = duplicate(Object.values(game.sfc.coinDataMap));
+        let coinDataArray = foundry.utils.duplicate(Object.values(game.sfc.coinDataMap));
         coinDataArray.sort((a, b) => {
             return b.value - a.value;
         });
 
         for (const coinData of coinDataArray) {
-            let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
             if (!coinData.enabled) {
-                if (coinItem) {
-                    deleteData.push(coinItem.id);
-                }
+                await actor.unsetFlag(SFC_CONFIG.NAME, coinData.countFlagName);
                 continue;
             }
 
@@ -283,34 +309,45 @@ export class Coins {
                 remainingCurrencyInt -= numCoins * valueInt;
             } else {
                 //If we're keeping coins, either grab the current quantity if we have the coin or 0 if we don't
-                numCoins = coinItem ? coinItem.system.quantity : 0;
+                let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+                numCoins = quantity ?? 0;
             }
-
-            if (coinItem) {
-                updateData.push({
-                    _id: coinItem.id,
-                    "name": coinData.name,
-                    "img": coinData.img,
-                    "system.quantity": numCoins,
-                    "system.weight": coinData.weight,
-                    "system.description": game.sfc.itemDescription
-                });
-            } else {
-                const itemData = this.buildItemDataFromCoinData(coinData);
-                createData.push(itemData);
-            }
-
-            //Set the count flag for this coin type on the actor, as the UI doesn't use the items directly
-            //We push it here and actually set it later because this will trigger an update in the actor before we're ready to handle it
-            countData.push({flagName: coinData.countFlagName, numCoins: numCoins});
+            
+            countData[coinData.countFlagName] = numCoins;
+            foundry.utils.setProperty(flagUpdateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, numCoins);
         }
+        
+        await actor.update(flagUpdateData);
 
-        if (createData.length) await actor.createEmbeddedDocuments("Item", createData);
-        if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
-        if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
+        const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
+        if (useCoinItems) {
+            for (const coinData of coinDataArray) {
+                let coinItem = actor.items.find(item => item.flags?.sfc?.type == coinData.type);
+                if (!coinData.enabled) {
+                    if (coinItem) {
+                        deleteData.push(coinItem.id);
+                    }
+                    continue;
+                }
 
-        for (let cd of countData) {
-            await actor.setFlag(SFC_CONFIG.NAME, cd.flagName, cd.numCoins);
+                if (coinItem) {
+                    updateData.push({
+                        _id: coinItem.id,
+                        "name": coinData.name,
+                        "img": coinData.img,
+                        "system.quantity": countData[coinData.countFlagName],
+                        "system.weight": coinData.weight,
+                        "system.description": game.sfc.itemDescription
+                    });
+                } else {
+                    const itemData = this.buildItemDataFromCoinData(coinData);
+                    createData.push(itemData);
+                }
+            }
+            
+            if (createData.length) await actor.createEmbeddedDocuments("Item", createData);
+            if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
+            if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
         }
 
         await Coins.refreshCurrency(actor);
@@ -379,12 +416,8 @@ export class Coins {
     }
 
     static async addCoinAmount(actor, coinData, coinAmount) {
-        let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-        if (!coinItem) {
-            coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
-        }
-
-        await coinItem.update({ "system.quantity": coinItem.system.quantity + Number(coinAmount) });
+        let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+        await actor.setFlag(SFC_CONFIG.NAME, coinData.countFlagName, quantity + Number(coinAmount));
     }
 
     static async createDefaultCoinDataMap() {
@@ -439,24 +472,24 @@ export class Coins {
     }
 
     static decimalToFraction(decimal) {
-        var gcd = function(a, b) {
+        var gcd = function (a, b) {
             if (!b) return a;
             a = parseInt(a);
             b = parseInt(b);
             return gcd(b, a % b);
-          };
+        };
 
-          var len = decimal.toString().length - 2;
-          len = len > 1 ? len : 1; //If decimal is a whole number, we don't want to shift the denominator
+        var len = decimal.toString().length - 2;
+        len = len > 1 ? len : 1; //If decimal is a whole number, we don't want to shift the denominator
 
-          var denominator = Math.pow(10, len);
-          var numerator = decimal * denominator;
+        var denominator = Math.pow(10, len);
+        var numerator = decimal * denominator;
 
-          var divisor = gcd(numerator, denominator);
-          numerator /= divisor;
-          denominator /= divisor;
+        var divisor = gcd(numerator, denominator);
+        numerator /= divisor;
+        denominator /= divisor;
 
-          return numerator.toFixed() + '/' + denominator.toFixed();
+        return numerator.toFixed() + '/' + denominator.toFixed();
     }
 
     static async buildItemDescriptionText() {
@@ -496,7 +529,7 @@ export class Coins {
             }
         }
 
-        const templateData = {coinDescriptionDatas};
+        const templateData = { coinDescriptionDatas };
         const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
         game.sfc.itemDescription = content;
     }

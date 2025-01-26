@@ -114,6 +114,8 @@
         "Settings": {
             "ShowCurrencyName": "Show Currency on Sheet",
             "ShowCurrencyHint": "Shows the total value of all coins as currency on the character sheet.",
+            "UseCoinItemsName": "Use Coin Items",
+            "UseCoinItemsHint": "If enabled, items will be added to actor inventories to represent the coins.",
             "NpcCoinsName": "Enable Coins for NPCs",
             "NpcCoinsHint": "Allows NPCs to use coins. Only works correctly when using a PC character sheet.",
             "ItemPilesConfigName": "Configure Item Piles Currencies",

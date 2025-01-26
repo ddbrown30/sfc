@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+* Using coin items is now optional
+
 ## 0.10.0
 
 * Added an option to filter by folder when initializing actors

@@ -6,7 +6,7 @@ export class CoinConfig extends FormApplication {
     constructor() {
         super();
         this.initialDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
-        this.workingCoinDataMap = duplicate(this.initialDataMap);
+        this.workingCoinDataMap = foundry.utils.duplicate(this.initialDataMap);
         this.restoredMap = false;
     }
 
@@ -95,7 +95,7 @@ export class CoinConfig extends FormApplication {
                     callback: async event => {
                         const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
                         this.initialDataMap = defaultMap;
-                        this.workingCoinDataMap = duplicate(this.initialDataMap);
+                        this.workingCoinDataMap = foundry.utils.duplicate(this.initialDataMap);
                         this.restoredMap = true;
                         this.render();
                     }

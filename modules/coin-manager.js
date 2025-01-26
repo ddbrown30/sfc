@@ -26,6 +26,7 @@ export class CoinManager extends FormApplication {
                     type: coinData.type,
                     name: coinData.name,
                     img: coinData.img,
+                    countFlagName: coinData.countFlagName,
                     quantity: 0,
                     valueInt: coinData.value * 1000
                 });
@@ -39,7 +40,7 @@ export class CoinManager extends FormApplication {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             template: SFC_CONFIG.DEFAULT_CONFIG.templates.coinManager,
             tabs: [
                 {
@@ -130,15 +131,14 @@ export class CoinManager extends FormApplication {
     }
 
     async removeCurrencyFromInventory(currency, actor) {
-        let sortedCoinDataArray = duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
+        let sortedCoinDataArray = foundry.utils.duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
         sortedCoinDataArray.sort((a, b) => {
             return a.valueInt - b.valueInt;
         });
 
         for (const coinData of sortedCoinDataArray) {
-            let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-            coinData.quantity = coinItem ? coinItem.system.quantity : 0;
-            coinData.item = coinItem;
+            let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+            coinData.quantity = quantity ?? 0;
         }
 
         //To remove the currency, we'll focus on removing the lowest value coins
@@ -173,21 +173,16 @@ export class CoinManager extends FormApplication {
             }
         }
 
+        const updateData = {};
         for (const coinData of sortedCoinDataArray) {
-            if (!coinData.item) {
-                if (coinData.quantity <= 0) {
-                    continue;
-                }
-
-                coinData.item = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
-            }
-
-            await coinData.item.update({ "system.quantity": coinData.quantity });
+            foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, coinData.quantity);
         }
+
+        await actor.update(updateData);
     }
 
     convertCurrencyToCoins(currency) {
-        let sortedCoinDataArray = duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
+        let sortedCoinDataArray = foundry.utils.duplicate(this.coinDataArray); //coinDataArray is sorted high to low in the constructor
 
         let covertedCoins = {};
         let remainingCurrencyInt = Math.floor(currency * 1000);
@@ -201,7 +196,7 @@ export class CoinManager extends FormApplication {
 
             covertedCoins[coinData.type] = {
                 quantity: numCoins,
-                type: coinData.type
+                countFlagName: coinData.countFlagName
             };
 
             //Subtract the value of the coins we just added from the remaining currency
@@ -218,11 +213,14 @@ export class CoinManager extends FormApplication {
     async addCoins() {
         const actor = this.object;
         const formData = this._getSubmitData();
+
+        const updateData = {};
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
                 const coinsToAdd = this.convertCurrencyToCoins(formData.currency);
                 for (const coinData of Object.values(coinsToAdd)) {
-                    await Coins.addCoinAmount(actor, coinData, coinData.quantity);
+                    let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+                    foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, quantity + coinData.quantity);
                 }
             }
         } else {
@@ -230,10 +228,13 @@ export class CoinManager extends FormApplication {
                 const inputName = "coin-" + coinData.type;
                 const coinAmount = formData[inputName];
                 if (coinAmount > 0) {
-                    await Coins.addCoinAmount(actor, coinData, coinAmount);
+                    let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
+                    foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, quantity + coinAmount);
                 }
             }
         }
+
+        await actor.update(updateData);
     }
 
     async removeCoins() {
@@ -299,67 +300,54 @@ export class CoinManager extends FormApplication {
         const fromType = fromSelect.split("-").pop();
         const destType = destSelect.split("-").pop();
 
-        let fromCoinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == fromType);
-        let destCoinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == destType);
-        if (!fromCoinItem) {
-            //We don't have the from item so there's nothing to exchange
+        const fromCoinData = game.sfc.coinDataMap[fromType];
+        const destCoinData = game.sfc.coinDataMap[destType];
+
+        let fromQuantity = Utils.getModuleFlag(actor, fromCoinData.countFlagName);
+        let destQuantity = Utils.getModuleFlag(actor, destCoinData.countFlagName);
+        if (!fromQuantity) {
+            //We don't have any from so there's nothing to exchange
             return;
         }
 
-        exchangeAmount = exchangeAmount < fromCoinItem.system.quantity ? exchangeAmount : fromCoinItem.system.quantity;
+        exchangeAmount = exchangeAmount < fromQuantity ? exchangeAmount : fromQuantity;
 
-        const fromValueInt = Math.floor(game.sfc.coinDataMap[fromType].value * 1000);
-        const destValueInt = Math.floor(game.sfc.coinDataMap[destType].value * 1000);
+        const fromValueInt = Math.floor(fromCoinData.value * 1000);
+        const destValueInt = Math.floor(destCoinData.value * 1000);
 
         let fromTotalAmountCurrency = fromValueInt * exchangeAmount;
 
-        let newCoinValues = {};
         const amountDestAdded = Math.floor(fromTotalAmountCurrency / destValueInt);
         if (amountDestAdded <= 0) {
             //Nothing exchanged
             return;
         }
 
-        const destCoinsQuantity = destCoinItem ? destCoinItem.system.quantity : 0;
-        const newDestCoins = destCoinsQuantity + amountDestAdded;
-        newCoinValues[destType] = {
-            type: destType,
-            quantity: newDestCoins
-        };
+        const newDestCoins = destQuantity + amountDestAdded;
 
         fromTotalAmountCurrency -= amountDestAdded * destValueInt;
         const amountFromRemaining = fromTotalAmountCurrency <= 0 ? 0 : (fromTotalAmountCurrency / fromValueInt);
         const amountFromRemoved = exchangeAmount - amountFromRemaining;
-        const newFromCoins = fromCoinItem.system.quantity - amountFromRemoved;
-        newCoinValues[fromType] = {
-            type: fromType,
-            quantity: newFromCoins
-        };
+        const newFromCoins = fromQuantity - amountFromRemoved;
+        
+        const updateData = {};
+        foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${fromCoinData.countFlagName}`, newFromCoins);
+        foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${destCoinData.countFlagName}`, newDestCoins);
 
-        if (!destCoinItem) {
-            destCoinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[destType]);
-        }
-
-        await fromCoinItem.update({ "system.quantity": newCoinValues[fromType].quantity });
-        await destCoinItem.update({ "system.quantity": newCoinValues[destType].quantity });
+        await actor.update(updateData);
     }
 
     async exchangeAll() {
         let actor = this.object;
         const convertedCoins = this.convertCurrencyToCoins(actor.system.details.currency);
+        
+        const updateData = {};
         for (const coinData of this.coinDataArray) {
             const quantity = convertedCoins[coinData.type] ? convertedCoins[coinData.type].quantity : 0;
-            let coinItem = actor.items.find(item => Utils.getModuleFlag(item, "type") == coinData.type);
-            if (!coinItem) {
-                if (quantity <= 0) {
-                    continue;
-                }
-
-                coinItem = await Coins.addCoinItem(actor, game.sfc.coinDataMap[coinData.type]);
-            }
-
-            await coinItem.update({ "system.quantity": quantity });
+            foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, quantity);
         }
+
+        await actor.update(updateData);
     }
 
     async initActor() {
@@ -391,7 +379,7 @@ export class CoinManager extends FormApplication {
                     callback: event => { }
                 }
             }
-        }, {classes: ["dialog", "init-dialog"]});
+        }, { classes: ["dialog", "init-dialog"] });
         dialog.render(true);
     }
 }

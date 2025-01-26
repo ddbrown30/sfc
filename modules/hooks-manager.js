@@ -45,8 +45,8 @@ export class HooksManager {
         /*                    Updates                   */
         /* -------------------------------------------- */
 
-        Hooks.on("preUpdateActor", (doc, updateData, options, userId) => {
-            Coins.onPreUpdateActor(doc, updateData, options, userId);
+        Hooks.on("updateActor", (doc, updateData, options, userId) => {
+            Coins.onUpdateActor(doc, updateData, options, userId);
         });
 
         Hooks.on("createItem", (doc, options, userId) => {
