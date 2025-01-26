@@ -1,17 +1,33 @@
-<p>{{{localize "SFC.InitActors.Dialog.AllContents1"}}}</p>
+<form>
+    <p>{{{localize "SFC.InitActors.Dialog.AllContents1"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents2"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents2"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents3"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents3"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents4"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents4"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents5"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents5"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents6"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents6"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents7"}}}</p>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents7"}}}</p>
 
-<p>{{{localize "SFC.InitActors.Dialog.Contents8"}}}</p>
-<br>
-<br>
+    <p>{{{localize "SFC.InitActors.Dialog.Contents8"}}}</p>
+    <br>
+    {{#if folders.length}}
+    <p>
+        <label for="folder">{{{localize "SFC.InitActors.Dialog.FolderSelector"}}}</label>
+        <select name="folder" class="folder-selector" title="">
+            {{selectOptions folders nameAttr="name" }}
+        </select>
+        <br>
+    </p>
+    {{/if}}
+    <br>
+    <footer class="form-footer">
+        <button type="button" data-action="currency"><i class="fas fa-dollar-sign"></i>{{localize "SFC.InitActors.Dialog.InitKeepCurrency"}}</button>
+        <button type="button" data-action="coins"><i class="fas fa-coins"></i>{{localize "SFC.InitActors.Dialog.InitKeepCoins"}}</button>
+        <button type="button" data-action="cancel"><i class="fas fa-times"></i>{{localize "SFC.InitActors.Dialog.Cancel"}}</button>
+    </footer>
+</form>

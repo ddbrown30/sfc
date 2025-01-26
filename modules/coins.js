@@ -1,6 +1,7 @@
 import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
 import { CoinManager } from "./coin-manager.js";
+import { InitAllActorsDialog } from "./init-all-actors-dialog.js";
 
 export class Coins {
 
@@ -38,37 +39,9 @@ export class Coins {
     static async onRenderSettingsConfig(app, el, data) {
         //Add the init actors button
         const initButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
-        const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsDialog, {});
-
+        
         initButton.find('[data-key="init-actors-button"]').click(ev => {
-            const dialog = new Dialog({
-                title: game.i18n.localize("SFC.InitActors.AllLabel"),
-                content: dialogContent,
-                buttons: {
-                    currency: {
-                        icon: `<i class="fas fa-dollar-sign"></i>`,
-                        label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCurrency"),
-                        callback: async (html) => {
-                            let keepCurrency = true;
-                            await Coins.initAllActorInventories(keepCurrency);
-                        }
-                    },
-                    coins: {
-                        icon: `<i class="fas fa-coins"></i>`,
-                        label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCoins"),
-                        callback: async (html) => {
-                            let keepCurrency = false;
-                            await Coins.initAllActorInventories(keepCurrency);
-                        }
-                    },
-                    cancel: {
-                        icon: `<i class="fas fa-times"></i>`,
-                        label: game.i18n.localize("SFC.InitActors.Dialog.Cancel"),
-                        callback: event => { }
-                    }
-                }
-            }, {classes: ["dialog", "init-dialog"]});
-            dialog.render(true);
+            new InitAllActorsDialog().render(true);
         });
 
         const refreshButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
@@ -268,8 +241,9 @@ export class Coins {
         actor.update({"system.details.currency": Number(totalCurrency.toFixed(2))});
     }
 
-    static async initAllActorInventories(keepCurrency) {
+    static async initAllActorInventories(keepCurrency, folder) {
         for (const actor of game.actors) {
+            if (folder && actor.folder != folder) { continue; }
             if (Utils.isSupportedActorType(actor.type)) {
                 await this.initActorInventory(actor, keepCurrency);
             }
