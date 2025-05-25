@@ -36,27 +36,27 @@ export class Coins {
         Coins.buildItemDescriptionText();
     }
 
-    static async onRenderSettingsConfig(app, el, data) {
+    static async onRenderSettingsConfig(app, html, data) {
         //Add the init actors button
-        const initButton = $(await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
+        const initButton = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {});
+        const refreshButton = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {});
 
-        initButton.find('[data-key="init-actors-button"]').click(ev => {
+        //Find the start of the SFC section and add the buttons there
+        const sfcSection = html.querySelector('section[data-tab="sfc"]');
+        sfcSection.insertAdjacentHTML('afterbegin', refreshButton);
+        sfcSection.insertAdjacentHTML('afterbegin', initButton);
+
+        sfcSection.querySelector('[data-key="init-actors-button"]').addEventListener("click", (event) => {
             new InitAllActorsDialog().render(true);
         });
 
-        const refreshButton = $(await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
-
-        refreshButton.find('[data-key="refresh-coin-items-button"]').click(ev => {
-            Dialog.confirm({
-                title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel"),
+        sfcSection.querySelector('[data-key="refresh-coin-items-button"]').addEventListener("click", (event) => {
+            foundry.applications.api.DialogV2.confirm({
+                window: { title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel") },
                 content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
-                yes: () => Coins.refreshAllActorItems(),
+                yes: { callback: (event, button, dialog) => Coins.refreshAllActorItems() },
             });
         });
-
-        //Find the start of the SFC section and add the buttons there
-        el.find('[data-tab="sfc"] h2').after(refreshButton);
-        el.find('[data-tab="sfc"] h2').after(initButton);
     }
 
     static async onRenderActorSheet(app, html, data) {
