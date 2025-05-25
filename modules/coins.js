@@ -38,13 +38,13 @@ export class Coins {
 
     static async onRenderSettingsConfig(app, el, data) {
         //Add the init actors button
-        const initButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
+        const initButton = $(await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {}));
 
         initButton.find('[data-key="init-actors-button"]').click(ev => {
             new InitAllActorsDialog().render(true);
         });
 
-        const refreshButton = $(await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
+        const refreshButton = $(await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {}));
 
         refreshButton.find('[data-key="refresh-coin-items-button"]').click(ev => {
             Dialog.confirm({
@@ -94,7 +94,7 @@ export class Coins {
             const currencyName = game.settings.get("swade", "currencyName");
             const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
             const templateData = { currencyAmount, currencyName, coinTemplateData, showCurrency };
-            const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
+            const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
 
             //Find the existing currency section and replace it with ours
             const currencySection = html[0].querySelector("div.form-group.currency");
@@ -135,7 +135,7 @@ export class Coins {
         const currencyName = game.settings.get("swade", "currencyName");
         const currencyAmount = actor.system.currency ? actor.system.currency : 0;
         const templateData = { currencyAmount, currencyName, coinTemplateData, showCurrency };
-        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
+        const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
 
         //Find the existing currency section and replace it with ours
         const currencyInput = html.querySelector("input#currency");
@@ -184,7 +184,7 @@ export class Coins {
                     }
                 }
             }
-            
+
             if (itemUpdateData.length) await actor.updateEmbeddedDocuments("Item", itemUpdateData);
         }
     }
@@ -215,12 +215,12 @@ export class Coins {
             // return because we're not the user making the change
             return;
         }
-        
+
         const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
         if (!useCoinItems) {
             return;
         }
-        
+
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let quantity = updateData.system?.quantity;
         let actor = doc.actor;
@@ -236,12 +236,12 @@ export class Coins {
             // return because we're not the user making the change
             return;
         }
-        
+
         const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
         if (!useCoinItems) {
             return;
         }
-        
+
         let type = doc.getFlag("sfc", "type"); //We grab the type from this item just to confirm that this is a coin
         let actor = doc.actor;
         if (type && actor) {
@@ -312,11 +312,11 @@ export class Coins {
                 let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
                 numCoins = quantity ?? 0;
             }
-            
+
             countData[coinData.countFlagName] = numCoins;
             foundry.utils.setProperty(flagUpdateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, numCoins);
         }
-        
+
         await actor.update(flagUpdateData);
 
         const useCoinItems = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.useCoinItems);
@@ -344,7 +344,7 @@ export class Coins {
                     createData.push(itemData);
                 }
             }
-            
+
             if (createData.length) await actor.createEmbeddedDocuments("Item", createData);
             if (updateData.length) await actor.updateEmbeddedDocuments("Item", updateData);
             if (deleteData.length) await actor.deleteEmbeddedDocuments("Item", deleteData);
@@ -530,7 +530,7 @@ export class Coins {
         }
 
         const templateData = { coinDescriptionDatas };
-        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
+        const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.itemDescription, templateData);
         game.sfc.itemDescription = content;
     }
 

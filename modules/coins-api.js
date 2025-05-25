@@ -56,9 +56,9 @@ export class CoinsAPI {
         coinTemplateData.sort((a, b) => {
             return b.valueInt - a.valueInt;
         });
-        
+
         const templateData = {coinTemplateData, targets};
-        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.awardCoinsDialog, templateData);
+        const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.awardCoinsDialog, templateData);
 
         new Dialog({
             title: game.i18n.localize("SFC.AwardCoinsDialog.AwardCoinsTitle"),

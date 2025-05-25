@@ -329,7 +329,7 @@ export class CoinManager extends FormApplication {
         const amountFromRemaining = fromTotalAmountCurrency <= 0 ? 0 : (fromTotalAmountCurrency / fromValueInt);
         const amountFromRemoved = exchangeAmount - amountFromRemaining;
         const newFromCoins = fromQuantity - amountFromRemoved;
-        
+
         const updateData = {};
         foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${fromCoinData.countFlagName}`, newFromCoins);
         foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${destCoinData.countFlagName}`, newDestCoins);
@@ -340,7 +340,7 @@ export class CoinManager extends FormApplication {
     async exchangeAll() {
         let actor = this.object;
         const convertedCoins = this.convertCurrencyToCoins(actor.system.details.currency);
-        
+
         const updateData = {};
         for (const coinData of this.coinDataArray) {
             const quantity = convertedCoins[coinData.type] ? convertedCoins[coinData.type].quantity : 0;
@@ -352,7 +352,7 @@ export class CoinManager extends FormApplication {
 
     async initActor() {
         const actor = this.object;
-        const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
+        const dialogContent = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
         const dialog = new Dialog({
             title: game.i18n.localize("SFC.InitActors.SingleLabel"),
             content: dialogContent,
