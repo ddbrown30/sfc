@@ -49,7 +49,7 @@
                 "RefreshDataTitle": "Data Changed",
                 "RefreshDataContent": "<p>Changes were made to one or more coins.</p><p>Would you like to update existing coins on characters?</p><p>(This will not apply value changes. You must still run a full initialize if you made changes to coin values.)",
                 "ValueChangedTitle": "Values Changed",
-                "ValueChangedContent": "<p>You have changed one or more coin values and you have characters with coins in your world.</p><p><strong>You must reinitialize those characters after doing this.</strong></p><br>"
+                "ValueChangedContent": "<p>You have changed one or more coin values and you have characters with coins in your world.</p><p><strong>You must reinitialize those characters after doing this.</strong></p>"
             }
         },
 

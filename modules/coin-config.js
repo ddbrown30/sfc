@@ -52,18 +52,18 @@ export class CoinConfig extends FormApplication {
                 function showRefreshPrompt(app) {
                     app.submit();
 
-                    Dialog.confirm({
-                        title: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataTitle"),
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinConfig.Dialog.RefreshDataTitle" },
                         content: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataContent"),
-                        yes: () => Coins.refreshAllActorItems(),
+                        yes: { callback: () => Coins.refreshAllActorItems() },
                     });
                 }
 
                 if (valueChanged) {
-                    Dialog.prompt({
-                        title: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedTitle"),
+                    foundry.applications.api.DialogV2.prompt({
+                        window: { title: "SFC.CoinConfig.Dialog.ValueChangedTitle" },
                         content: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedContent"),
-                        callback: () => showRefreshPrompt(this)
+                        ok: { callback: () => showRefreshPrompt(this) },
                     });
                 } else {
                     showRefreshPrompt(this);

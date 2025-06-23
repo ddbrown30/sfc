@@ -557,7 +557,7 @@ export class Coins {
                     name: coinData.name,
                     img: coinData.img,
                     abbreviation: `{#} ${coinData.shortName}`,
-                    exchangeRate: coinData.value,
+                    exchangeRate: Number(coinData.value),
                     type: 'item',
                     data: {
                         item: this.buildItemDataFromCoinData(coinData),
