@@ -20,12 +20,10 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
         actions: {
             add: function () {
                 if (this.form.checkValidity()) {
-                    Dialog.confirm({
-                        title: game.i18n.localize("SFC.CoinManager.Dialog.AddConfirmTitle"),
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.AddConfirmTitle" },
                         content: game.i18n.localize("SFC.CoinManager.Dialog.AddConfirmContent"),
-                        yes: () => this.addCoins(),
-                        no: () => { },
-                        defaultYes: false
+                        yes: { callback: () => this.addCoins() },
                     });
                 } else {
                     this.form.reportValidity();
@@ -33,12 +31,10 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
             },
             remove: function () {
                 if (this.form.checkValidity()) {
-                    Dialog.confirm({
-                        title: game.i18n.localize("SFC.CoinManager.Dialog.RemoveConfirmTitle"),
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.RemoveConfirmTitle" },
                         content: game.i18n.localize("SFC.CoinManager.Dialog.RemoveConfirmContent"),
-                        yes: () => this.removeCoins(),
-                        no: () => { },
-                        defaultYes: false
+                        yes: { callback: () => this.removeCoins() },
                     });
                 } else {
                     this.form.reportValidity();
@@ -46,32 +42,28 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
             },
             exchange: function () {
                 if (this.form.checkValidity()) {
-                    Dialog.confirm({
-                        title: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeConfirmTitle"),
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.ExchangeConfirmTitle" },
                         content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeConfirmContent"),
-                        yes: () => this.exchange(),
-                        no: () => { },
-                        defaultYes: false
+                        yes: { callback: () => this.exchange() },
                     });
                 } else {
                     this.form.reportValidity();
                 }
             },
             exchangeAll: function () {
-                Dialog.confirm({
-                    title: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeAllConfirmTitle"),
+                foundry.applications.api.DialogV2.confirm({
+                    window: { title: "SFC.CoinManager.Dialog.ExchangeAllConfirmTitle" },
                     content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeAllConfirmContent"),
-                    yes: () => this.exchangeAll(),
-                    no: () => { },
-                    defaultYes: false
+                    yes: { callback: () => this.exchangeAll() },
                 });
             },
             initActor: function () { this.initActor(); },
             refreshItems: function () {
-                Dialog.confirm({
-                    title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel"),
+                foundry.applications.api.DialogV2.confirm({
+                    window: { title: "SFC.RefreshCoinItems.AllLabel" },
                     content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
-                    yes: () => Coins.refreshAllActorItems(),
+                    yes: { callback: () => Coins.refreshAllActorItems() },
                 });
             },
         },

@@ -92,13 +92,13 @@
 
             "Dialog": {
                 "AddConfirmTitle": "Add Coins",
-                "AddConfirmContent": "<p>Add coins to this character?</p><br>",
+                "AddConfirmContent": "<p>Add coins to this character?</p>",
                 "RemoveConfirmTitle": "Remove Coins",
-                "RemoveConfirmContent": "<p>Remove coins from this character?</p><br>",
+                "RemoveConfirmContent": "<p>Remove coins from this character?</p>",
                 "ExchangeAllConfirmTitle": "Exchange All Coins",
-                "ExchangeAllConfirmContent": "<p>Exchange all the coins for this character?</p><br>",
+                "ExchangeAllConfirmContent": "<p>Exchange all the coins for this character?</p>",
                 "ExchangeConfirmTitle": "Exchange Coins",
-                "ExchangeConfirmContent": "<p>Exchange coins for this character?</p><br>"
+                "ExchangeConfirmContent": "<p>Exchange coins for this character?</p>"
             }
         },
 
