@@ -85,30 +85,19 @@ export class CoinConfig extends FormApplication {
     }
 
     async restoreDefaults() {
-        const dialog = new Dialog({
+        foundry.applications.api.DialogV2.confirm({
             title: game.i18n.localize("SFC.CoinConfig.RestoreDefaultsTitle"),
             content: game.i18n.localize("SFC.CoinConfig.RestoreDefaultsContents"),
-            buttons: {
-                yes: {
-                    icon: `<i class="fa fa-check"></i>`,
-                    label: game.i18n.localize("SFC.Yes"),
-                    callback: async event => {
-                        const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
-                        this.initialDataMap = defaultMap;
-                        this.workingCoinDataMap = foundry.utils.duplicate(this.initialDataMap);
-                        this.restoredMap = true;
-                        this.render();
-                    }
-                },
-                no: {
-                    icon: `<i class="fa fa-times"></i>`,
-                    label: game.i18n.localize("SFC.No"),
-                    callback: event => { }
+            yes: {
+                callback: () => {
+                    const defaultMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.defaultCoinDataMap);
+                    this.initialDataMap = defaultMap;
+                    this.workingCoinDataMap = foundry.utils.duplicate(this.initialDataMap);
+                    this.restoredMap = true;
+                    this.render();
                 }
             },
-            default: "no"
-        }).render(true);
-        this.render(true);
+        });
     }
 
     async _onChangeInput(event) {
