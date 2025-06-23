@@ -391,33 +391,36 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
     async initActor() {
         const actor = this.actor;
         const dialogContent = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
-        const dialog = new Dialog({
-            title: game.i18n.localize("SFC.InitActors.SingleLabel"),
+        new foundry.applications.api.DialogV2({
+            window: { title: "SFC.InitActors.SingleLabel" },
             content: dialogContent,
-            buttons: {
-                currency: {
-                    icon: `<i class="fas fa-dollar-sign"></i>`,
+            classes: ["init-dialog-form", "init-dialog"],
+            position: { width: 400 },
+            buttons: [
+                {
+                    icon: "fas fa-dollar-sign",
                     label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCurrency"),
+                    action: "currency",
                     callback: async (html) => {
                         let keepCurrency = true;
                         await Coins.initActorInventory(actor, keepCurrency);
                     }
                 },
-                coins: {
-                    icon: `<i class="fas fa-coins"></i>`,
+                {
+                    icon: "fas fa-coins",
                     label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCoins"),
+                    action: "coins",
                     callback: async (html) => {
                         let keepCurrency = false;
                         await Coins.initActorInventory(actor, keepCurrency);
                     }
                 },
-                cancel: {
-                    icon: `<i class="fas fa-times"></i>`,
+                {
+                    icon: "fas fa-times",
                     label: game.i18n.localize("SFC.InitActors.Dialog.Cancel"),
-                    callback: event => { }
+                    action: "cancel",
                 }
-            }
-        }, { classes: ["dialog", "init-dialog"] });
-        dialog.render(true);
+            ]
+        }).render(true);
     }
 }

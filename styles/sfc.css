@@ -16,6 +16,10 @@
     display: block;
 }
 
+.init-dialog-form footer {
+    display: unset;
+}
+
 .sfc .coins .value {
     font-weight: 700;
 }
