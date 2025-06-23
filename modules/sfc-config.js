@@ -13,8 +13,11 @@ export const DEFAULT_CONFIG = {
             exchange: `${PATH}/templates/coin-manager/exchange-tab.hbs`,
             system: `${PATH}/templates/coin-manager/system-tab.hbs`,
         },
+        coinConfig: {
+            form: `${PATH}/templates/coin-config/form.hbs`,
+            footer: `${PATH}/templates/coin-config/footer.hbs`,
+        },
         coinsDisplay: `${PATH}/templates/coins-display.hbs`,
-        coinConfig: `${PATH}/templates/coin-config.hbs`,
         initAllActorsButton: `${PATH}/templates/init-all-actors-button.hbs`,
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,

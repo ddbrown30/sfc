@@ -2,7 +2,32 @@ import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
 import { Coins } from "./coins.js";
 
-export class CoinConfig extends FormApplication {
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+export class CoinConfig extends HandlebarsApplicationMixin(ApplicationV2) {
+    static DEFAULT_OPTIONS = {
+        id: 'coin-config',
+        tag: "form",
+        form: {
+            handler: CoinConfig.formHandler,
+            submitOnChange: false,
+            closeOnSubmit: true
+        },
+        window: { title: "SFC.CoinConfig.Name", resizable: false, },
+        classes:["sfc-form"],
+        position: { width: 600, height: 820 },
+        actions: {
+            reset: function () { this.restoreDefaults(); },
+            save: function () { this.save(); },
+            filePicker: function (event, target) { this.onOpenFilePicker(target); },
+        },
+    };
+
+    static coinConfigTemplates = SFC_CONFIG.DEFAULT_CONFIG.templates.coinConfig;
+    static PARTS = {
+        form: { template: this.coinConfigTemplates.form },
+        footer: { template: this.coinConfigTemplates.footer },
+    };
+
     constructor() {
         super();
         this.initialDataMap = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap);
@@ -10,71 +35,11 @@ export class CoinConfig extends FormApplication {
         this.restoredMap = false;
     }
 
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            id: 'coin-config',
-            title: game.i18n.localize('SFC.CoinConfig.Name'),
-            template: SFC_CONFIG.DEFAULT_CONFIG.templates.coinConfig,
-            width: 600,
-            height: 700,
-            resizable: false
-        });
+    async _prepareContext(options) {
+        return { coinDataMap: this.workingCoinDataMap };
     }
 
-    getData() {
-        const coinDataMap = this.workingCoinDataMap;
-        const data = {
-            coinDataMap
-        };
-        return data;
-    }
-
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find('#reset').click(() => this.restoreDefaults());
-        html.find('#save').click(() => {
-            if (this.form.checkValidity()) {
-                const hasCoins = this.hasAnyActiveCoins();
-                const dataChanged = this.restoredMap || !foundry.utils.isEmpty(foundry.utils.diffObject(this.initialDataMap, this.workingCoinDataMap));
-                if (!hasCoins || !dataChanged) {
-                    this.submit();
-                    return;
-                }
-
-                let valueChanged = false;
-                for (let coinData of Object.values(this.initialDataMap)) {
-                    if (this.workingCoinDataMap[coinData.type].value != coinData.value) {
-                        valueChanged = true;
-                        break;
-                    }
-                }
-
-                function showRefreshPrompt(app) {
-                    app.submit();
-
-                    foundry.applications.api.DialogV2.confirm({
-                        window: { title: "SFC.CoinConfig.Dialog.RefreshDataTitle" },
-                        content: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataContent"),
-                        yes: { callback: () => Coins.refreshAllActorItems() },
-                    });
-                }
-
-                if (valueChanged) {
-                    foundry.applications.api.DialogV2.prompt({
-                        window: { title: "SFC.CoinConfig.Dialog.ValueChangedTitle" },
-                        content: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedContent"),
-                        ok: { callback: () => showRefreshPrompt(this) },
-                    });
-                } else {
-                    showRefreshPrompt(this);
-                }
-            } else {
-                this.form.reportValidity();
-            }
-        });
-    }
-
-    async _updateObject(event, formData) {
+    static async formHandler(event, form, formData) {
         await Utils.setSetting(SFC_CONFIG.SETTING_KEYS.coinDataMap, this.workingCoinDataMap);
         Coins.buildItemDescriptionText();
 
@@ -84,7 +49,50 @@ export class CoinConfig extends FormApplication {
         }
     }
 
-    async restoreDefaults() {
+    save() {
+        if (this.form.checkValidity()) {
+            const hasCoins = this.hasAnyActiveCoins();
+            const dataChanged = this.restoredMap || !foundry.utils.isEmpty(foundry.utils.diffObject(this.initialDataMap, this.workingCoinDataMap));
+            if (!hasCoins || !dataChanged) {
+                this.submit();
+                this.close();
+                return;
+            }
+
+            let valueChanged = false;
+            for (let coinData of Object.values(this.initialDataMap)) {
+                if (this.workingCoinDataMap[coinData.type].value != coinData.value) {
+                    valueChanged = true;
+                    break;
+                }
+            }
+
+            function showRefreshPrompt(app) {
+                app.submit();
+                app.close();
+
+                foundry.applications.api.DialogV2.confirm({
+                    window: { title: "SFC.CoinConfig.Dialog.RefreshDataTitle" },
+                    content: game.i18n.localize("SFC.CoinConfig.Dialog.RefreshDataContent"),
+                    yes: { callback: () => Coins.refreshAllActorItems() },
+                });
+            }
+
+            if (valueChanged) {
+                foundry.applications.api.DialogV2.prompt({
+                    window: { title: "SFC.CoinConfig.Dialog.ValueChangedTitle" },
+                    content: game.i18n.localize("SFC.CoinConfig.Dialog.ValueChangedContent"),
+                    ok: { callback: () => showRefreshPrompt(this) },
+                });
+            } else {
+                showRefreshPrompt(this);
+            }
+        } else {
+            this.form.reportValidity();
+        }
+    }
+
+    restoreDefaults() {
         foundry.applications.api.DialogV2.confirm({
             title: game.i18n.localize("SFC.CoinConfig.RestoreDefaultsTitle"),
             content: game.i18n.localize("SFC.CoinConfig.RestoreDefaultsContents"),
@@ -99,8 +107,23 @@ export class CoinConfig extends FormApplication {
             },
         });
     }
+    async onOpenFilePicker(target) {
+        const inputField = this.element.querySelector(`input[name="${target.dataset.target}"`);
+        new FilePicker.implementation({
+            type: target.dataset.type,
+            current: inputField.value,
+            allowUpload: true,
+            callback: (src) => {
+                if (inputField.value != src) {
+                    inputField.value = src;
+                    inputField.dispatchEvent(new Event('change', { 'bubbles': true }));
+                }
+            }
+        }).browse();
+    }
 
-    async _onChangeInput(event) {
+    async _onChangeForm(formConfig, event) {
+        super._onChangeForm(formConfig, event);
         const name = event.target.name;
         const row = event.target.name.split("-").pop();
         if (!row) {
@@ -125,7 +148,6 @@ export class CoinConfig extends FormApplication {
 
         event.target.blur();
         event.target.reportValidity();
-        this.render(true);
     }
 
     //Searches through all the actors and checks if any of them contain coin data
