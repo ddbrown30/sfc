@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+* Updated everything to AppV2
+
 ## 1.0.0
 
 * v13 update
