@@ -1,0 +1,43 @@
+<section class='tab' data-group="primary" data-tab='exchange'>
+  <p>{{localize "SFC.CoinManager.ExchangeAllDescription"}}</p>
+  <div class='flexrow coin-manager-buttons'>
+    <button type='button' class="sfc coins manager-button" data-action="exchangeAll" name='exchange-all'>
+      <i class="fas fa-arrow-right-arrow-left"></i> {{localize "SFC.CoinManager.ExchangeAllButton"}}
+    </button>
+  </div>
+  <br>
+  <p>{{localize "SFC.CoinManager.ExchangeDescription"}}</p>
+  <table>
+    <tbody>
+      <tr>
+        <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeAmount'}}</th>
+        <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeFrom'}}</th>
+        <th class="sub-heading" style="text-align: left">{{localize 'SFC.CoinManager.ExchangeTo'}}</th>
+      </tr>
+
+      <tr>
+        <td><input name='exchange-amount' type='number' min="0" step="1" data-dtype='Number' /></td>
+
+        <td>
+          <select name='exchange-from' id="exchange-from">
+            {{#each coinData}}
+              <option value="coin-{{type}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </td>
+        <td>
+          <select name='exchange-to' id="exchange-to">
+            {{#each coinData}}
+              <option value="coin-{{type}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class='flexrow coin-manager-buttons'>
+    <button type='button' class="sfc coins manager-button" data-action="exchange" name='exchange'>
+      <i class="fas fa-right-to-line"></i> {{localize "SFC.CoinManager.ExchangeButton"}}
+    </button>
+  </div>
+</section>

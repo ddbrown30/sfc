@@ -1,3 +1,7 @@
+:root {
+    --form-field-height: 26px;
+}
+
 .sfc .coins {
     display: flex;
     align-items: center;
@@ -132,7 +136,11 @@
     margin: 10px;
 }
 
-.flexrow.coin-manager-buttons {
+.coin-manager-buttons {
     max-width: 300px;
     gap: 10px;
+}
+
+.sfc .system-button {
+    margin: 10px 0;
 }

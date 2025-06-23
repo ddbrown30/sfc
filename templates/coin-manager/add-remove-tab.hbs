@@ -1,0 +1,38 @@
+<section class='tab active' data-group="primary" data-tab='add-remove'>
+  <p>{{localize "SFC.CoinManager.AddDescription"}}</p>
+  <p>{{localize "SFC.CoinManager.RemoveDescription"}}</p>
+  <p>{{localize "SFC.CoinManager.AddRemoveWarning"}}</p>
+  <div class='sfc'>
+    <div class='coins'>
+      <select id="behaviour">
+        <option value="coins" {{#if (eq behaviour "coins" )}}selected{{/if}}>{{localize "SFC.CoinManager.UseCoins"}}</option>
+        <option value="currency" {{#if (eq behaviour "currency" )}}selected{{/if}}>{{localize "SFC.CoinManager.UseCurrency"}}</option>
+      </select>
+    </div>
+  </div>
+  <div class='sfc' style="padding-top: 10px; padding-bottom: 10px;">
+    <div class='coins'>
+      {{#if (eq behaviour "currency")}}
+        <div class="currency-group">
+          <label for="currency" style="padding-right: 10px">{{localize "SFC.CoinManager.CurrencyLabel"}}</label>
+          <input name='currency' type='number' min="0" step="any" data-dtype='Number' />
+        </div>
+      {{else}}
+        {{#each coinData}}
+          <div class="coin-group">
+            <img name="icon-{{@index}}" src='{{img}}' class="coin-icon" title='{{name}}' />
+            <input name='coin-{{type}}' type='number' min="0" step="1" data-dtype='Number' />
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+  <div class='flexrow coin-manager-buttons'>
+    <button type='button' class="sfc coins manager-button" data-action="add" name='add'>
+      <i class="fas fa-circle-plus"></i> {{localize "SFC.CoinManager.AddButton"}}
+    </button>
+    <button type='button' class="sfc coins manager-button" data-action="remove" name='remove'>
+      <i class="fas fa-circle-minus"></i> {{localize "SFC.CoinManager.RemoveButton"}}
+    </button>
+  </div>
+</section>
