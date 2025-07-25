@@ -2,21 +2,114 @@ import * as SFC_CONFIG from "./sfc-config.js";
 import { Utils } from "./utils.js";
 import { Coins } from "./coins.js";
 
-export class CoinManager extends FormApplication {
-    constructor(object, parentApp, options) {
-        options = options ? options : {};
-        options.title = object.name;
-        options.id = 'coin-manager' + object.id;
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
+    static DEFAULT_OPTIONS = {
+        tag: "form",
+        form: {
+            submitOnChange: false,
+            closeOnSubmit: false
+        },
+        classes: ["sheet", "sfc"],
+        window: {
+            title: "SFC.CoinManager.Name",
+            minimizable: false,
+            resizable: false,
+        },
+        position: { width: 600, height: 450 },
+        actions: {
+            add: function () {
+                if (this.form.checkValidity()) {
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.AddConfirmTitle" },
+                        content: game.i18n.localize("SFC.CoinManager.Dialog.AddConfirmContent"),
+                        yes: { callback: () => this.addCoins() },
+                    });
+                } else {
+                    this.form.reportValidity();
+                }
+            },
+            remove: function () {
+                if (this.form.checkValidity()) {
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.RemoveConfirmTitle" },
+                        content: game.i18n.localize("SFC.CoinManager.Dialog.RemoveConfirmContent"),
+                        yes: { callback: () => this.removeCoins() },
+                    });
+                } else {
+                    this.form.reportValidity();
+                }
+            },
+            exchange: function () {
+                if (this.form.checkValidity()) {
+                    foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.CoinManager.Dialog.ExchangeConfirmTitle" },
+                        content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeConfirmContent"),
+                        yes: { callback: () => this.exchange() },
+                    });
+                } else {
+                    this.form.reportValidity();
+                }
+            },
+            exchangeAll: function () {
+                foundry.applications.api.DialogV2.confirm({
+                    window: { title: "SFC.CoinManager.Dialog.ExchangeAllConfirmTitle" },
+                    content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeAllConfirmContent"),
+                    yes: { callback: () => this.exchangeAll() },
+                });
+            },
+            initActor: function () { this.initActor(); },
+            refreshItems: function () {
+                foundry.applications.api.DialogV2.confirm({
+                    window: { title: "SFC.RefreshCoinItems.AllLabel" },
+                    content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
+                    yes: { callback: () => Coins.refreshAllActorItems() },
+                });
+            },
+        },
+    };
 
-        options.classes = ['sheet', 'actor'];
-        if (parentApp?.options.classes.includes("swpf-sheet")) {
-            options.classes.push("swpf-sheet");
-        } else {
-            options.classes.push("swade-official");
-        }
+    static coinManagerTemplates = SFC_CONFIG.DEFAULT_CONFIG.templates.coinManager;
+    static PARTS = {
+        tabs: { template: 'templates/generic/tab-navigation.hbs' },
+        addRemove: { template: this.coinManagerTemplates.addRemove },
+        exchange: { template: this.coinManagerTemplates.exchange },
+        system: { template: this.coinManagerTemplates.system },
+    };
 
-        super(object, options);
+    static TABS = {
+        addRemove: {
+            id: 'add-remove',
+            group: 'primary',
+            label: 'SFC.CoinManager.AddRemoveTab',
+        },
+        exchange: {
+            id: 'exchange',
+            group: 'primary',
+            label: 'SFC.CoinManager.ExchangeTab',
+        },
+        system: {
+            id: 'system',
+            group: 'primary',
+            label: 'SFC.CoinManager.SystemTab',
+        },
+    };
 
+    constructor(actor, parentApp, options) {
+        options ??= {};
+        options.id = 'coin-manager' + actor.id;
+
+        //TODO: Possibly bring this back once swade has updated their sheets to V2
+        // options.classes = ['sheet', 'actor'];
+        // if (parentApp?.options.classes.includes("swpf-sheet")) {
+        //     options.classes.push("swpf-sheet");
+        // } else {
+        //     options.classes.push("swade-official");
+        // }
+
+        super(options);
+
+        this.actor = actor;
         this.behaviour = "coins";
         this.coinDataArray = [];
 
@@ -39,95 +132,40 @@ export class CoinManager extends FormApplication {
         });
     }
 
-    static get defaultOptions() {
-        return foundry.utils.mergeObject(super.defaultOptions, {
-            template: SFC_CONFIG.DEFAULT_CONFIG.templates.coinManager,
-            tabs: [
-                {
-                    navSelector: '.tabs',
-                    contentSelector: '.sheet-body',
-                    initial: 'add-remove',
-                },
-            ],
-            width: 600,
-            height: 400,
-            resizable: false,
-            closeOnSubmit: false
-        });
+    _getTabs() {
+        return Object.values(this.constructor.TABS).reduce(
+            (acc, v) => {
+                const isActive = this.tabGroups[v.group] === v.id;
+                acc[v.id] = {
+                    ...v,
+                    active: isActive,
+                    cssClass: isActive ? 'active' : '',
+                    tabCssClass: isActive ? 'tab active' : 'tab',
+                };
+                return acc;
+            },
+            {},
+        );
     }
 
-    getData() {
-        const data = super.getData();
+    async _prepareContext(options) {
+        await super._prepareContext(options);
 
-        data.behaviour = this.behaviour;
-        data.coinData = this.coinDataArray;
-        data.actor = this.object;
-
-        return data;
+        return {
+            behaviour: this.behaviour,
+            coinData: this.coinDataArray,
+            actor: this.actor,
+            tabs: this._getTabs(),
+        };
     }
 
-    activateListeners(html) {
-        super.activateListeners(html);
-        html.find("select[id='behaviour']").on("change", event => this.onChangeBehaviour(event));
-        html.find("button[id='add']").click(() => {
-            if (this.form.checkValidity()) {
-                Dialog.confirm({
-                    title: game.i18n.localize("SFC.CoinManager.Dialog.AddConfirmTitle"),
-                    content: game.i18n.localize("SFC.CoinManager.Dialog.AddConfirmContent"),
-                    yes: () => this.addCoins(),
-                    no: () => { },
-                    defaultYes: false
-                });
-            } else {
-                this.form.reportValidity();
-            }
-        });
-        html.find("button[id='remove']").click(() => {
-            if (this.form.checkValidity()) {
-                Dialog.confirm({
-                    title: game.i18n.localize("SFC.CoinManager.Dialog.RemoveConfirmTitle"),
-                    content: game.i18n.localize("SFC.CoinManager.Dialog.RemoveConfirmContent"),
-                    yes: () => this.removeCoins(),
-                    no: () => { },
-                    defaultYes: false
-                });
-            } else {
-                this.form.reportValidity();
-            }
-        });
-        html.find("button[id='exchange-all-button']").click(() => {
-            Dialog.confirm({
-                title: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeAllConfirmTitle"),
-                content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeAllConfirmContent"),
-                yes: () => this.exchangeAll(),
-                no: () => { },
-                defaultYes: false
-            });
-        });
-        html.find("button[id='exchange-button']").click(() => {
-            if (this.form.checkValidity()) {
-                Dialog.confirm({
-                    title: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeConfirmTitle"),
-                    content: game.i18n.localize("SFC.CoinManager.Dialog.ExchangeConfirmContent"),
-                    yes: () => this.exchange(),
-                    no: () => { },
-                    defaultYes: false
-                });
-            } else {
-                this.form.reportValidity();
-            }
-        });
-        html.find("button[id='init-actor-button']").click(() => this.initActor());
-        html.find("button[id='refresh-coin-items-button']").click(ev => {
-            Dialog.confirm({
-                title: game.i18n.localize("SFC.RefreshCoinItems.AllLabel"),
-                content: game.i18n.localize("SFC.RefreshCoinItems.AllContent"),
-                yes: () => Coins.refreshAllActorItems(),
-            });
-        });
+    _onRender(context, options) {
+        this.element.querySelector("select[id='behaviour']").addEventListener("change", event => this.onChangeBehaviour(event));
     }
 
-    async _updateObject(event, formData) {
+    getFormData() {
+        const fd = new foundry.applications.ux.FormDataExtended(this.form, { editors: this.editors });
+        return fd.object;
     }
 
     async removeCurrencyFromInventory(currency, actor) {
@@ -211,8 +249,8 @@ export class CoinManager extends FormApplication {
     }
 
     async addCoins() {
-        const actor = this.object;
-        const formData = this._getSubmitData();
+        const actor = this.actor;
+        const formData = this.getFormData();
 
         const updateData = {};
         if (this.behaviour == "currency") {
@@ -238,8 +276,8 @@ export class CoinManager extends FormApplication {
     }
 
     async removeCoins() {
-        const actor = this.object;
-        const formData = this._getSubmitData();
+        const actor = this.actor;
+        const formData = this.getFormData();
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
                 if (formData.currency > actor.system.details.currency) {
@@ -277,14 +315,14 @@ export class CoinManager extends FormApplication {
         return this.render();
     }
 
-    async _onChangeInput(event) {
+    _onChangeForm(formConfig, event) {
         event.target.blur();
         event.target.reportValidity();
     }
 
     async exchange() {
-        let actor = this.object;
-        const formData = this._getSubmitData();
+        let actor = this.actor;
+        const formData = this.getFormData();
         let exchangeAmount = formData["exchange-amount"];
         if (exchangeAmount <= 0) {
             return;
@@ -329,7 +367,7 @@ export class CoinManager extends FormApplication {
         const amountFromRemaining = fromTotalAmountCurrency <= 0 ? 0 : (fromTotalAmountCurrency / fromValueInt);
         const amountFromRemoved = exchangeAmount - amountFromRemaining;
         const newFromCoins = fromQuantity - amountFromRemoved;
-        
+
         const updateData = {};
         foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${fromCoinData.countFlagName}`, newFromCoins);
         foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${destCoinData.countFlagName}`, newDestCoins);
@@ -338,9 +376,9 @@ export class CoinManager extends FormApplication {
     }
 
     async exchangeAll() {
-        let actor = this.object;
+        let actor = this.actor;
         const convertedCoins = this.convertCurrencyToCoins(actor.system.details.currency);
-        
+
         const updateData = {};
         for (const coinData of this.coinDataArray) {
             const quantity = convertedCoins[coinData.type] ? convertedCoins[coinData.type].quantity : 0;
@@ -351,35 +389,38 @@ export class CoinManager extends FormApplication {
     }
 
     async initActor() {
-        const actor = this.object;
-        const dialogContent = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
-        const dialog = new Dialog({
-            title: game.i18n.localize("SFC.InitActors.SingleLabel"),
+        const actor = this.actor;
+        const dialogContent = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initSingleActorDialog, {});
+        new foundry.applications.api.DialogV2({
+            window: { title: "SFC.InitActors.SingleLabel" },
             content: dialogContent,
-            buttons: {
-                currency: {
-                    icon: `<i class="fas fa-dollar-sign"></i>`,
+            classes: ["init-dialog-form", "init-dialog"],
+            position: { width: 400 },
+            buttons: [
+                {
+                    icon: "fas fa-dollar-sign",
                     label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCurrency"),
+                    action: "currency",
                     callback: async (html) => {
                         let keepCurrency = true;
                         await Coins.initActorInventory(actor, keepCurrency);
                     }
                 },
-                coins: {
-                    icon: `<i class="fas fa-coins"></i>`,
+                {
+                    icon: "fas fa-coins",
                     label: game.i18n.localize("SFC.InitActors.Dialog.InitKeepCoins"),
+                    action: "coins",
                     callback: async (html) => {
                         let keepCurrency = false;
                         await Coins.initActorInventory(actor, keepCurrency);
                     }
                 },
-                cancel: {
-                    icon: `<i class="fas fa-times"></i>`,
+                {
+                    icon: "fas fa-times",
                     label: game.i18n.localize("SFC.InitActors.Dialog.Cancel"),
-                    callback: event => { }
+                    action: "cancel",
                 }
-            }
-        }, { classes: ["dialog", "init-dialog"] });
-        dialog.render(true);
+            ]
+        }).render(true);
     }
 }

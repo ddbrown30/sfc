@@ -49,7 +49,7 @@
                 "RefreshDataTitle": "Data Changed",
                 "RefreshDataContent": "<p>Changes were made to one or more coins.</p><p>Would you like to update existing coins on characters?</p><p>(This will not apply value changes. You must still run a full initialize if you made changes to coin values.)",
                 "ValueChangedTitle": "Values Changed",
-                "ValueChangedContent": "<p>You have changed one or more coin values and you have characters with coins in your world.</p><p><strong>You must reinitialize those characters after doing this.</strong></p><br>"
+                "ValueChangedContent": "<p>You have changed one or more coin values and you have characters with coins in your world.</p><p><strong>You must reinitialize those characters after doing this.</strong></p>"
             }
         },
 
@@ -92,13 +92,13 @@
 
             "Dialog": {
                 "AddConfirmTitle": "Add Coins",
-                "AddConfirmContent": "<p>Add coins to this character?</p><br>",
+                "AddConfirmContent": "<p>Add coins to this character?</p>",
                 "RemoveConfirmTitle": "Remove Coins",
-                "RemoveConfirmContent": "<p>Remove coins from this character?</p><br>",
+                "RemoveConfirmContent": "<p>Remove coins from this character?</p>",
                 "ExchangeAllConfirmTitle": "Exchange All Coins",
-                "ExchangeAllConfirmContent": "<p>Exchange all the coins for this character?</p><br>",
+                "ExchangeAllConfirmContent": "<p>Exchange all the coins for this character?</p>",
                 "ExchangeConfirmTitle": "Exchange Coins",
-                "ExchangeConfirmContent": "<p>Exchange coins for this character?</p><br>"
+                "ExchangeConfirmContent": "<p>Exchange coins for this character?</p>"
             }
         },
 

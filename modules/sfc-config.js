@@ -8,14 +8,21 @@ export const PATH = "modules/sfc";
 
 export const DEFAULT_CONFIG = {
     templates: {
+        coinManager: {
+            addRemove: `${PATH}/templates/coin-manager/add-remove-tab.hbs`,
+            exchange: `${PATH}/templates/coin-manager/exchange-tab.hbs`,
+            system: `${PATH}/templates/coin-manager/system-tab.hbs`,
+        },
+        coinConfig: {
+            form: `${PATH}/templates/coin-config/form.hbs`,
+            footer: `${PATH}/templates/coin-config/footer.hbs`,
+        },
         coinsDisplay: `${PATH}/templates/coins-display.hbs`,
-        coinConfig: `${PATH}/templates/coin-config.hbs`,
         initAllActorsButton: `${PATH}/templates/init-all-actors-button.hbs`,
         initAllActorsDialog: `${PATH}/templates/init-all-actors-dialog.hbs`,
         initSingleActorDialog: `${PATH}/templates/init-single-actor-dialog.hbs`,
         refreshAllCoinItemsButton: `${PATH}/templates/refresh-all-coin-items-button.hbs`,
         itemDescription: `${PATH}/templates/coin-item-description.hbs`,
-        coinManager: `${PATH}/templates/coin-manager.hbs`,
         awardCoinsDialog: `${PATH}/templates/award-coins-dialog.hbs`,
     },
     coins: {

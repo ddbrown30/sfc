@@ -63,8 +63,8 @@ export function registerSettings() {
         default: SFC_CONFIG.DEFAULT_CONFIG.defaultEnableNpcCoins,
         onChange: async enableNpcCoins => {
             if (enableNpcCoins) {
-                await Dialog.prompt({
-                    title: game.i18n.localize("SFC.Settings.Dialog.EnableNpcWarningTitle"),
+                await foundry.applications.api.DialogV2.prompt({
+                    window: { title: "SFC.Settings.Dialog.EnableNpcWarningTitle" },
                     content: game.i18n.localize("SFC.Settings.Dialog.EnableNpcWarningContent")
                 });
             }
@@ -81,11 +81,11 @@ export function registerSettings() {
             default: SFC_CONFIG.DEFAULT_CONFIG.defaultItemPilesConfig,
             onChange: async itemPilesConfig => {
                 if (itemPilesConfig) {
-                    await Dialog.confirm({
-                        title: game.i18n.localize("SFC.Settings.Dialog.ItemPilesTitle"),
+                    await foundry.applications.api.DialogV2.confirm({
+                        window: { title: "SFC.Settings.Dialog.ItemPilesTitle" },
                         content: game.i18n.localize("SFC.Settings.Dialog.ItemPilesContent"),
-                        yes: () => Coins.itemPilesConfig(),
-                        no: () => Utils.setSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig, false)
+                        yes: { callback: () => Coins.itemPilesConfig() },
+                        no: { callback: () => Utils.setSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig, false) },
                     });
                 }
             }

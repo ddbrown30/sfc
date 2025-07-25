@@ -1,3 +1,7 @@
+:root {
+    --form-field-height: 26px;
+}
+
 .sfc .coins {
     display: flex;
     align-items: center;
@@ -10,6 +14,10 @@
 
 .init-dialog .dialog-buttons {
     display: block;
+}
+
+.init-dialog-form footer {
+    display: unset;
 }
 
 .sfc .coins .value {
@@ -108,6 +116,8 @@
 
 .coin-config .flexrow {
     justify-content: space-around;
+    margin-top: 1px;
+    margin-bottom: 1px;
 }
 
 #coin-config .icon-path {
@@ -116,6 +126,17 @@
 
 .coin-config .flexcol {
     margin: 3px;
+}
+
+.coin-config.list {
+    padding: 0;
+}
+
+.coin-config button.file-picker {
+    flex: 0 0 24px;
+    line-height: 24px;
+    margin: -1px 0 -1px 4px;
+    order: 99;
 }
 
 .coin-manager.tabs {
@@ -132,7 +153,19 @@
     margin: 10px;
 }
 
-.flexrow.coin-manager-buttons {
+.coin-manager-buttons {
     max-width: 300px;
     gap: 10px;
+}
+
+.sfc .system-button {
+    margin: 10px 0;
+}
+.sfc-form .hint,
+.sfc-form .notes {
+  flex: 0 0 100%;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-16);
+  color: var(--color-text-dark-secondary);
+  margin: 3px 0;
 }

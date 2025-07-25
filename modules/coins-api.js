@@ -56,19 +56,21 @@ export class CoinsAPI {
         coinTemplateData.sort((a, b) => {
             return b.valueInt - a.valueInt;
         });
-        
-        const templateData = {coinTemplateData, targets};
-        const content = await renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.awardCoinsDialog, templateData);
 
-        new Dialog({
-            title: game.i18n.localize("SFC.AwardCoinsDialog.AwardCoinsTitle"),
+        const templateData = {coinTemplateData, targets};
+        const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.awardCoinsDialog, templateData);
+
+        new foundry.applications.api.DialogV2({
+            window: { title: "SFC.AwardCoinsDialog.AwardCoinsTitle" },
+            position: { width: 400 },
             content: content,
-            buttons: {
-                award: {
+            buttons: [
+                {
                     label: game.i18n.localize("SFC.AwardCoinsDialog.AwardButtonName"),
-                    callback: async (html) => {
+                    action: "award",
+                    callback: async (event, target, dialog) => {
                         let selectedTargets = [];
-                        let targetId = html.find("#targetId")[0].value;
+                        let targetId = dialog.element.querySelector("#targetId").value;
                         if (targetId === "all-targets") {
                             selectedTargets = targets;
                         } else {
@@ -78,7 +80,7 @@ export class CoinsAPI {
                         for (const coinData of Object.values(game.sfc.coinDataMap)) {
                             if (coinData.enabled) {
                                 let inputName = "#coin-" + coinData.type;
-                                const coinAmount = Number(html.find(inputName)[0].value);
+                                const coinAmount = Number(dialog.element.querySelector(inputName).value);
                                 if (coinAmount > 0) {
                                     for (const target of selectedTargets) {
                                         await Coins.addCoinAmount(target.actor, coinData, coinAmount);
@@ -88,10 +90,11 @@ export class CoinsAPI {
                         };
                     }
                 },
-                cancel: {
-                    label: game.i18n.localize("SFC.AwardCoinsDialog.CancelButtonName")
+                {
+                    label: game.i18n.localize("SFC.AwardCoinsDialog.CancelButtonName"),
+                    action: "cancel",
                 }
-            }
+            ]
         }).render(true)
     }
 }

@@ -13,7 +13,7 @@
                 "Contents6": "Se você já tem personagens com moedas, você deveria usar a opção de manter moedas.",
                 "Contents7": "<strong>Este processo não pode ser desfeito. Você tem certeza que quer continuar?</strong>",
                 "Contents8": "Para mais informações, viste a página do projeto SFC.",
-                
+
                 "InitKeepCurrency": "Inicializa e preserva o valor",
                 "InitKeepCoins": "Inicializa e preserva as moedas",
                 "Cancel": "Cancelar",
@@ -41,12 +41,12 @@
             "RestoreDefaultsButton": "Restaurar Padrão",
             "RestoreDefaultsTitle": "Restaurar Padrão",
             "RestoreDefaultsContents": "<p>Você tem certeza que quer restaurar a configuração de moedas padrão?</p><p><strong>Isto vai reiniciar qualquer mudança  que tenha feito na moedas.</strong></p>",
-        
+
             "Dialog": {
                 "RefreshDataTitle": "Dados Alterados",
                 "RefreshDataContent": "<p>Mudanças foram feitas em um tipo ou mais de moedas.</p><p>Você gostaria de atualizar as moedas existentes nos personagens?</p><p>(Isto não aplicará mudança de valoress. Você precisará ainda de uma reinicialização completa se tiver feito mudanças nos valores das moedas.)",
                 "ValueChangedTitle": "Valores Alterados",
-                "ValueChangedContent": "<p>Você mudou um tipo ou mais de valores de moedas e você tem personagens com moedas em seu mundo.</p><p><strong>Você precisa reiniciar estes personagens após ter feito isto.</strong></p><br>"
+                "ValueChangedContent": "<p>Você mudou um tipo ou mais de valores de moedas e você tem personagens com moedas em seu mundo.</p><p><strong>Você precisa reiniciar estes personagens após ter feito isto.</strong></p>"
             }
         },
 
@@ -89,13 +89,13 @@
 
             "Dialog": {
                 "AddConfirmTitle": "Adicionar Moedas",
-                "AddConfirmContent": "<p>Adicionar moedas a este personagem?</p><br>",
+                "AddConfirmContent": "<p>Adicionar moedas a este personagem?</p>",
                 "RemoveConfirmTitle": "Remover Moedas",
-                "RemoveConfirmContent": "<p>Remover moedas deste personagem?</p><br>",
+                "RemoveConfirmContent": "<p>Remover moedas deste personagem?</p>",
                 "ExchangeAllConfirmTitle": "Trocar Todas as Moedas",
-                "ExchangeAllConfirmContent": "<p>Trocar todas as moedas deste personagem?</p><br>",
+                "ExchangeAllConfirmContent": "<p>Trocar todas as moedas deste personagem?</p>",
                 "ExchangeConfirmTitle": "Trocar Moedas",
-                "ExchangeConfirmContent": "<p>Trocar moedas deste personagem?</p><br>"
+                "ExchangeConfirmContent": "<p>Trocar moedas deste personagem?</p>"
             }
         },
 

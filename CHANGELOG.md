@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+* Updated everything to AppV2
+
+## 1.0.0
+
+* v13 update
+
 ## 0.11.0
 
 * Using coin items is now optional
@@ -31,7 +39,7 @@
 ## 0.8.1
 
 * Adding new coin items to an actor now correctly updates the currency
-* Fixed bugs with Item Piles data 
+* Fixed bugs with Item Piles data
 
 ## 0.8.0
 
