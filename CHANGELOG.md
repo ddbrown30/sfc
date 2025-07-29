@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+* Fixed error when rendering settings on non-gms
+
 ## 1.1.0
 
 * Updated everything to AppV2
