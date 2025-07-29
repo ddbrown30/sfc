@@ -4,7 +4,7 @@
   "description": "<p>A module that overrides the default currency behaviour of SWADE and replaces it with a configurable set of currencies.</p>",
   "compatibility": {
     "minimum": "13",
-    "verified": "13.344"
+    "verified": "13.346"
   },
   "packs": [
     {
