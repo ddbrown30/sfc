@@ -34,6 +34,23 @@ export class Coins {
 
         Coins.validateAndRepairCoinMap();
         Coins.buildItemDescriptionText();
+
+        if (game.modules.get('item-piles')?.active && Utils.getSetting(SFC_CONFIG.SETTING_KEYS.itemPilesConfig)) {
+            if (game.itempiles.API.CURRENCIES.length &&
+                game.itempiles.API.CURRENCIES[0].data?.item?.flags?.sfc &&
+                !game.itempiles.API.CURRENCIES[0].data?.item?.system?.swid) {
+                //If we have an item piles config that uses this module but it doesn't have a swid,
+                //that means that it was configured before v13 and it needs to be updated.
+                Coins.itemPilesConfig();
+                for (const actor of game.actors) {
+                    for (const item of actor.items) {
+                        if (item.flags.sfc && (!item.system.swid || item.system.swid == "none")) {
+                            item.update({ ["system.swid"]: game.swade.util.slugify(item.name) });
+                        }
+                    }
+                }
+            }
+        }
     }
 
     static async onRenderSettingsConfig(app, html, data) {
@@ -408,7 +425,8 @@ export class Coins {
             system: {
                 quantity: 0,
                 weight: coinData.weight,
-                description: game.sfc.itemDescription
+                description: game.sfc.itemDescription,
+                swid: game.swade.util.slugify(coinData.name),
             }
         };
     }
