@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+* Fixed Item Piles config
+
 ## 1.1.1
 
 * Fixed error when rendering settings on non-gms
