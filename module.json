@@ -4,7 +4,7 @@
   "description": "<p>A module that overrides the default currency behaviour of SWADE and replaces it with a configurable set of currencies.</p>",
   "compatibility": {
     "minimum": "13",
-    "verified": "13.347"
+    "verified": "13.351"
   },
   "packs": [
     {
@@ -24,8 +24,8 @@
         "type": "system",
         "manifest": "https://gitlab.com/api/v4/projects/16269883/packages/generic/swade/latest/system.json",
         "compatibility": {
-          "minimum": "5.0.0",
-          "verified": "5.0.4"
+          "minimum": "5.2.0",
+          "verified": "5.2.0"
         }
       }
     ]

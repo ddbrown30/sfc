@@ -29,8 +29,8 @@ export class HooksManager {
         /*                    Render                    */
         /* -------------------------------------------- */
 
-        Hooks.on("renderActorSheet", (app, html, data) => {
-            Coins.onRenderActorSheet(app, html, data);
+        Hooks.on("renderActorSheetV2", (app, html, data, options) => {
+            Coins.onRenderActorSheet(app, html, data, options);
         });
 
         Hooks.on("renderGroupSheet", (app, html, data) => {

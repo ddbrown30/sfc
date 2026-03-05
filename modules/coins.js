@@ -80,7 +80,7 @@ export class Coins {
         });
     }
 
-    static async onRenderActorSheet(app, html, data) {
+    static async onRenderActorSheet(app, html, data, options) {
         let actor = app.actor;
 
         if (actor.sheet.options.classes.includes("swade-official") == false) {
@@ -118,15 +118,17 @@ export class Coins {
             const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
 
             //Find the existing currency section and replace it with ours
-            const currencySection = html[0].querySelector("div.form-group.currency");
-            currencySection.parentNode.insertAdjacentHTML("afterend", content);
-            currencySection.remove();
+            const currencySection = html.querySelector("div.form-group.currency");
+            if (currencySection) {
+                currencySection.parentNode.insertAdjacentHTML("afterend", content);
+                currencySection.remove();
 
-            //Respond to the init actor button
-            const button = html.find('[id="manager-button"]');
-            button.click(ev => {
-                new CoinManager(actor, app).render(true);
-            });
+                //Respond to the init actor button
+                const button = html.querySelector('[id="manager-button"]');
+                button.click(ev => {
+                    new CoinManager(actor, app).render(true);
+                });
+            }
         }
     }
 
