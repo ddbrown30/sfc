@@ -19,7 +19,6 @@ for (const pack of packs) {
     if (error.code === "ENOENT") console.log("No files inside of " + pack);
     else console.log(error);
   }
-  console.log("here");
   await extractPack(
     `${MODULE_ID}/packs/${pack}`,
     `${MODULE_ID}/src/packs/${pack}`,
@@ -28,7 +27,6 @@ for (const pack of packs) {
       transformName,
     }
   );
-  console.log("here2");
 }
 /**
  * Prefaces the document with its type
