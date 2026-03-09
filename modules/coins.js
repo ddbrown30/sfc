@@ -124,8 +124,7 @@ export class Coins {
                 currencySection.remove();
 
                 //Respond to the init actor button
-                const button = html.querySelector('[id="manager-button"]');
-                button.click(ev => {
+                html.querySelector('.coins.manager-button').addEventListener("click", ev => {
                     new CoinManager(actor, app).render(true);
                 });
             }

@@ -18,7 +18,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
         },
         position: { width: 600, height: 450 },
         actions: {
-            add: function () {
+            addCoins: function () {
                 if (this.form.checkValidity()) {
                     foundry.applications.api.DialogV2.confirm({
                         window: { title: "SFC.CoinManager.Dialog.AddConfirmTitle" },
@@ -29,7 +29,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                     this.form.reportValidity();
                 }
             },
-            remove: function () {
+            removeCoins: function () {
                 if (this.form.checkValidity()) {
                     foundry.applications.api.DialogV2.confirm({
                         window: { title: "SFC.CoinManager.Dialog.RemoveConfirmTitle" },
