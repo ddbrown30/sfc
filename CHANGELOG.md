@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+* Minor fixes
+
 ## 1.1.3
 
 * Updated to swade 5.2
