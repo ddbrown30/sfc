@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.5
+
+* Fixed error when rendering other settings configs than the main one
+
 ## 1.1.4
 
 * Minor fixes
