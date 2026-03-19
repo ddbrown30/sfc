@@ -58,6 +58,10 @@ export class Coins {
             return;
         }
 
+        if (app.id !== 'settings-config') {
+            return;
+        }
+
         //Add the init actors button
         const initButton = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.initAllActorsButton, {});
         const refreshButton = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.refreshAllCoinItemsButton, {});
