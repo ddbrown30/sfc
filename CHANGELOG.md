@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.6
+
+* Fixed currency not working on group actors
+
 ## 1.1.5
 
 * Fixed error when rendering other settings configs than the main one
