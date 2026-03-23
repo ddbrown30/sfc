@@ -278,9 +278,10 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
     async removeCoins() {
         const actor = this.actor;
         const formData = this.getFormData();
+        const actorCurrency = actor.type === "group" ? actor.system.currency : actor.system.details.currency;
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
-                if (formData.currency > actor.system.details.currency) {
+                if (formData.currency > actorCurrency) {
                     Utils.showNotification("error", game.i18n.localize("SFC.Errors.CannotAfford"));
                     return;
                 }
@@ -301,7 +302,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                 return;
             }
 
-            if (totalCurrency > (actor.system.details.currency * 1000)) {
+            if (totalCurrency > (actorCurrency * 1000)) {
                 Utils.showNotification("error", game.i18n.localize("SFC.Errors.CannotAfford"));
                 return;
             }
@@ -377,7 +378,8 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async exchangeAll() {
         let actor = this.actor;
-        const convertedCoins = this.convertCurrencyToCoins(actor.system.details.currency);
+        const actorCurrency = actor.type === "group" ? actor.system.currency : actor.system.details.currency;
+        const convertedCoins = this.convertCurrencyToCoins(actorCurrency);
 
         const updateData = {};
         for (const coinData of this.coinDataArray) {

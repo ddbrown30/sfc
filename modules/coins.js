@@ -117,7 +117,8 @@ export class Coins {
 
             const showCurrency = Utils.getSetting(SFC_CONFIG.SETTING_KEYS.showCurrency);
             const currencyName = game.settings.get("swade", "currencyName");
-            const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
+            const actorCurrency = actor.type === "group" ? actor.system.currency : actor.system.details.currency;
+            const currencyAmount = actorCurrency ? actorCurrency : 0;
             const templateData = { currencyAmount, currencyName, coinTemplateData, showCurrency };
             const content = await foundry.applications.handlebars.renderTemplate(SFC_CONFIG.DEFAULT_CONFIG.templates.coinsDisplay, templateData);
 
@@ -292,7 +293,11 @@ export class Coins {
             }
         }
 
-        actor.update({ "system.details.currency": Number(totalCurrency.toFixed(2)) });
+        if (actor.type === "group") {
+            actor.update({ "system.currency": Number(totalCurrency.toFixed(2)) });
+        } else {
+            actor.update({ "system.details.currency": Number(totalCurrency.toFixed(2)) });
+        }
     }
 
     static async initAllActorInventories(keepCurrency, folder) {
@@ -305,7 +310,8 @@ export class Coins {
     }
 
     static async initActorInventory(actor, keepCurrency) {
-        const currencyAmount = actor.system.details.currency ? actor.system.details.currency : 0;
+        const actorCurrency = actor.type === "group" ? actor.system.currency : actor.system.details.currency;
+        const currencyAmount = actorCurrency ? actorCurrency : 0;
         let remainingCurrencyInt = Math.floor(currencyAmount * 1000); //This converts us to an int so we don't have to deal with float issues
         const flagUpdateData = {}
         let createData = [];
