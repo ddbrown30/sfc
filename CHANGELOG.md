@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.7
+
+* Added an sfcReady hook
+
 ## 1.1.6
 
 * Fixed currency not working on group actors
