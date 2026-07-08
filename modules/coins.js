@@ -51,6 +51,8 @@ export class Coins {
                 }
             }
         }
+
+        Hooks.callAll("sfcReady");
     }
 
     static async onRenderSettingsConfig(app, html, data) {
