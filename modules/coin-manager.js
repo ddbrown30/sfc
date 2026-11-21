@@ -207,7 +207,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
             if (sortedCoinDataArray[0].quantity == 0) {
                 //We have no more coins to convert. We can't afford this
                 Utils.showNotification("error", game.i18n.localize("SFC.Errors.CannotAfford"));
-                return;
+                return false;
             }
         }
 
@@ -217,6 +217,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
         }
 
         await actor.update(updateData);
+        return true;
     }
 
     convertCurrencyToCoins(currency) {
@@ -233,8 +234,8 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
             }
 
             covertedCoins[coinData.type] = {
-                quantity: numCoins,
-                countFlagName: coinData.countFlagName
+                ...coinData,
+                quantity: numCoins
             };
 
             //Subtract the value of the coins we just added from the remaining currency
@@ -252,10 +253,13 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
         const actor = this.actor;
         const formData = this.getFormData();
 
+        let coinsAdded = {};
+
         const updateData = {};
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
                 const coinsToAdd = this.convertCurrencyToCoins(formData.currency);
+                coinsAdded = coinsToAdd;
                 for (const coinData of Object.values(coinsToAdd)) {
                     let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
                     foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, quantity + coinData.quantity);
@@ -268,17 +272,25 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                 if (coinAmount > 0) {
                     let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
                     foundry.utils.setProperty(updateData, `flags.${SFC_CONFIG.NAME}.${coinData.countFlagName}`, quantity + coinAmount);
+                    coinsAdded[coinData.type] = { ...coinData, quantity: coinAmount };
                 }
             }
         }
 
         await actor.update(updateData);
+
+        if (game.itempiles?.API.isItemPileVault(actor)) {
+            Coins.logItemPilesAccess(actor, coinsAdded);
+        }
     }
 
     async removeCoins() {
         const actor = this.actor;
         const formData = this.getFormData();
         const actorCurrency = actor.type === "group" ? actor.system.currency : actor.system.details.currency;
+
+        let coinsRemoved = {};
+
         if (this.behaviour == "currency") {
             if (formData.currency > 0) {
                 if (formData.currency > actorCurrency) {
@@ -286,7 +298,12 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                     return;
                 }
 
-                this.removeCurrencyFromInventory(formData.currency * 1000, actor);
+                const removed = await this.removeCurrencyFromInventory(formData.currency * 1000, actor);
+                if (!removed) {
+                    return;
+                }
+
+                coinsRemoved = this.convertCurrencyToCoins(formData.currency);
             }
         } else {
             let totalCurrency = 0;
@@ -295,6 +312,7 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                 const coinAmount = formData[inputName];
                 if (coinAmount > 0) {
                     totalCurrency += coinAmount * coinData.valueInt;
+                    coinsRemoved[coinData.type] = { ...coinData, quantity: coinAmount };
                 }
             }
 
@@ -307,7 +325,19 @@ export class CoinManager extends HandlebarsApplicationMixin(ApplicationV2) {
                 return;
             }
 
-            this.removeCurrencyFromInventory(totalCurrency, actor);
+            const removed = await this.removeCurrencyFromInventory(totalCurrency, actor);
+            if (!removed) {
+                return;
+            }
+        }
+
+        if (Object.keys(coinsRemoved).length && game.itempiles?.API.isItemPileVault(actor)) {
+            //Removals are logged with negative quantities so they show up as "withdrew"
+            const coinsWithdrawn = {};
+            for (const [type, coin] of Object.entries(coinsRemoved)) {
+                coinsWithdrawn[type] = { ...coin, quantity: -coin.quantity };
+            }
+            await Coins.logItemPilesAccess(actor, coinsWithdrawn);
         }
     }
 

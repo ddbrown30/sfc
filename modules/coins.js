@@ -453,6 +453,10 @@ export class Coins {
     static async addCoinAmount(actor, coinData, coinAmount) {
         let quantity = Utils.getModuleFlag(actor, coinData.countFlagName);
         await actor.setFlag(SFC_CONFIG.NAME, coinData.countFlagName, quantity + Number(coinAmount));
+
+        if (game.itempiles?.API.isItemPileVault(actor)) {
+            Coins.logItemPilesAccess(actor, { [coinData.type]: { ...coinData, quantity: coinAmount } });
+        }
     }
 
     static async createDefaultCoinDataMap() {
@@ -603,5 +607,22 @@ export class Coins {
             }
         }
         game.itempiles.API.setCurrencies(newItemPileCurrencies);
+    }
+
+    static logItemPilesAccess(vault, coins) {
+        const path = "flags.item-piles.log";
+        const log = foundry.utils.deepClone(foundry.utils.getProperty(vault, path) ?? []);
+
+        for (const coin of Object.values(coins)) {
+            log.unshift({
+                user: game.user.id,
+                name: coin.name,
+                qty: coin.quantity,
+                action: coin.quantity > 0 ? "deposited" : "withdrew",
+                date: Date.now()
+            });
+        }
+
+        return vault.update({ [path]: log });
     }
 }
