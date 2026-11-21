@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.8
+
+* Added support for vault logging if item piles is active
+
 ## 1.1.7
 
 * Added an sfcReady hook
